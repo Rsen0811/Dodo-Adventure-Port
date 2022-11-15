@@ -21,6 +21,7 @@ class Game
     //
     Vector2 tileSize = new Vector2(80, 80);
     Vector2 playerPos = new Vector2(100, 100);
+    int PixelsPerSecond = 100;
     public Game()
     {
      using (StreamReader sr = File.OpenText(path))
@@ -45,29 +46,20 @@ class Game
 
     public void Update()
     {
-        // three steps
+        //three steps
         //1. collect input and predict the movement without colisions
         //2. check if the character intersects with a wall at those coordinates
         //3. change the movement appropriately
         //4. 
         //collect input and predict movement
         Vector2 predictedMovement = Vector2.Zero;
-        if (Engine.MousePosition.X > playerPos.X)
-        {
-            predictedMovement.X++;
-        }
-        else
-        {
-            predictedMovement.X -= 1;
-        }
-        if (Engine.MousePosition.Y > playerPos.Y)
-        {
-            predictedMovement.Y++;
-        }
-        else
-        {
-            predictedMovement.Y -= 1;
-        }
+        //collect unnormalized movement
+        if (Engine.GetKeyHeld(Key.Up))predictedMovement.Y -= 1;
+        if (Engine.GetKeyHeld(Key.Down))predictedMovement.Y +=1;
+        if (Engine.GetKeyHeld(Key.Right))predictedMovement.X += 1;
+        if (Engine.GetKeyHeld(Key.Left))predictedMovement.X -= 1;
+        //normalize the movement
+        predictedMovement = predictedMovement.Normalized()*(PixelsPerSecond*Engine.TimeDelta);
         //check if it intersects 
         Vector2 predictedPosition = predictedMovement + playerPos;
         //can simplify this to be faster
