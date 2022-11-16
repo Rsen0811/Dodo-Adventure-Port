@@ -20,14 +20,14 @@ class Room
     public Vector2 move(Vector2 start, Vector2 move)
     {
         Vector2 moveTo = start + move;
-        Bounds2 playerBounds = new Bounds2(new Vector2(start.X, start.X + PLAYER_SIZE.X),
-                                    new Vector2(start.Y, start.Y + PLAYER_SIZE.Y));
+        Bounds2 playerBounds = new Bounds2(new Vector2(moveTo.X, moveTo.X + PLAYER_SIZE.X),
+                                    new Vector2(moveTo.Y, moveTo.Y + PLAYER_SIZE.Y));
 
 
         foreach (Bounds2 rect in CollisionZones)
         { // position is actual x range and size is actually y range
-            if (checkIntervalIntersect(rect.Position, playerBounds.Position)) moveTo.X = 0;
-            if (checkIntervalIntersect(rect.Size, playerBounds.Size)) moveTo.Y = 0;
+            if (moveTo.X != 0 && checkIntervalIntersect(rect.Position, playerBounds.Position)) moveTo.X = 0;
+            if (moveTo.Y != 0 && checkIntervalIntersect(rect.Size, playerBounds.Size)) moveTo.Y = 0;
         }
 
         return moveTo;
