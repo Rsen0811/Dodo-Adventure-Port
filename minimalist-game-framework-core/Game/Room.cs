@@ -20,14 +20,20 @@ class Room
     public Vector2 move(Vector2 start, Vector2 move)
     {
         Vector2 moveTo = start + move;
-        Bounds2 playerBounds = new Bounds2(new Vector2(moveTo.X, moveTo.X + PLAYER_SIZE.X),
-                                    new Vector2(moveTo.Y, moveTo.Y + PLAYER_SIZE.Y));
-
+        Bounds2 playerBounds = getPlayerBounds(moveTo);
+        
 
         foreach (Bounds2 rect in CollisionZones)
         { // position is actual x range and size is actually y range
-            if (moveTo.X != 0 && checkIntervalIntersect(rect.Position, playerBounds.Position)) moveTo.X = 0;
-            if (moveTo.Y != 0 && checkIntervalIntersect(rect.Size, playerBounds.Size)) moveTo.Y = 0;
+            if (checkIntervalIntersect(rect.Position, playerBounds.Position)
+             && checkIntervalIntersect(rect.Size, playerBounds.Size))
+            { // doesnt handle corners
+                Vector2 moveToX = start + new Vector2(move.X, 0);
+                Vector2 moveToY = start + new Vector2(0, move.Y);
+                
+                return (!checkIntervalIntersect(rect.Position, playerBounds.Position) ? moveToY : moveToX);
+            }
+            else return moveTo;
         }
 
         return moveTo;
@@ -39,6 +45,12 @@ class Room
         if (player.Y < barrier.Y && player.Y > barrier.X) return true;    
         if (barrier.X < player.Y && barrier.X > player.X) return true;
         return false;
+    }
+    
+    private Bounds2 getPlayerBounds(Vector2 moveTo)
+    {
+         return new Bounds2(new Vector2(moveTo.X, moveTo.X + PLAYER_SIZE.X),
+                                    new Vector2(moveTo.Y, moveTo.Y + PLAYER_SIZE.Y));
     }
 
     public void drawRoom()
