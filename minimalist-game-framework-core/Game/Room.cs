@@ -6,7 +6,7 @@ class Room
 {
     Vector2 PLAYER_SIZE = new Vector2(24, 24);
     List<Bounds2> CollisionZones;
-    
+
     public Room()
     {
         CollisionZones = new List<Bounds2>();
@@ -21,7 +21,7 @@ class Room
     {
         Vector2 moveTo = start + move;
         Bounds2 playerBounds = getPlayerBounds(moveTo);
-        
+
 
         foreach (Bounds2 rect in CollisionZones)
         { // position is actual x range and size is actually y range
@@ -30,23 +30,34 @@ class Room
             { // doesnt handle corners
                 Vector2 moveToX = start + new Vector2(move.X, 0);
                 Vector2 moveToY = start + new Vector2(0, move.Y);
-                
-                return (!checkIntervalIntersect(rect.Position, playerBounds.Position) ? moveToY : moveToX);
+                if (checkIntervalIntersect(rect.Position, getPlayerBounds(moveToX).Position)
+             && checkIntervalIntersect(rect.Size, getPlayerBounds(moveToX).Size)) {
+                    moveTo.X = start.X;
+                }
+                if (checkIntervalIntersect(rect.Position, getPlayerBounds(moveToY).Position)
+             && checkIntervalIntersect(rect.Size, getPlayerBounds(moveToY).Size))
+                {
+                    moveTo.Y = start.Y;
+                }
             }
-            else return moveTo;
         }
-
         return moveTo;
     }
 
     private bool checkIntervalIntersect(Vector2 barrier, Vector2 player)
     {
         if (player.X < barrier.Y && player.X > barrier.X) return true;
-        if (player.Y < barrier.Y && player.Y > barrier.X) return true;    
+        if (player.Y < barrier.Y && player.Y > barrier.X) return true;
         if (barrier.X < player.Y && barrier.X > player.X) return true;
         return false;
     }
-    
+
+    private bool checkPosIntersect(Bounds2 rect, Bounds2 playerBounds)
+    {
+        return checkIntervalIntersect(rect.Position, playerBounds.Position)
+             && checkIntervalIntersect(rect.Size, playerBounds.Size);
+    }
+
     private Bounds2 getPlayerBounds(Vector2 moveTo)
     {
          return new Bounds2(new Vector2(moveTo.X, moveTo.X + PLAYER_SIZE.X),
