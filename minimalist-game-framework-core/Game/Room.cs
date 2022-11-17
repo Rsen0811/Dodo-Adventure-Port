@@ -23,19 +23,17 @@ class Room
         Bounds2 playerBounds = getPlayerBounds(moveTo);
 
 
-        foreach (Bounds2 rect in CollisionZones)
+        foreach (Bounds2 collider in CollisionZones)
         { // position is actual x range and size is actually y range
-            if (checkIntervalIntersect(rect.Position, playerBounds.Position)
-             && checkIntervalIntersect(rect.Size, playerBounds.Size))
+            if (checkRectIntersect(collider, playerBounds))
             { // doesnt handle corners
                 Vector2 moveToX = start + new Vector2(move.X, 0);
                 Vector2 moveToY = start + new Vector2(0, move.Y);
-                if (checkIntervalIntersect(rect.Position, getPlayerBounds(moveToX).Position)
-             && checkIntervalIntersect(rect.Size, getPlayerBounds(moveToX).Size)) {
+                if (checkRectIntersect(collider, getPlayerBounds(moveToX)))
+                {
                     moveTo.X = start.X;
                 }
-                if (checkIntervalIntersect(rect.Position, getPlayerBounds(moveToY).Position)
-             && checkIntervalIntersect(rect.Size, getPlayerBounds(moveToY).Size))
+                if (checkRectIntersect(collider, getPlayerBounds(moveToX)))
                 {
                     moveTo.Y = start.Y;
                 }
@@ -52,7 +50,7 @@ class Room
         return false;
     }
 
-    private bool checkPosIntersect(Bounds2 rect, Bounds2 playerBounds)
+    private bool checkRectIntersect(Bounds2 rect, Bounds2 playerBounds)
     {
         return checkIntervalIntersect(rect.Position, playerBounds.Position)
              && checkIntervalIntersect(rect.Size, playerBounds.Size);
