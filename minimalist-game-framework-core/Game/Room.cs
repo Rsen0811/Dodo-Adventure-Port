@@ -33,7 +33,7 @@ class Room
                 {
                     moveTo.X = start.X;
                 }
-                if (checkRectIntersect(collider, getPlayerBounds(moveToX)))
+                if (checkRectIntersect(collider, getPlayerBounds(moveToY)))
                 {
                     moveTo.Y = start.Y;
                 }
