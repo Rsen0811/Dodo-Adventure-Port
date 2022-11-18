@@ -8,6 +8,7 @@ class Game
 
     public Game()
     {
+        
     }
 
     public void Update()
