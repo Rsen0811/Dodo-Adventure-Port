@@ -10,10 +10,9 @@ class Room
     public Room()
     {
         CollisionZones = new List<Bounds2>();
-
-        CollisionZones.Add(new Bounds2(new Vector2(200, 250), new Vector2(200, 300)));
         CollisionZones.Add(new Bounds2(new Vector2(200, 250), new Vector2(100, 150)));
         CollisionZones.Add(new Bounds2(new Vector2(100, 200), new Vector2(150, 200)));
+        CollisionZones.Add(new Bounds2(new Vector2(200, 250), new Vector2(200, 300)));
         CollisionZones.Add(new Bounds2(new Vector2(250, 350), new Vector2(200, 250)));
     }
 
