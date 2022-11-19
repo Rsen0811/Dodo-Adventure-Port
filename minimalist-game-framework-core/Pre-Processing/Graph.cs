@@ -23,5 +23,11 @@ class Graph
     {
         return adjList[v, dir];
     }
+
+    public void addEdge(int v1, int v2, int dir)
+    {
+        adjList[v1, dir] = v2;
+        adjList[v2, Direction.reverse(dir)] = v1;
+    }
 }
 
