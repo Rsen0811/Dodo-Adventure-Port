@@ -10,8 +10,10 @@ class Room
     public Room()
     {
         CollisionZones = new List<Bounds2>();
+        CollisionZones.Add(new Bounds2(new Vector2(200, 250), new Vector2(100, 150)));
         CollisionZones.Add(new Bounds2(new Vector2(100, 200), new Vector2(150, 200)));
         CollisionZones.Add(new Bounds2(new Vector2(200, 250), new Vector2(200, 300)));
+        CollisionZones.Add(new Bounds2(new Vector2(250, 350), new Vector2(200, 250)));
     }
 
     public void Update()
@@ -38,14 +40,15 @@ class Room
                 {
                     moveTo.Y = start.Y;
                 }
-                if (moveTo.Equals(start) && Math.Abs(move.X) == Math.Abs(move.Y))
+                if (moveTo.Equals(start) && move.X == -move.Y) // bug only appears in y = -x motion
                 {
-                    //if on corner, corner deflects
-                    moveTo.X -= (moveTo.X > collider.Position.X) ? 1 : -1;
-                    moveTo.Y -= (moveTo.Y > collider.Size.X) ? -1 : 1;
+                    //if on corner, deflects of from it depending on which side the collsion is on
+                    moveTo.X += (moveTo.X > collider.Position.X) ? -1 : 1;
+                    moveTo.Y += (moveTo.Y > collider.Size.X) ? 1 : -1;
 
-                    
-                    foreach (Bounds2 otherBounds in CollisionZones)
+                    // yes, its n^2, but only for one edgecase, for one frame
+                    // makes sure deflection doesnt noclip though other block
+                    foreach (Bounds2 otherBounds in CollisionZones) 
                     {
                         if (checkRectIntersect(otherBounds, getPlayerBounds(moveTo))) return start;
                     }
@@ -77,8 +80,10 @@ class Room
 
     public void drawRoom()
     {
+        Engine.DrawRectSolid(new Bounds2(new Vector2(200, 100), new Vector2(50, 50)), Color.White);
         Engine.DrawRectSolid(new Bounds2(new Vector2(100, 150), new Vector2(100, 50)), Color.White);
         Engine.DrawRectSolid(new Bounds2(new Vector2(200, 200), new Vector2(50, 100)), Color.White);
+        Engine.DrawRectSolid(new Bounds2(new Vector2(250, 200), new Vector2(100, 50)), Color.White);
     }
 
     public void addObject()
