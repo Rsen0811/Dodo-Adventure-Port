@@ -22,6 +22,9 @@ class Room
 
     public Vector2 move(Vector2 start, Vector2 move)
     {
+        // why do calcs if none needed
+        if (move.Equals(Vector2.Zero)) return start;
+
         Vector2 moveTo = start + move;
         Bounds2 playerBounds = getPlayerBounds(moveTo);
 
