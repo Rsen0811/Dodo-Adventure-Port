@@ -7,7 +7,7 @@ class Game
     public static readonly Vector2 Resolution = new Vector2(640, 480);
     Texture player = Engine.LoadTexture("Player.png");
     Vector2 tileSize = new Vector2(32, 32);
-    Vector2 playerPos = new Vector2(100+100, 150);
+    Vector2 playerPos = new Vector2(210, 210);
     Room currentRoom = new Room();
 
     readonly int PLAYER_SPEED = 100;
@@ -41,7 +41,8 @@ class Game
         playerPos=currentRoom.move(playerPos, predictedMovement);
 
         // Graphics ------------------------------------
-        Engine.DrawTexture(player, playerPos, size: new Vector2(24, 24));
         currentRoom.drawRoom();
+        Engine.DrawTexture(player, playerPos, size: new Vector2(24, 24));
+        
     }
 }

@@ -37,6 +37,12 @@ class Room
                 {
                     moveTo.Y = start.Y;
                 }
+                if (moveTo.Equals(start) && Math.Abs(move.X) == Math.Abs(move.Y))
+                {
+                    //if on corner, corner deflects
+                    moveTo.X += (moveTo.X > collider.Position.X) ? 1 : -1;
+                    moveTo.Y += (moveTo.Y > collider.Size.X) ? -1 : 1;
+                }
             }
         }
         return moveTo;
@@ -57,9 +63,9 @@ class Room
     }
 
     private Bounds2 getPlayerBounds(Vector2 moveTo)
-    {
-         return new Bounds2(new Vector2(moveTo.X, moveTo.X + PLAYER_SIZE.X),
-                                    new Vector2(moveTo.Y, moveTo.Y + PLAYER_SIZE.Y));
+    { // a -1 makes the boundaries even
+         return new Bounds2(new Vector2(moveTo.X-1, moveTo.X + PLAYER_SIZE.X),
+                                    new Vector2(moveTo.Y-1, moveTo.Y + PLAYER_SIZE.Y));
     }
 
     public void drawRoom()
