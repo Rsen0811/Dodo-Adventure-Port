@@ -44,12 +44,16 @@ class Room
                     moveTo.Y = start.Y;
                 }
             }
-
-            if (moveTo.Equals(start) && move.X == move.Y && move.X < 0) // bug only appears in y = -x motion upwards
+            Console.WriteLine(checkBRCornerTouch(collider, playerBounds));
+            if (moveTo.Equals(start) && checkBRCornerTouch(collider, playerBounds)) // bug only appears in y = -x motion upwards
             {
                 //if on corner, deflects of from it depending on which side the collsion is on
-                moveTo.X += (moveTo.X > collider.Position.X) ? -1 : 1;
-                moveTo.Y += (moveTo.Y > collider.Size.X) ? 1 : -1;
+                if (move.X != 0)
+                {
+                    moveTo += new Vector2(-1, 1);
+                }
+                else moveTo += new Vector2(1, -1);
+
 
                 // yes, its n^2, but only for one edgecase, for one frame
                 // makes sure deflection doesnt noclip though other block
@@ -75,11 +79,16 @@ class Room
         return checkIntervalIntersect(rect.Position, playerBounds.Position)
              && checkIntervalIntersect(rect.Size, playerBounds.Size);
     }
+    private bool checkBRCornerTouch(Bounds2 rect, Bounds2 playerBounds)
+    {
+        return ((new Vector2(rect.Position.Y, rect.Size.Y)
+            - new Vector2(playerBounds.Position.X, playerBounds.Size.X)).Length() < 3.5);
+    }
 
     private Bounds2 getPlayerBounds(Vector2 moveTo)
     { // a -1 makes the boundaries even
-         return new Bounds2(new Vector2(moveTo.X-1, moveTo.X + PLAYER_SIZE.X),
-                                    new Vector2(moveTo.Y-1, moveTo.Y + PLAYER_SIZE.Y));
+        return new Bounds2(new Vector2(moveTo.X - 1, moveTo.X + PLAYER_SIZE.X),
+                                   new Vector2(moveTo.Y - 1, moveTo.Y + PLAYER_SIZE.Y));
     }
 
     public void drawRoom()
