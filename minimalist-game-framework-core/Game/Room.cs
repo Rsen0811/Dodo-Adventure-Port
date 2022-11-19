@@ -45,7 +45,7 @@ class Room
                 }
             }
 
-            if (moveTo.Equals(start) && move.X == move.Y) // bug only appears in y = -x motion
+            if (moveTo.Equals(start) && move.X == move.Y && move.X < 0) // bug only appears in y = -x motion upwards
             {
                 //if on corner, deflects of from it depending on which side the collsion is on
                 moveTo.X += (moveTo.X > collider.Position.X) ? -1 : 1;
