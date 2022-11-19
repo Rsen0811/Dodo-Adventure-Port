@@ -11,6 +11,7 @@ class Room
     {
         CollisionZones = new List<Bounds2>();
         CollisionZones.Add(new Bounds2(new Vector2(100, 200), new Vector2(150, 200)));
+        CollisionZones.Add(new Bounds2(new Vector2(200, 250), new Vector2(200, 300)));
     }
 
     public void Update()
@@ -40,8 +41,14 @@ class Room
                 if (moveTo.Equals(start) && Math.Abs(move.X) == Math.Abs(move.Y))
                 {
                     //if on corner, corner deflects
-                    moveTo.X += (moveTo.X > collider.Position.X) ? 1 : -1;
-                    moveTo.Y += (moveTo.Y > collider.Size.X) ? -1 : 1;
+                    moveTo.X -= (moveTo.X > collider.Position.X) ? 1 : -1;
+                    moveTo.Y -= (moveTo.Y > collider.Size.X) ? -1 : 1;
+
+                    
+                    foreach (Bounds2 otherBounds in CollisionZones)
+                    {
+                        if (checkRectIntersect(otherBounds, getPlayerBounds(moveTo))) return start;
+                    }
                 }
             }
         }
@@ -71,6 +78,7 @@ class Room
     public void drawRoom()
     {
         Engine.DrawRectSolid(new Bounds2(new Vector2(100, 150), new Vector2(100, 50)), Color.White);
+        Engine.DrawRectSolid(new Bounds2(new Vector2(200, 200), new Vector2(50, 100)), Color.White);
     }
 
     public void addObject()
