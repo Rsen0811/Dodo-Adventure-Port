@@ -44,20 +44,21 @@ class Room
                     moveTo.Y = start.Y;
                 }
             }
-        }
-        if (moveTo.Equals(start) && move.X == -move.Y) // bug only appears in y = -x motion
-        {
-            //if on corner, deflects of from it depending on which side the collsion is on            
-            moveTo.Y += (move.X < 0) ? 1 : -1;
-            
-            // yes, its n^2, but only for one edgecase, for one frame
-            // makes sure deflection doesnt noclip though other block
-            foreach (Bounds2 otherBounds in CollisionZones)
+
+            if (moveTo.Equals(start) && move.X == move.Y) // bug only appears in y = -x motion
             {
-                if (checkRectIntersect(otherBounds, getPlayerBounds(moveTo))) return start;
+                //if on corner, deflects of from it depending on which side the collsion is on
+                moveTo.X += (moveTo.X > collider.Position.X) ? -1 : 1;
+                moveTo.Y += (moveTo.Y > collider.Size.X) ? 1 : -1;
+
+                // yes, its n^2, but only for one edgecase, for one frame
+                // makes sure deflection doesnt noclip though other block
+                foreach (Bounds2 otherBounds in CollisionZones)
+                {
+                    if (checkRectIntersect(otherBounds, getPlayerBounds(moveTo))) return start;
+                }
             }
         }
-
         return moveTo;
     }
 
