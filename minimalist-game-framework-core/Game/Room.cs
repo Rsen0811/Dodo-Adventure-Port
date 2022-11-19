@@ -10,7 +10,11 @@ class Room
     public Room()
     {
         CollisionZones = new List<Bounds2>();
+
+        CollisionZones.Add(new Bounds2(new Vector2(200, 250), new Vector2(200, 300)));
+        CollisionZones.Add(new Bounds2(new Vector2(200, 250), new Vector2(100, 150)));
         CollisionZones.Add(new Bounds2(new Vector2(100, 200), new Vector2(150, 200)));
+        CollisionZones.Add(new Bounds2(new Vector2(250, 350), new Vector2(200, 250)));
     }
 
     public void Update()
@@ -19,6 +23,9 @@ class Room
 
     public Vector2 move(Vector2 start, Vector2 move)
     {
+        // why do calcs if none needed
+        if (move.Equals(Vector2.Zero)) return start;
+
         Vector2 moveTo = start + move;
         Bounds2 playerBounds = getPlayerBounds(moveTo);
 
@@ -37,11 +44,23 @@ class Room
                 {
                     moveTo.Y = start.Y;
                 }
-                if (moveTo.Equals(start) && Math.Abs(move.X) == Math.Abs(move.Y))
+            }
+            Console.WriteLine(checkBRCornerTouch(collider, playerBounds));
+            if (moveTo.Equals(start) && checkBRCornerTouch(collider, playerBounds)) // bug only appears in y = -x motion upwards
+            {
+                //if on corner, deflects of from it depending on which side the collsion is on
+                if (move.X != 0)
                 {
-                    //if on corner, corner deflects
-                    moveTo.X += (moveTo.X > collider.Position.X) ? 1 : -1;
-                    moveTo.Y += (moveTo.Y > collider.Size.X) ? -1 : 1;
+                    moveTo += new Vector2(-1, 1);
+                }
+                else moveTo += new Vector2(1, -1);
+
+
+                // yes, its n^2, but only for one edgecase, for one frame
+                // makes sure deflection doesnt noclip though other block
+                foreach (Bounds2 otherBounds in CollisionZones)
+                {
+                    if (checkRectIntersect(otherBounds, getPlayerBounds(moveTo))) return start;
                 }
             }
         }
@@ -61,16 +80,24 @@ class Room
         return checkIntervalIntersect(rect.Position, playerBounds.Position)
              && checkIntervalIntersect(rect.Size, playerBounds.Size);
     }
+    private bool checkBRCornerTouch(Bounds2 rect, Bounds2 playerBounds)
+    {
+        return ((new Vector2(rect.Position.Y, rect.Size.Y)
+            - new Vector2(playerBounds.Position.X, playerBounds.Size.X)).Length() < 3.5);
+    }
 
     private Bounds2 getPlayerBounds(Vector2 moveTo)
     { // a -1 makes the boundaries even
-         return new Bounds2(new Vector2(moveTo.X-1, moveTo.X + PLAYER_SIZE.X),
-                                    new Vector2(moveTo.Y-1, moveTo.Y + PLAYER_SIZE.Y));
+        return new Bounds2(new Vector2(moveTo.X - 1, moveTo.X + PLAYER_SIZE.X),
+                                   new Vector2(moveTo.Y - 1, moveTo.Y + PLAYER_SIZE.Y));
     }
 
     public void drawRoom()
     {
+        Engine.DrawRectSolid(new Bounds2(new Vector2(200, 100), new Vector2(50, 50)), Color.White);
         Engine.DrawRectSolid(new Bounds2(new Vector2(100, 150), new Vector2(100, 50)), Color.White);
+        Engine.DrawRectSolid(new Bounds2(new Vector2(200, 200), new Vector2(50, 100)), Color.White);
+        Engine.DrawRectSolid(new Bounds2(new Vector2(250, 200), new Vector2(100, 50)), Color.White);
     }
 
     public void addObject()
