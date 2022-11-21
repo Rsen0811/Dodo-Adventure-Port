@@ -12,6 +12,6 @@ class Player
     
     public Vector2 getPos()
     {
-        return Vector2.Zero;
+        return playerPos;
     }
 }
