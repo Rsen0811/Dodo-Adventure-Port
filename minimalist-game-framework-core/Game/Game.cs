@@ -5,7 +5,7 @@ class Game
 {
     public static readonly string Title = "Minimalist Game Framework";
     public static readonly Vector2 Resolution = new Vector2(640, 480);
-    Texture player = Engine.LoadTexture("Player.png");
+    Texture player = Engine.LoadTexture("textures/player.png");
     Vector2 tileSize = new Vector2(32, 32);
     Vector2 playerPos = new Vector2(250, 300);
     Room currentRoom = new Room();
