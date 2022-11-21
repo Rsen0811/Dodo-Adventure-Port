@@ -13,13 +13,8 @@ class RectangleHealing
         };
         int rows=3;
         int columns=3;
-        //idea
-        //read the number of 1's
-        //Make a graph
-        //
-        //
-        //
         
+        //adding map to the graph
         Graph map = new Graph(rows*columns);
         for(int i = 0; i < rows; i++)
         {
