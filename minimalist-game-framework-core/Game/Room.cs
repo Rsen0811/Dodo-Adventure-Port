@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using System.IO;
+
 class Room
 {
     Vector2 PLAYER_SIZE = new Vector2(24, 24);
@@ -112,6 +114,23 @@ class Room
     public void pickup()
     {
 
+    }
+
+    //read rectangle collisions from a text file
+    public void readCollisionZones(String file)
+    {
+        using (StreamReader sr = File.OpenText(file))
+        {
+            string s;
+            while((s = sr.ReadLine()) != null)
+            {
+                String[] nums = s.Split(',');
+                
+                CollisionZones.Add(new Bounds2(new Vector2(float.Parse(nums[0]), float.Parse(nums[1])), 
+                                                new Vector2(float.Parse(nums[2]), float.Parse(nums[3]))));
+
+            }
+        }
     }
 }
 
