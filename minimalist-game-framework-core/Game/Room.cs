@@ -84,6 +84,7 @@ class Room
 
     }
 
+    //read rectangle collisions from a text file
     public void readCollisionZones(String file)
     {
         using (StreamReader sr = File.OpenText(file))
@@ -92,12 +93,9 @@ class Room
             while((s = sr.ReadLine()) != null)
             {
                 String[] nums = s.Split(',');
-                List<float> floats = new List<float>();
-                foreach(String temp in nums)
-                {
-                    floats.Add((float) Double.Parse(temp));
-                }
-                CollisionZones.Add(new Bounds2(new Vector2( floats[0], floats[1]), new Vector2(floats[2], floats[3])));
+                
+                CollisionZones.Add(new Bounds2(new Vector2(float.Parse(nums[0]), float.Parse(nums[1])), 
+                                                new Vector2(float.Parse(nums[2]), float.Parse(nums[3]))));
 
             }
         }
