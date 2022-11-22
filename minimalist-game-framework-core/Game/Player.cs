@@ -5,29 +5,46 @@ using System.Text;
 
 namespace Game.Game
 {
+    public class Item
+    {
+
+    }
     internal class Player
     {
         Vector2 pos;
         bool active;
         Item holding;
         Vector2 currRoom;
+        readonly int SPEED = 100;
+        Texture player = Engine.LoadTexture("textures/player.png");
 
-        public Vector2 move()
+        public Player(Vector2 position, Vector2 spawn)
         {
-            return Vector2.Zero;
+            pos = position;
+            currRoom = spawn;
+        }
+        public Vector2 move(Vector2 newPos)
+        {
+            if(active)
+            {
+                pos = newPos;
+            }
+            
+
+            return newPos;
         }
         public Item pickup()
         {
-            return Item;
+            return null;
         }
         public Item drop()
         {
-            return Item;
+            return null;
         }
 
-        public Vector2 drawPlayer()
+        public void drawPlayer()
         {
-            return Vector2.Zero;
+            Engine.DrawTexture(player, pos, size: new Vector2(24, 24));
         }
     }
 }
