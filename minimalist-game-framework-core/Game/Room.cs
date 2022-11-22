@@ -11,11 +11,7 @@ class Room
 
     public Room()
     {
-        CollisionZones = new List<Bounds2>();
-        CollisionZones.Add(new Bounds2(new Vector2(200, 250), new Vector2(100, 150)));
-        CollisionZones.Add(new Bounds2(new Vector2(100, 200), new Vector2(150, 200)));
-        CollisionZones.Add(new Bounds2(new Vector2(200, 250), new Vector2(200, 300)));
-        CollisionZones.Add(new Bounds2(new Vector2(250, 350), new Vector2(200, 250)));
+        CollisionZones = readCollisionZones("assets/rooms/temp/collision.txt");
     }
 
     public void Update()
@@ -117,20 +113,22 @@ class Room
     }
 
     //read rectangle collisions from a text file
-    public void readCollisionZones(String file)
+    public List<Bounds2> readCollisionZones(String file)
     {
+        List<Bounds2> loader = new List<Bounds2>();
+
         using (StreamReader sr = File.OpenText(file))
         {
             string s;
-            while((s = sr.ReadLine()) != null)
+            while ((s = sr.ReadLine()) != null)
             {
                 String[] nums = s.Split(',');
-                
-                CollisionZones.Add(new Bounds2(new Vector2(float.Parse(nums[0]), float.Parse(nums[1])), 
-                                                new Vector2(float.Parse(nums[2]), float.Parse(nums[3]))));
 
+                loader.Add(new Bounds2(new Vector2(float.Parse(nums[0]), float.Parse(nums[1])),
+                                                new Vector2(float.Parse(nums[2]), float.Parse(nums[3]))));
             }
         }
+        return loader;
     }
 }
 
