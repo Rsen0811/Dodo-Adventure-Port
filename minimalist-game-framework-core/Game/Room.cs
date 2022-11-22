@@ -8,10 +8,13 @@ class Room
 {
     Vector2 PLAYER_SIZE = new Vector2(24, 24);
     List<Bounds2> CollisionZones;
+    Texture bg;
+    String name;
 
-    public Room()
-    {
-        CollisionZones = readCollisionZones("assets/rooms/temp/collision.txt");
+    public Room(Vector2 pos) { 
+        name = "" + pos.X + pos.Y;
+        CollisionZones = readCollisionZones("assets/rooms/" + name + "/" + name + "c.txt");
+        bg = Engine.LoadTexture("assets/rooms/" + name + "/" + name + "i.png");
     }
 
     public void Update()
