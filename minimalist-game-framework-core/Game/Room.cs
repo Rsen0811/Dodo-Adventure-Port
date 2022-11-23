@@ -13,8 +13,8 @@ class Room
 
     public Room(Vector2 pos) { 
         name = "" + pos.X + pos.Y;
-        CollisionZones = readCollisionZones("assets/rooms/" + name + "/" + name + "c.txt");
-        bg = Engine.LoadTexture("assets/rooms/" + name + "/" + name + "i.png");
+        CollisionZones = readCollisionZones("rooms/" + name + "/" + name + "c.txt");
+        bg = Engine.LoadTexture("rooms/" + name + "/" + name + "i.png");
     }
 
     public void Update()
@@ -94,10 +94,7 @@ class Room
 
     public void drawRoom()
     {
-        Engine.DrawRectSolid(new Bounds2(new Vector2(200, 100), new Vector2(50, 50)), Color.White);
-        Engine.DrawRectSolid(new Bounds2(new Vector2(100, 150), new Vector2(100, 50)), Color.White);
-        Engine.DrawRectSolid(new Bounds2(new Vector2(200, 200), new Vector2(50, 100)), Color.White);
-        Engine.DrawRectSolid(new Bounds2(new Vector2(250, 200), new Vector2(100, 50)), Color.White);
+        Engine.DrawTexture(bg, new Vector2(0, 0));
     }
 
     public void addObject()
@@ -120,14 +117,14 @@ class Room
     {
         List<Bounds2> loader = new List<Bounds2>();
 
-        using (StreamReader sr = File.OpenText(file))
+        using (StreamReader sr = File.OpenText("Assets/" + file))
         {
             string s;
             while ((s = sr.ReadLine()) != null)
             {
-                String[] nums = s.Split(',');
+                String[] nums = s.Split(' ');
 
-                loader.Add(new Bounds2(new Vector2(float.Parse(nums[0]), float.Parse(nums[1])),
+                loader.Add(new Bounds2(new Vector2(float.Parse(nums[0]) , float.Parse(nums[1])),
                                                 new Vector2(float.Parse(nums[2]), float.Parse(nums[3]))));
             }
         }
