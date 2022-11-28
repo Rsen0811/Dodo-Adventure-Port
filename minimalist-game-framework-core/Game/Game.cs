@@ -7,7 +7,7 @@ class Game
     public static readonly Vector2 Resolution = new Vector2(960, 640);
     Texture player = Engine.LoadTexture("textures/player.png");
     Vector2 tileSize = new Vector2(32, 32);
-    Vector2 playerPos = new Vector2(250, 300);
+    Vector2 playerPos = new Vector2(416, 584);
     Room currentRoom = new Room(new Vector2(2, 4));
 
     readonly int PLAYER_SPEED = 150;

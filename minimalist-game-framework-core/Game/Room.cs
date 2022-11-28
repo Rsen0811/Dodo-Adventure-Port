@@ -45,28 +45,6 @@ class Room
                     moveTo.Y = start.Y;
                 }
             }
-            //Console.WriteLine(checkBRCornerTouch(collider, playerBounds));
-            int dir = checkBRCornerTouch(collider, playerBounds);
-            if (moveTo.Equals(start) && dir != 0) // bug only appears in y = -x motion upwards
-            {
-                //if on corner, deflects of from it depending on which side the collsion is on
-                if (dir == -1)
-                {
-                    if (move.X != 0)
-                    {
-                        moveTo += new Vector2(-1, 1);
-                    }
-                    else moveTo += new Vector2(1, -1);
-                }
-
-
-                // yes, its n^2, but only for one edgecase, for one frame
-                // makes sure deflection doesnt noclip though other block
-                foreach (Bounds2 otherBounds in CollisionZones)
-                {
-                    if (checkRectIntersect(otherBounds, getPlayerBounds(moveTo))) return start;
-                }
-            }
         }
         return moveTo;
     }
@@ -84,26 +62,11 @@ class Room
         return checkIntervalIntersect(rect.Position, playerBounds.Position)
              && checkIntervalIntersect(rect.Size, playerBounds.Size);
     }
-    private int checkBRCornerTouch(Bounds2 rect, Bounds2 playerBounds)
-    {
-        if ((new Vector2(rect.Position.Y, rect.Size.Y) //y = -x
-            - new Vector2(playerBounds.Position.X, playerBounds.Size.X)).Length() < 3.5)
-        {
-            return -1;
-        }
-                        
-        if ((new Vector2(rect.Position.X, rect.Size.X) // y = x
-            - new Vector2(playerBounds.Position.Y, playerBounds.Size.Y)).Length() < 3.5)
-        {
-            return 1;
-        }
-        return 0;
-    }
-
+    
     private Bounds2 getPlayerBounds(Vector2 moveTo)
     { // a -1 makes the boundaries even
-        return new Bounds2(new Vector2(moveTo.X - 1, moveTo.X + PLAYER_SIZE.X),
-                                   new Vector2(moveTo.Y - 1, moveTo.Y + PLAYER_SIZE.Y));
+        return new Bounds2(new Vector2(moveTo.X, moveTo.X + PLAYER_SIZE.X),
+                                   new Vector2(moveTo.Y, moveTo.Y + PLAYER_SIZE.Y));
     }
 
     public void drawRoom()
