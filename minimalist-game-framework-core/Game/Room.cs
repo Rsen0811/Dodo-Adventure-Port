@@ -13,8 +13,8 @@ class Room
 
     public Room(Vector2 pos) { 
         name = "" + pos.X + pos.Y;
-        CollisionZones = readCollisionZones("assets/rooms/" + name + "/" + name + "c.txt");
-        bg = Engine.LoadTexture("assets/rooms/" + name + "/" + name + "i.png");
+        CollisionZones = readCollisionZones("rooms/" + name + "/" + name + "c.txt");
+        bg = Engine.LoadTexture("rooms/" + name + "/" + name + "i.png");
     }
 
     public void Update()
@@ -45,15 +45,19 @@ class Room
                     moveTo.Y = start.Y;
                 }
             }
-            Console.WriteLine(checkBRCornerTouch(collider, playerBounds));
-            if (moveTo.Equals(start) && checkBRCornerTouch(collider, playerBounds)) // bug only appears in y = -x motion upwards
+            //Console.WriteLine(checkBRCornerTouch(collider, playerBounds));
+            int dir = checkBRCornerTouch(collider, playerBounds);
+            if (moveTo.Equals(start) && dir != 0) // bug only appears in y = -x motion upwards
             {
                 //if on corner, deflects of from it depending on which side the collsion is on
-                if (move.X != 0)
+                if (dir == -1)
                 {
-                    moveTo += new Vector2(-1, 1);
+                    if (move.X != 0)
+                    {
+                        moveTo += new Vector2(-1, 1);
+                    }
+                    else moveTo += new Vector2(1, -1);
                 }
-                else moveTo += new Vector2(1, -1);
 
 
                 // yes, its n^2, but only for one edgecase, for one frame
@@ -80,10 +84,20 @@ class Room
         return checkIntervalIntersect(rect.Position, playerBounds.Position)
              && checkIntervalIntersect(rect.Size, playerBounds.Size);
     }
-    private bool checkBRCornerTouch(Bounds2 rect, Bounds2 playerBounds)
+    private int checkBRCornerTouch(Bounds2 rect, Bounds2 playerBounds)
     {
-        return ((new Vector2(rect.Position.Y, rect.Size.Y)
-            - new Vector2(playerBounds.Position.X, playerBounds.Size.X)).Length() < 3.5);
+        if ((new Vector2(rect.Position.Y, rect.Size.Y) //y = -x
+            - new Vector2(playerBounds.Position.X, playerBounds.Size.X)).Length() < 3.5)
+        {
+            return -1;
+        }
+                        
+        if ((new Vector2(rect.Position.X, rect.Size.X) // y = x
+            - new Vector2(playerBounds.Position.Y, playerBounds.Size.Y)).Length() < 3.5)
+        {
+            return 1;
+        }
+        return 0;
     }
 
     private Bounds2 getPlayerBounds(Vector2 moveTo)
@@ -94,10 +108,7 @@ class Room
 
     public void drawRoom()
     {
-        Engine.DrawRectSolid(new Bounds2(new Vector2(200, 100), new Vector2(50, 50)), Color.White);
-        Engine.DrawRectSolid(new Bounds2(new Vector2(100, 150), new Vector2(100, 50)), Color.White);
-        Engine.DrawRectSolid(new Bounds2(new Vector2(200, 200), new Vector2(50, 100)), Color.White);
-        Engine.DrawRectSolid(new Bounds2(new Vector2(250, 200), new Vector2(100, 50)), Color.White);
+        Engine.DrawTexture(bg, new Vector2(0, 0));
     }
 
     public void addObject()
@@ -120,14 +131,14 @@ class Room
     {
         List<Bounds2> loader = new List<Bounds2>();
 
-        using (StreamReader sr = File.OpenText(file))
+        using (StreamReader sr = File.OpenText("Assets/" + file))
         {
             string s;
             while ((s = sr.ReadLine()) != null)
             {
-                String[] nums = s.Split(',');
+                String[] nums = s.Split(' ');
 
-                loader.Add(new Bounds2(new Vector2(float.Parse(nums[0]), float.Parse(nums[1])),
+                loader.Add(new Bounds2(new Vector2(float.Parse(nums[0]) , float.Parse(nums[1])),
                                                 new Vector2(float.Parse(nums[2]), float.Parse(nums[3]))));
             }
         }
