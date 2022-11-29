@@ -15,6 +15,7 @@ class Game
     readonly int PLAYER_SPEED = 400;
     public Game()
     {
+        
     }
 
     public void Update()
