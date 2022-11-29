@@ -1,10 +1,13 @@
 ﻿using System;
 
-public class Rect
+class Rect
 {
-	public int X1
-	public Class1()
-	{
+	public Range X;
+	public Range Y;
 
+	public Rect(Range X, Range Y)
+	{
+		this.X = X;
+		this.Y = Y;
 	}
 }
