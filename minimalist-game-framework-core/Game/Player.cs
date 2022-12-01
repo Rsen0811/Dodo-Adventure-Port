@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -22,8 +22,6 @@ class Player
         {
             pos = newPos;
         }
-
-
         return newPos;
     }
     public Item pickup()
