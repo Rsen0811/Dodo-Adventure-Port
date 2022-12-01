@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 class Dodo
@@ -15,6 +16,7 @@ class Dodo
     private Texture dodoAlive;
     private Texture dodoDead;
     private Texture dodoDamaged;
+    private bool mirror;
 
     private Random random = new Random();
 
@@ -23,7 +25,7 @@ class Dodo
     {
         this.dodoPos = dodoPos;
         walkSpeed = 1;
-        runSpeed = 3;
+        runSpeed = 5;
         chaseDist = 400;
         move = new Vector2(random.Next(), random.Next());
         dodoAlive = Engine.LoadTexture("textures/dodoAlive.png");
@@ -53,23 +55,21 @@ class Dodo
             if (damTimer > 0)
             {
                 damTimer -= Engine.TimeDelta;
-                displayDodoDamaged();
+                displayDodoDamaged(mirror);
             }
             else
             {
                 if (dist > chaseDist)
                 {
                     Idle();
-                    displayDodoAlive();
                 }
                 else
                 {
                     Run(playerPos);
-                    displayDodoAlive();
                 }
             }
         }
-        else displayDodoDead();
+        else displayDodoDead(mirror);
     }
     
     private void Idle()
@@ -81,6 +81,8 @@ class Dodo
         }
         move = move.Normalized() * walkSpeed;
         dodoPos = Move(dodoPos, move);
+        mirror = move.X < 0;
+        displayDodoAlive(mirror);
         timer += Engine.TimeDelta;
     }
 
@@ -89,6 +91,8 @@ class Dodo
         Vector2 dir = new Vector2(playerPos.X - dodoPos.X , playerPos.Y - dodoPos.Y).Normalized();
         Vector2 move = dir * runSpeed;
         dodoPos = Move(dodoPos, move);
+        mirror = move.X < 0;
+        displayDodoAlive(mirror);
     }
     
     public Vector2 Move(Vector2 start, Vector2 move)
@@ -105,18 +109,21 @@ class Dodo
         return moveTo;
     }
 
-    private void displayDodoAlive()
+    private void displayDodoAlive(bool mirror)
     {
-        Engine.DrawTexture(dodoAlive, dodoPos);
+        Engine.DrawTexture(dodoAlive, dodoPos, mirror: mirror ? TextureMirror.Horizontal : 
+            TextureMirror.None);
     }
 
-    private void displayDodoDead()
+    private void displayDodoDead(bool mirror)
     {
-        Engine.DrawTexture(dodoDead, dodoPos);
+        Engine.DrawTexture(dodoDead, dodoPos, mirror: mirror ? TextureMirror.Horizontal :
+            TextureMirror.None);
     }
-    private void displayDodoDamaged()
+    private void displayDodoDamaged(bool mirror)
     {
-        Engine.DrawTexture(dodoDamaged, dodoPos);
+        Engine.DrawTexture(dodoDamaged, dodoPos, mirror: mirror ? TextureMirror.Horizontal :
+            TextureMirror.None);
     }
 
     public void Damage()
