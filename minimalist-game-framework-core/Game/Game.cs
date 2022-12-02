@@ -10,12 +10,13 @@ class Game
     Vector2 playerPos = new Vector2(250, 300);
     Vector2 currRoom = new Vector2(2, 4);
     public static readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
-    Room currentRoom = new Room(new Vector2(2, 4));
+    Room[,] rooms;
 
     readonly int PLAYER_SPEED = 400;
     public Game()
     {
-        
+        rooms = new Room[30, 20];
+        rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
     }
 
     public void Update()
@@ -41,11 +42,11 @@ class Game
         //normalize the movement
         predictedMovement = predictedMovement.Normalized() * (PLAYER_SPEED * Engine.TimeDelta);
         //check if it intersects 
-        playerPos=currentRoom.move(playerPos, predictedMovement);
+        playerPos=rooms[(int)currRoom.X, (int)currRoom.Y].move(playerPos, predictedMovement);
         wrap();
 
         // Graphics ------------------------------------
-        currentRoom.drawRoom();
+        rooms[(int)currRoom.X, (int)currRoom.Y].drawRoom();
         Engine.DrawTexture(player, playerPos, size: new Vector2(24, 24));
         
     }
@@ -78,8 +79,10 @@ class Game
                 playerPos.Y = Resolution.Y - 1;
                 currRoom.Y -= 1;
                 break;
-
         }
-
+        if (rooms[(int)currRoom.X, (int)currRoom.Y] == null)
+        {
+            rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
+        }
     }
 }
