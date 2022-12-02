@@ -8,13 +8,16 @@ class Player
     bool active;
     Item holding;
     Vector2 currRoom;
+    Vector2 checkpoint;
+    Vector2 checkpointPos;
     readonly int SPEED = 100;
     Texture player = Engine.LoadTexture("textures/player.png");
 
-    public Player(Vector2 position, Vector2 spawn)
+    public Player(Vector2 position, Vector2 room)
     {
         pos = position;
-        currRoom = spawn;
+        currRoom = room;
+        checkpoint = room;
     }
     public Vector2 move(Vector2 newPos)
     {
@@ -36,6 +39,17 @@ class Player
     public void drawPlayer()
     {
         Engine.DrawTexture(player, pos, size: new Vector2(24, 24));
+    }
+
+    public Vector2 position()
+    {
+        return pos;
+    }
+
+    public void respawn()
+    {
+        currRoom = checkpoint;
+        pos = checkpointPos
     }
 }
 
