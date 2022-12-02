@@ -5,18 +5,24 @@ class Game
 {
     public static readonly string Title = "Minimalist Game Framework";
     public static readonly Vector2 Resolution = new Vector2(960, 640);
-    Texture player = Engine.LoadTexture("textures/player.png");
-    Vector2 tileSize = new Vector2(32, 32);
-    Vector2 playerPos = new Vector2(250, 300);
-    Vector2 currRoom = new Vector2(2, 4);
     public static readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
+    readonly int PLAYER_SPEED = 400;
+
+    Vector2 tileSize = new Vector2(32, 32);
+    Vector2 startpos = new Vector2(250, 300);
+    Vector2 currRoom = new Vector2(2, 4);
+   
+
+    Player player;
 
     Room[,] rooms;
-    readonly int PLAYER_SPEED = 400;
+    
+
     public Game()
-    {
+    {        
         rooms = new Room[30, 20];
         rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
+        player = new Player(startpos, currRoom);
     }
 
     public void Update()
@@ -42,20 +48,21 @@ class Game
         //normalize the movement
         predictedMovement = predictedMovement.Normalized() * (PLAYER_SPEED * Engine.TimeDelta);
         //check if it intersects 
-        playerPos=rooms[(int)currRoom.X, (int)currRoom.Y].move(playerPos, predictedMovement);
+        player.move(rooms[(int)currRoom.X, (int)currRoom.Y].move(player.position(), predictedMovement));
         wrap();
 
         // Graphics ------------------------------------
         rooms[(int)currRoom.X, (int)currRoom.Y].drawRoom();
-        Engine.DrawTexture(player, playerPos, size: new Vector2(24, 24));
+        player.drawPlayer();
 
         // Dodo ----------------------------------------
-        testDodo.Update(playerPos, Resolution.X);
         
     }
 
     public void wrap()
     {
+        Vector2 playerPos = player.position();
+
         if (playerPos.X > Resolution.X) swapRoom(0);
         if (playerPos.X + PLAYER_SIZE.X < 0) swapRoom(1);
         if (playerPos.Y > Resolution.Y) swapRoom(2);
@@ -64,6 +71,7 @@ class Game
 
     public void swapRoom(int i)
     {
+        Vector2 playerPos = player.position();
         switch(i)
         {
             case 0:
@@ -87,5 +95,6 @@ class Game
         {
             rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
         }
+        player.move(playerPos);
     }
 }

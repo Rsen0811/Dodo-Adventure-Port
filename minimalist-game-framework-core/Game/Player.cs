@@ -7,25 +7,26 @@ class Player
     Vector2 pos;
     bool active;
     Item holding;
-    Vector2 currRoom;
-    Vector2 checkpoint;
+    Vector2 checkpointRoom;
     Vector2 checkpointPos;
-    readonly int SPEED = 100;
     Texture player = Engine.LoadTexture("textures/player.png");
 
     public Player(Vector2 position, Vector2 room)
     {
+        active = true;
         pos = position;
-        currRoom = room;
-        checkpoint = room;
+        checkpointPos = position;
+        checkpointRoom = room;
     }
-    public Vector2 move(Vector2 newPos)
+    public bool move(Vector2 newPos)
     {
+
         if (active)
         {
             pos = newPos;
+            return true;
         }
-        return newPos;
+        return false;
     }
     public Item pickup()
     {
@@ -46,10 +47,10 @@ class Player
         return pos;
     }
 
-    public void respawn()
+    public Vector2 respawn()
     {
-        currRoom = checkpoint;
-        pos = checkpointPos
+        pos = checkpointPos;
+        return checkpointRoom;
     }
 }
 
