@@ -53,8 +53,8 @@ class Game
 
     public void wrap()
     {
-        if(playerPos.X > Resolution.X) swapRoom(0);
-        if(playerPos.X + PLAYER_SIZE.X < 0) swapRoom(1);
+        if (playerPos.X > Resolution.X) swapRoom(0);
+        if (playerPos.X + PLAYER_SIZE.X < 0) swapRoom(1);
         if (playerPos.Y > Resolution.Y) swapRoom(2);
         if (playerPos.Y + PLAYER_SIZE.Y < 0) swapRoom(3);
     }
@@ -64,19 +64,19 @@ class Game
         switch(i)
         {
             case 0:
-                playerPos.X = 1 - PLAYER_SIZE.X;
+                playerPos.X = 1 ;
                 currRoom.X += 1;
                 break;
             case 1:
-                playerPos.X = Resolution.X - 1;
+                playerPos.X = Resolution.X - PLAYER_SIZE.X;
                 currRoom.X -= 1;
                 break;
             case 2:
-                playerPos.Y = 1 - PLAYER_SIZE.Y;
+                playerPos.Y = 1;
                 currRoom.Y += 1;
                 break;
             case 3:
-                playerPos.Y = Resolution.Y - 1;
+                playerPos.Y = Resolution.Y - PLAYER_SIZE.Y;
                 currRoom.Y -= 1;
                 break;
         }
