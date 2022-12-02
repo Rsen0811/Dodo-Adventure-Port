@@ -10,8 +10,8 @@ class Game
     Vector2 playerPos = new Vector2(250, 300);
     Vector2 currRoom = new Vector2(2, 4);
     public static readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
-    Room[,] rooms;
 
+    Room[,] rooms;
     readonly int PLAYER_SPEED = 400;
     public Game()
     {
@@ -48,6 +48,9 @@ class Game
         // Graphics ------------------------------------
         rooms[(int)currRoom.X, (int)currRoom.Y].drawRoom();
         Engine.DrawTexture(player, playerPos, size: new Vector2(24, 24));
+
+        // Dodo ----------------------------------------
+        testDodo.Update(playerPos, Resolution.X);
         
     }
 
