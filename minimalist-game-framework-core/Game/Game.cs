@@ -46,8 +46,8 @@ class Game
         // Processing ----------------------------------
                      
         //update player
-        player.move(moveVector, rooms[(int)currRoom.X, (int)currRoom.Y]);
-        wrap();
+        bool successfulMove = player.move(moveVector, rooms[(int)currRoom.X, (int)currRoom.Y]);
+        if (successfulMove) wrap();
 
         // Graphics ------------------------------------
         rooms[(int)currRoom.X, (int)currRoom.Y].drawRoom();
@@ -72,7 +72,7 @@ class Game
         switch(i)
         {
             case 0:
-                playerPos.X = 1 ;
+                playerPos.X = 1;
                 currRoom.X += 1;
                 break;
             case 1:

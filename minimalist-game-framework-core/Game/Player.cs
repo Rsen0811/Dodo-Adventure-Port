@@ -23,7 +23,7 @@ class Player
     {
         bool absolute = (currRoom == null);
 
-        if (!active) return false;
+        if (!active || moveVector.Equals(Vector2.Zero)) return false;
         if (absolute)
         {
             pos = moveVector;
