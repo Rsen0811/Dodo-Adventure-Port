@@ -16,7 +16,6 @@ class Game
     Player player;
     Room[,] rooms;
     
-
     public Game()
     {        
         rooms = new Room[30, 20];
@@ -55,7 +54,6 @@ class Game
         player.drawPlayer();
 
         // Dodo ----------------------------------------
-        
     }
 
     public void wrap()
