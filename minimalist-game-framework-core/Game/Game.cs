@@ -6,7 +6,7 @@ class Game
     public static readonly string Title = "Minimalist Game Framework";
     public static readonly Vector2 Resolution = new Vector2(960, 640);
     public static readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
-    readonly int PLAYER_SPEED = 400;
+    //readonly int PLAYER_SPEED = 400;
 
     Vector2 tileSize = new Vector2(32, 32);
     Vector2 startpos = new Vector2(250, 300);
@@ -14,7 +14,6 @@ class Game
    
 
     Player player;
-
     Room[,] rooms;
     
 
@@ -34,21 +33,21 @@ class Game
         
         // Input ---------------------------------------
         //collect input and predict movement
-        Vector2 predictedMovement = Vector2.Zero;
+        Vector2 moveVector = Vector2.Zero;
         //collect unnormalized movement
-        if (Engine.GetKeyHeld(Key.Up)) predictedMovement.Y -= 1;
-        if (Engine.GetKeyHeld(Key.Down)) predictedMovement.Y += 1;
-        if (Engine.GetKeyHeld(Key.Right)) predictedMovement.X += 1;
-        if (Engine.GetKeyHeld(Key.Left)) predictedMovement.X -= 1;
+        if (Engine.GetKeyHeld(Key.Up)) moveVector.Y -= 1;
+        if (Engine.GetKeyHeld(Key.Down)) moveVector.Y += 1;
+        if (Engine.GetKeyHeld(Key.Right)) moveVector.X += 1;
+        if (Engine.GetKeyHeld(Key.Left)) moveVector.X -= 1;
 
+        //normalize the movement
+        moveVector = moveVector.Normalized();
 
 
         // Processing ----------------------------------
-
-        //normalize the movement
-        predictedMovement = predictedMovement.Normalized() * (PLAYER_SPEED * Engine.TimeDelta);
-        //check if it intersects 
-        player.move(rooms[(int)currRoom.X, (int)currRoom.Y].move(player.position(), predictedMovement));
+                     
+        //update player
+        player.move(moveVector, rooms[(int)currRoom.X, (int)currRoom.Y]);
         wrap();
 
         // Graphics ------------------------------------

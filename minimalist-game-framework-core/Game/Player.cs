@@ -9,6 +9,7 @@ class Player
     Item holding;
     Vector2 checkpointRoom;
     Vector2 checkpointPos;
+    readonly int PLAYER_SPEED = 400;
     Texture player = Engine.LoadTexture("textures/player.png");
 
     public Player(Vector2 position, Vector2 room)
@@ -18,15 +19,20 @@ class Player
         checkpointPos = position;
         checkpointRoom = room;
     }
-    public bool move(Vector2 newPos)
+    public bool move(Vector2 moveVector, Room currRoom = null)
     {
+        bool absolute = (currRoom == null);
 
-        if (active)
+        if (!active) return false;
+        if (absolute)
         {
-            pos = newPos;
+            pos = moveVector;
             return true;
         }
-        return false;
+        Vector2 moveDir = moveVector.Normalized() * (PLAYER_SPEED * Engine.TimeDelta);
+        pos = currRoom.move(pos, moveDir);
+
+        return true;
     }
     public Item pickup()
     {
