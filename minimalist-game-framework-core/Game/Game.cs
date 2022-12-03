@@ -9,7 +9,6 @@ class Game
     Vector2 tileSize = new Vector2(32, 32);
     Vector2 playerPos = new Vector2(416, 584);
     Room currentRoom = new Room(new Vector2(2, 4));
-
     readonly int PLAYER_SPEED = 150;
     public Game()
     {
@@ -43,6 +42,5 @@ class Game
         // Graphics ------------------------------------
         currentRoom.drawRoom();
         Engine.DrawTexture(player, playerPos, size: new Vector2(24, 24));
-        
     }
 }

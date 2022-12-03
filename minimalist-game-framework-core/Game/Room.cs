@@ -7,7 +7,7 @@ using System.IO;
 class Room
 {
     Vector2 PLAYER_SIZE = new Vector2(24, 24);
-    List<Bounds2> CollisionZones;
+    List<Rect> CollisionZones;
     Texture bg;
     String name;
 
@@ -27,46 +27,77 @@ class Room
         if (move.Equals(Vector2.Zero)) return start;
 
         Vector2 moveTo = start + move;
-        Bounds2 playerBounds = getPlayerBounds(moveTo);
+        Rect playerBounds = getPlayerBounds(moveTo);
 
 
-        foreach (Bounds2 collider in CollisionZones)
+        foreach (Rect collider in CollisionZones)
         { // position is actual x range and size is actually y range
             if (checkRectIntersect(collider, playerBounds))
-            { // doesnt handle corners
-                Vector2 moveToX = start + new Vector2(move.X, 0);
+            { // does handle corners
                 Vector2 moveToY = start + new Vector2(0, move.Y);
-                if (checkRectIntersect(collider, getPlayerBounds(moveToX)))
+                Rect playerBoundsY = getPlayerBounds(moveToY);
+                Vector2 moveToX = start + new Vector2(move.X, 0);
+                Rect playerBoundsX = getPlayerBounds(moveToX);
+                if (!checkRectIntersect(collider, playerBoundsY) && !checkRectIntersect(collider, playerBoundsX))
                 {
+                    moveTo.Y = start.Y+moveTo.Y;
                     moveTo.X = start.X;
+                    return moveTo;
                 }
-                if (checkRectIntersect(collider, getPlayerBounds(moveToY)))
+                else
                 {
-                    moveTo.Y = start.Y;
+                    if (checkRectIntersect(collider, playerBoundsX))
+                    {
+                        //need to check if you are to the right or to the left
+                        //if player to the right of the wall
+                        if (collider.X.max<=getPlayerBounds(start).X.min)
+                        {
+                            moveTo.X = collider.X.max;
+                        }
+                        //if player is to the left of the wall
+                        else
+                        {
+                            moveTo.X = collider.X.min - PLAYER_SIZE.X;
+                        }
+                    }
+                    if (checkRectIntersect(collider, playerBoundsY))
+                    {
+                        //need to check if you are to the up or to the down
+                        //if player is above the wall
+                        if (collider.Y.min >= getPlayerBounds(start).Y.max)
+                        {
+                            moveTo.Y = collider.Y.min - PLAYER_SIZE.Y;
+                        }
+                        //if player is below the wall
+                        else
+                        {
+                            moveTo.Y = collider.Y.max;
+                        }
+                    }
                 }
+               
             }
         }
         return moveTo;
     }
-
-    private bool checkIntervalIntersect(Vector2 barrier, Vector2 player)
+    private bool checkIntervalIntersect(Range barrier, Range player)
     {
-        if (player.X < barrier.Y && player.X > barrier.X) return true;
-        if (player.Y < barrier.Y && player.Y > barrier.X) return true;
-        if (barrier.X < player.Y && barrier.X > player.X) return true;
+        if (player.min < barrier.max && player.min > barrier.min) return true;
+        if (player.max < barrier.max && player.max > barrier.min) return true;
+        if (barrier.min < player.max && barrier.min > player.max) return true;
         return false;
     }
 
-    private bool checkRectIntersect(Bounds2 rect, Bounds2 playerBounds)
+    private bool checkRectIntersect(Rect rect, Rect playerBounds)
     {
-        return checkIntervalIntersect(rect.Position, playerBounds.Position)
-             && checkIntervalIntersect(rect.Size, playerBounds.Size);
+        return checkIntervalIntersect(rect.X, playerBounds.X)
+             && checkIntervalIntersect(rect.Y, playerBounds.Y);
     }
     
-    private Bounds2 getPlayerBounds(Vector2 moveTo)
+    private Rect getPlayerBounds(Vector2 moveTo)
     { // a -1 makes the boundaries even
-        return new Bounds2(new Vector2(moveTo.X, moveTo.X + PLAYER_SIZE.X),
-                                   new Vector2(moveTo.Y, moveTo.Y + PLAYER_SIZE.Y));
+        return new Rect(new Range(moveTo.X, moveTo.X + PLAYER_SIZE.X),
+                                   new Range(moveTo.Y, moveTo.Y + PLAYER_SIZE.Y));
     }
 
     public void drawRoom()
@@ -90,9 +121,9 @@ class Room
     }
 
     //read rectangle collisions from a text file
-    public List<Bounds2> readCollisionZones(String file)
+    public List<Rect> readCollisionZones(String file)
     {
-        List<Bounds2> loader = new List<Bounds2>();
+        List<Rect> loader = new List<Rect>();
 
         using (StreamReader sr = File.OpenText("Assets/" + file))
         {
@@ -101,8 +132,8 @@ class Room
             {
                 String[] nums = s.Split(' ');
 
-                loader.Add(new Bounds2(new Vector2(float.Parse(nums[0]) , float.Parse(nums[1])),
-                                                new Vector2(float.Parse(nums[2]), float.Parse(nums[3]))));
+                loader.Add(new Rect(new Range(float.Parse(nums[0]) , float.Parse(nums[1])),
+                                                new Range(float.Parse(nums[2]), float.Parse(nums[3]))));
             }
         }
         return loader;
