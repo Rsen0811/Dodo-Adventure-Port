@@ -21,12 +21,12 @@ class Room
     {
     }
 
-    public Vector2 move(Vector2 start, Vector2 move)
+    public Vector2 move(Vector2 start, Vector2 movement)
     {
         // why do calcs if none needed
-        if (move.Equals(Vector2.Zero)) return start;
+        if (movement.Equals(Vector2.Zero)) return start;
 
-        Vector2 moveTo = start + move;
+        Vector2 moveTo = start + movement;
         Rect playerBounds = getPlayerBounds(moveTo);
 
 
@@ -34,15 +34,18 @@ class Room
         { // position is actual x range and size is actually y range
             if (checkRectIntersect(collider, playerBounds))
             { // does handle corners
-                Vector2 moveToY = start + new Vector2(0, move.Y);
+                Vector2 moveToY = start + new Vector2(0, movement.Y);
                 Rect playerBoundsY = getPlayerBounds(moveToY);
-                Vector2 moveToX = start + new Vector2(move.X, 0);
+                Vector2 moveToX = start + new Vector2(movement.X, 0);
                 Rect playerBoundsX = getPlayerBounds(moveToX);
                 if (!checkRectIntersect(collider, playerBoundsY) && !checkRectIntersect(collider, playerBoundsX))
                 {
-                    moveTo.Y = start.Y+moveTo.Y;
-                    moveTo.X = start.X;
-                    return moveTo;
+                    //check just x and just y and whic ever moves farther is the one we use
+                    Vector2 Xmove= move(start, new Vector2(movement.X, 0));
+                    float XmoveLength = Xmove.Length();
+                    Vector2 Ymove = move(start, new Vector2(0, movement.Y));
+                    float YmoveLength = Ymove.Length();
+                    return XmoveLength > YmoveLength ? Xmove : Ymove;
                 }
                 else
                 {
