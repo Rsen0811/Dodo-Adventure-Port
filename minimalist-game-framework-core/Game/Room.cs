@@ -40,7 +40,7 @@ class Room
                 Rect playerBoundsX = getPlayerBounds(moveToX);
                 if (!checkRectIntersect(collider, playerBoundsY) && !checkRectIntersect(collider, playerBoundsX))
                 {
-                    //check just x and just y and whic ever moves farther is the one we use
+                    //check just x and just y and which ever moves farther is the one we use
                     Vector2 Xmove= move(start, new Vector2(movement.X, 0));
                     float XmoveLength = Xmove.Length();
                     Vector2 Ymove = move(start, new Vector2(0, movement.Y));
