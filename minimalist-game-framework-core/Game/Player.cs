@@ -7,22 +7,32 @@ class Player
     Vector2 pos;
     bool active;
     Item holding;
-    Vector2 currRoom;
-    readonly int SPEED = 100;
+    Vector2 checkpointRoom;
+    Vector2 checkpointPos;
+    readonly int PLAYER_SPEED = 400;
     Texture player = Engine.LoadTexture("textures/player.png");
 
-    public Player(Vector2 position, Vector2 spawn)
+    public Player(Vector2 position, Vector2 room)
     {
+        active = true;
         pos = position;
-        currRoom = spawn;
+        checkpointPos = position;
+        checkpointRoom = room;
     }
-    public Vector2 move(Vector2 newPos)
+    public bool move(Vector2 moveVector, Room currRoom = null)
     {
-        if (active)
+        bool absolute = (currRoom == null);
+
+        if (!active) return false;
+        if (absolute)
         {
-            pos = newPos;
+            pos = moveVector;
+            return true;
         }
-        return newPos;
+        Vector2 moveDir = moveVector.Normalized() * (PLAYER_SPEED * Engine.TimeDelta);
+        pos = currRoom.move(pos, moveDir);
+
+        return true;
     }
     public Item pickup()
     {
@@ -38,7 +48,8 @@ class Player
         Engine.DrawTexture(player, pos, size: new Vector2(24, 24));
     }
 
-    public Vector2 Pos()
+
+    public Vector2 position()
     {
         return pos;
     }
@@ -46,6 +57,12 @@ class Player
     public void getEaten()
     {
         active = false;
+    }
+    public Vector2 respawn()
+    {
+        pos = checkpointPos;
+        return checkpointRoom;
+
     }
 }
 
