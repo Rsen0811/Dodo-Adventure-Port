@@ -42,9 +42,9 @@ class Room
                 {
                     //check just x and just y and which ever moves farther is the one we use
                     Vector2 Xmove= move(start, new Vector2(movement.X, 0));
-                    float XmoveLength = Xmove.Length();
+                    float XmoveLength = (Xmove - start).Length();
                     Vector2 Ymove = move(start, new Vector2(0, movement.Y));
-                    float YmoveLength = Ymove.Length();
+                    float YmoveLength = (Ymove - start).Length();
                     return XmoveLength > YmoveLength ? Xmove : Ymove;
                 }
                 else
