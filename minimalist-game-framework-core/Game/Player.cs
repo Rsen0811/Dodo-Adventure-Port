@@ -48,15 +48,21 @@ class Player
         Engine.DrawTexture(player, pos, size: new Vector2(24, 24));
     }
 
+
     public Vector2 position()
     {
         return pos;
     }
 
+    public void getEaten()
+    {
+        active = false;
+    }
     public Vector2 respawn()
     {
         pos = checkpointPos;
         return checkpointRoom;
+
     }
 }
 
