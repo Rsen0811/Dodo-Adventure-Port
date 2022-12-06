@@ -37,7 +37,7 @@ class Sword : Item
 
     public bool dodoCollides()
     {
-
+        return true;
     }
 
     public Rect collisionZone()
