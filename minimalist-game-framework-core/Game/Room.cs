@@ -9,16 +9,41 @@ class Room
     Vector2 PLAYER_SIZE = new Vector2(24, 24);
     List<Rect> CollisionZones;
     Texture bg;
-    String name;
+    Vector2 pos;
+    List<Dodo> enemies;
 
-    public Room(Vector2 pos) { 
-        name = "" + pos.X + pos.Y;
+    public Room(Vector2 pos) {
+        String name = "" + pos.X + pos.Y;
         CollisionZones = readCollisionZones("rooms/" + name + "/" + name + "c.txt");
         bg = Engine.LoadTexture("rooms/" + name + "/" + name + "i.png");
+        enemies = new List<Dodo>();
+        enemies.Add(new Dodo(new Vector2(200, 200)));
+        this.pos = pos;
     }
 
-    public void Update()
+    public Vector2 position()
     {
+        return pos;
+    }
+
+    public void testaddDodo()
+    {
+        enemies.Add(new Dodo(new Vector2(200, 200)));
+    }
+    public void Update(Player p)
+    {
+        foreach (Dodo d in enemies)
+        {
+            d.Update(p.position(), 960);
+        }
+    }
+
+    public void idle()
+    {
+        foreach (Dodo d in enemies)
+        {
+            d.Idle();
+        }
     }
 
     public Vector2 move(Vector2 start, Vector2 movement)
@@ -106,6 +131,10 @@ class Room
     public void drawRoom()
     {
         Engine.DrawTexture(bg, new Vector2(0, 0));
+        foreach (Dodo d in enemies)
+        {
+            d.DrawDodo();
+        }
     }
 
     public void addObject()

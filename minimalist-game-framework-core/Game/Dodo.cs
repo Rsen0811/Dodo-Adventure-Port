@@ -129,7 +129,7 @@ class Dodo
         }
     }
     
-    private void Idle()
+    public void Idle()
     {
         if(timer >= 2)
         {
