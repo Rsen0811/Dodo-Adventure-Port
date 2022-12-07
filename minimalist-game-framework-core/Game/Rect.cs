@@ -25,4 +25,13 @@ class Rect
 		return new Bounds2(new Vector2(X.min, Y.min), new Vector2(XRange(), YRange()));
 
 	}
+	static public Rect getSpriteBounds(Vector2 position, Vector2 spriteSize)
+	{ // a -1 makes the boundaries even
+		Rect sBound = new Rect(new Range(position.X, position.X + spriteSize.X),
+								   new Range(position.Y, position.Y + spriteSize.Y));
+
+		// for debug use only - bounding boxes
+		Engine.DrawRectEmpty(sBound.toBounds(), Color.Black);
+		return sBound;
+	}
 }

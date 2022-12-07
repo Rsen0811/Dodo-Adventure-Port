@@ -49,15 +49,16 @@ class Game
 
         //update player
         bool successfulMove = player.move(moveVector, rooms[(int)currRoom.X, (int)currRoom.Y]);
-        if (successfulMove) wrap();
-
+        if (successfulMove) wrap();        
         rooms[(int)currRoom.X, (int)currRoom.Y].Update(player);
+
         idle();
+
         // Graphics ------------------------------------
         rooms[(int)currRoom.X, (int)currRoom.Y].drawRoom();
         player.drawPlayer();
 
-        // Dodo ----------------------------------------
+        // Dodo ----------------------------------------        
     }
 
     public void idle() 
@@ -65,7 +66,7 @@ class Game
         foreach(Room r in rooms)
         {
             // if room is neighboring
-            if (r != null && Math.Abs((r.position() - currRoom).Length() - 1) < 1)
+            if (r != null && Math.Abs((r.position() - currRoom).Length() - 1) <= 0)
             {
                 r.idle();
             }
