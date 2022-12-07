@@ -4,25 +4,25 @@ using System.Text;
 
 class Dodo
 {
-    private float walkSpeed;
-    private float runSpeed;
-    private float chargeSpeed;
+    private readonly float walkSpeed;
+    private readonly float runSpeed;
+    private readonly float chargeSpeed;
     private float stunSpeed;
     private float chaseDist;
 
     private float timer = 0;
     private float chargeTimer = 0;
     private bool charge = false;
-    private int chargeChance = 2;
+    private readonly int chargeChance = 2;
     private Vector2 chargeDir;
     private float stunTimer = 0;
     private float damTimer = 0;
     private float eatTimer = 0;
     private Vector2 move;
     private int health = 2;
-    private Texture dodoAlive;
-    private Texture dodoDead;
-    private Texture dodoDamaged;
+    private readonly Texture dodoAlive;
+    private readonly Texture dodoDead;
+    private readonly Texture dodoDamaged;
     private bool mirror;
     private Vector2 dimentions = new Vector2(58, 82);
 
@@ -57,23 +57,24 @@ class Dodo
 
     public void Update(Vector2 playerPos, float screenWidth)
     {
-        playerPos += new Vector2(12, 12);
-        float dist = (float)Math.Sqrt(Math.Pow(dodoPos.X + dimentions.X / 2 - playerPos.X, 2) +
-            Math.Pow(dodoPos.Y + dimentions.Y / 4 - playerPos.Y, 2));
-        if (dist < 30) Damage();
-        if(chargeTimer > 1.4 && !charge)
+        if (health > 0)
         {
-            if (random.Next(chargeChance) == 1)
+            playerPos += new Vector2(12, 12);
+            float dist = (float)Math.Sqrt(Math.Pow(dodoPos.X + dimentions.X / 2 - playerPos.X, 2) +
+                Math.Pow(dodoPos.Y + dimentions.Y / 4 - playerPos.Y, 2));
+            if (dist < 30) Damage();
+            if (chargeTimer > 1.4 && !charge)
             {
-                charge = true;
+                if (random.Next(chargeChance) == 1)
+                {
+                    charge = true;
+                }
+                chargeTimer = 0;
             }
-            chargeTimer = 0;
-        }
-        if(health > 0)
-        {
+
             if (stunTimer > 0)
             {
-                if(stunTimer > 0.65 && Move(dodoPos + chargeDir * -1))
+                if (stunTimer > 0.65 && Move(dodoPos + chargeDir * -1))
                 {
                     dodoPos += chargeDir * stunSpeed;
                     stunSpeed -= stunSpeed / 10;
@@ -115,42 +116,49 @@ class Dodo
         switch(health)
         { 
             case 2: 
-                displayDodoAlive();
+                DisplayDodoAlive();
                 break;
             case 1:
-                displayDodoDamaged();
+                DisplayDodoDamaged();
                 break;
             case 0:
-                displayDodoDead();
+                DisplayDodoDead();
                 break;
             default:
-                displayDodoAlive();
+                DisplayDodoAlive();
                 break;
         }
     }
     
-    private void Idle()
+    public void Idle()
     {
-        if(timer >= 2)
+        if(health > 0)
         {
-            timer = 0;
-            move = new Vector2(random.Next() * 2 - 1, random.Next() * 2 - 1);
+            if (timer >= 2)
+            {
+                timer = 0;
+                move = new Vector2(random.Next() * 2 - 1, random.Next() * 2 - 1);
+                move = move.Normalized() * walkSpeed;
+            }
+            if (!Move(dodoPos + move))
+            {
+                move = new Vector2(random.Next() * 2 - 1, random.Next() * 2 - 1);
+                move = move.Normalized() * walkSpeed;
+            }
+            else
+            {
+                dodoPos += move;
+            }
+            mirror = move.X < 0;
+            timer += Engine.TimeDelta;
         }
-        move = move.Normalized() * walkSpeed;
-        while (!Move(dodoPos + move))
-        {
-            move = new Vector2(random.Next() * 2 - 1, random.Next() * 2 - 1);
-        }
-        dodoPos += move;
-        mirror = move.X < 0;
-        timer += Engine.TimeDelta;
     }
 
     private void Run(Vector2 playerPos)
     {
         Vector2 dir = new Vector2(playerPos.X + 12 - dodoPos.X - dimentions.X / 2, 
             playerPos.Y + 12 - dodoPos.Y - dimentions.Y / 4).Normalized();
-        Vector2 move = dir * runSpeed;
+        move = dir * runSpeed;
         if (Move(dodoPos + move))
         {
             dodoPos += move;
@@ -183,42 +191,37 @@ class Dodo
     
     public bool Move(Vector2 moveTo)
     {
-        if (moveTo.X >= 960 - 70)
+        if (moveTo.X >= 890)
         {
-            moveTo = new Vector2(960 - 71, moveTo.Y);
             return false;
-            
         }
         else if (moveTo.X <= 15)
         {
-            moveTo = new Vector2(16, moveTo.Y);
             return false;
         }
-        if (moveTo.Y >= 640 - 70)
+        if (moveTo.Y >= 570)
         {
-            moveTo = new Vector2(moveTo.X, 640 - 71);
             return false;
         }
         else if(moveTo.Y <= 15)
         {
-            moveTo = new Vector2(moveTo.X, 16);
             return false;
         }
         return true;
     }
 
-    private void displayDodoAlive()
+    private void DisplayDodoAlive()
     {
         Engine.DrawTexture(dodoAlive, dodoPos, mirror: mirror ? TextureMirror.Horizontal : 
             TextureMirror.None);
     }
 
-    private void displayDodoDead()
+    private void DisplayDodoDead()
     {
         Engine.DrawTexture(dodoDead, dodoPos, mirror: mirror ? TextureMirror.Horizontal :
             TextureMirror.None);
     }
-    private void displayDodoDamaged()
+    private void DisplayDodoDamaged()
     {
         Engine.DrawTexture(dodoDamaged, dodoPos, mirror: mirror ? TextureMirror.Horizontal :
             TextureMirror.None);

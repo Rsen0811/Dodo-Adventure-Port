@@ -39,16 +39,20 @@ class Game
         if (Engine.GetKeyHeld(Key.Right)) moveVector.X += 1;
         if (Engine.GetKeyHeld(Key.Left)) moveVector.X -= 1;
 
+        if (Engine.GetKeyHeld(Key.D)) rooms[(int)currRoom.X, (int)currRoom.Y].testaddDodo();
+        
         //normalize the movement
         moveVector = moveVector.Normalized();
 
 
         // Processing ----------------------------------
-                     
+
         //update player
         bool successfulMove = player.move(moveVector, rooms[(int)currRoom.X, (int)currRoom.Y]);
         if (successfulMove) wrap();
 
+        rooms[(int)currRoom.X, (int)currRoom.Y].Update(player);
+        idle();
         // Graphics ------------------------------------
         rooms[(int)currRoom.X, (int)currRoom.Y].drawRoom();
         player.drawPlayer();
@@ -56,6 +60,17 @@ class Game
         // Dodo ----------------------------------------
     }
 
+    public void idle() 
+    { 
+        foreach(Room r in rooms)
+        {
+            // if room is neighboring
+            if (r != null && Math.Abs((r.position() - currRoom).Length() - 1) < 1)
+            {
+                r.idle();
+            }
+        }
+    }
     public void wrap()
     {
         Vector2 playerPos = player.position();
