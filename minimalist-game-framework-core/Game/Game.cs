@@ -39,7 +39,7 @@ class Game
         if (Engine.GetKeyHeld(Key.Right)) moveVector.X += 1;
         if (Engine.GetKeyHeld(Key.Left)) moveVector.X -= 1;
 
-        if (Engine.GetKeyDown(Key.D)) rooms[(int)currRoom.X, (int)currRoom.Y].testaddDodo();
+        if (Engine.GetKeyHeld(Key.D)) rooms[(int)currRoom.X, (int)currRoom.Y].testaddDodo();
         
         //normalize the movement
         moveVector = moveVector.Normalized();
