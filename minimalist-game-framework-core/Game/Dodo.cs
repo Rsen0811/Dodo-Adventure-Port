@@ -113,6 +113,9 @@ class Dodo
 
     public void DrawDodo()
     {
+        // for debug use only - bounding boxes
+        Engine.DrawRectEmpty(this.getBounds().toBounds(), Color.Black);
+
         switch(health)
         { 
             case 2: 
@@ -245,5 +248,13 @@ class Dodo
             health--;
             damTimer = 1.5f;
         }
+    }
+
+    public Rect getBounds()
+    {
+        Vector2 bodyTLC = new Vector2((mirror ? 10:2), 2);
+        Vector2 size = new Vector2(46, 74);
+
+        return Room.getSpriteBounds(bodyTLC + dodoPos, size);
     }
 }

@@ -6,7 +6,7 @@ using System.IO;
 
 class Room
 {
-    Vector2 PLAYER_SIZE = new Vector2(24, 24);
+    readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
     List<Rect> CollisionZones;
     Texture bg;
     Vector2 pos;
@@ -52,7 +52,7 @@ class Room
         if (movement.Equals(Vector2.Zero)) return start;
 
         Vector2 moveTo = start + movement;
-        Rect playerBounds = getPlayerBounds(moveTo);
+        Rect playerBounds = getSpriteBounds(moveTo, PLAYER_SIZE);
 
 
         foreach (Rect collider in CollisionZones)
@@ -60,9 +60,9 @@ class Room
             if (checkRectIntersect(collider, playerBounds))
             { // does handle corners
                 Vector2 moveToY = start + new Vector2(0, movement.Y);
-                Rect playerBoundsY = getPlayerBounds(moveToY);
+                Rect playerBoundsY = getSpriteBounds(moveToY, PLAYER_SIZE);
                 Vector2 moveToX = start + new Vector2(movement.X, 0);
-                Rect playerBoundsX = getPlayerBounds(moveToX);
+                Rect playerBoundsX = getSpriteBounds(moveToX, PLAYER_SIZE);
                 if (!checkRectIntersect(collider, playerBoundsY) && !checkRectIntersect(collider, playerBoundsX))
                 {
                     //check just x and just y and which ever moves farther is the one we use
@@ -78,7 +78,7 @@ class Room
                     {
                         //need to check if you are to the right or to the left
                         //if player to the right of the wall
-                        if (collider.X.max<=getPlayerBounds(start).X.min)
+                        if (collider.X.max<= getSpriteBounds(start, PLAYER_SIZE).X.min)
                         {
                             moveTo.X = collider.X.max;
                         }
@@ -92,7 +92,7 @@ class Room
                     {
                         //need to check if you are to the up or to the down
                         //if player is above the wall
-                        if (collider.Y.min >= getPlayerBounds(start).Y.max)
+                        if (collider.Y.min >= getSpriteBounds(start, PLAYER_SIZE).Y.max)
                         {
                             moveTo.Y = collider.Y.min - PLAYER_SIZE.Y;
                         }
@@ -122,10 +122,10 @@ class Room
              && checkIntervalIntersect(rect.Y, playerBounds.Y);
     }
     
-    private Rect getPlayerBounds(Vector2 moveTo)
+    static public Rect getSpriteBounds(Vector2 position, Vector2 spriteSize)
     { // a -1 makes the boundaries even
-        return new Rect(new Range(moveTo.X, moveTo.X + PLAYER_SIZE.X),
-                                   new Range(moveTo.Y, moveTo.Y + PLAYER_SIZE.Y));
+        return new Rect(new Range(position.X, position.X + spriteSize.X),
+                                   new Range(position.Y, position.Y + spriteSize.Y));
     }
 
     public void drawRoom()
