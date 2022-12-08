@@ -14,6 +14,8 @@ interface Item
 
     bool collides(Rect bounds);
 
+    void drop();
+
 
 
 }
