@@ -29,7 +29,7 @@ class GateKey : Item
     {
         return false;
     }
-    public void Update()
+    public void Update(Rect player)
     {
 
     }
