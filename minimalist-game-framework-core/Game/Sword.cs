@@ -41,23 +41,23 @@ class Sword : Item
             if ((dir-new Vector2(0, -1)).Equals(Vector2.Zero))
             {
                 pos = new Vector2(playerPos.X + 12 - size.X / 2, playerPos.Y + size.Y);
-                collisionBox = Rect.GetSpriteBounds(pos, size);
+                collisionBox = Rect.getSpriteBounds(pos, size);
 
             }
             else if ((dir - new Vector2(-1, 0)).Equals(Vector2.Zero))
             {
                 pos = new Vector2(playerPos.X - size.Y, playerPos.Y + 12 - size.X / 2);
-                collisionBox = Rect.GetSpriteBounds(pos, new Vector2(size.Y, size.X));
+                collisionBox = Rect.getSpriteBounds(pos, new Vector2(size.Y, size.X));
             }
             else if ((dir - new Vector2(0, 1)).Equals(Vector2.Zero))
             {
                 pos = new Vector2(playerPos.X + 12 - size.X / 2, playerPos.Y + 24);
-                collisionBox = Rect.GetSpriteBounds(pos, size);
+                collisionBox = Rect.getSpriteBounds(pos, size);
             }
             else if ((dir - new Vector2(1, 0)).Equals(Vector2.Zero))
             {
                 pos = new Vector2(playerPos.X + 24, playerPos.Y + 12 - size.X / 2);
-                collisionBox = Rect.GetSpriteBounds(pos, new Vector2(size.Y, size.X));
+                collisionBox = Rect.getSpriteBounds(pos, new Vector2(size.Y, size.X));
             }
         }
     }
