@@ -66,6 +66,4 @@ class Player
     }
 }
 
-class Item {
 
-}
