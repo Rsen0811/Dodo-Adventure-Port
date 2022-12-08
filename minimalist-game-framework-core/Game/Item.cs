@@ -10,7 +10,7 @@ interface Item
 
     bool isHeld();
 
-    void Update();
+    void Update(Rect Player);
 
     bool collides(Rect bounds);
 
