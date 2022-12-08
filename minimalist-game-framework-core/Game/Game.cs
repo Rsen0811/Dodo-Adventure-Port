@@ -11,13 +11,13 @@ class Game
     Vector2 tileSize = new Vector2(32, 32);
     Vector2 startpos = new Vector2(250, 300);
     Vector2 currRoom = new Vector2(2, 4);
-   
 
+    Sword sword;
     Player player;
     Room[,] rooms;
     
     public Game()
-    {        
+    {
         rooms = new Room[30, 20];
         rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
         player = new Player(startpos, currRoom);
@@ -39,7 +39,7 @@ class Game
         if (Engine.GetKeyHeld(Key.Right)) moveVector.X += 1;
         if (Engine.GetKeyHeld(Key.Left)) moveVector.X -= 1;
 
-        if (Engine.GetKeyHeld(Key.D)) rooms[(int)currRoom.X, (int)currRoom.Y].testaddDodo();
+        if (Engine.GetKeyHeld(Key.P)) rooms[(int)currRoom.X, (int)currRoom.Y].testaddDodo();
         
         //normalize the movement
         moveVector = moveVector.Normalized();

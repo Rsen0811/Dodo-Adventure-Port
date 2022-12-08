@@ -4,6 +4,7 @@ using System.Text;
 
 class Sword : Item
 {
+    Vector2 PLAYERSIZE =new Vector2(24, 24);
     public bool isHoly;
     public int damage;
     private Texture spriteMap;
@@ -13,16 +14,25 @@ class Sword : Item
     private Vector2 size;
     private Rect collisionBox;
     private bool held;
-    public Sword(String texturePath, Vector2 pos, bool isHoly, Vector2 size, int damage)
+    public Sword(Vector2 pos, bool isHoly)
     {
-        this.spriteMap = Engine.LoadTexture(texturePath);
         this.pos = pos;
         this.dir = new Vector2(1, 0);
-        this.size = size;
+        if (isHoly)
+        {
+            this.spriteMap = Engine.LoadTexture("textures/player.png");
+            this.size = new Vector2(18,36);
+            this.damage = 2;
+        }
+        else {
+            this.spriteMap = Engine.LoadTexture("textures/player.png");
+            this.size = new Vector2(12, 24);
+            this.damage = 1;
+        }
         this.isHoly = isHoly;
         this.held = false;
         this.collisionBox = new Rect(new Range(pos.X, pos.X + size.X),new Range(pos.Y, pos.Y + size.Y));
-        this.damage = damage;
+        
     }
     public void drop()
     {
@@ -40,23 +50,23 @@ class Sword : Item
         {
             if ((dir-new Vector2(0, -1)).Equals(Vector2.Zero))
             {
-                pos = new Vector2(playerPos.X + 12 - size.X / 2, playerPos.Y + size.Y);
+                pos = new Vector2(playerPos.X + PLAYERSIZE.X/2 - size.X / 2, playerPos.Y - size.Y);
                 collisionBox = Rect.getSpriteBounds(pos, size);
 
             }
             else if ((dir - new Vector2(-1, 0)).Equals(Vector2.Zero))
             {
-                pos = new Vector2(playerPos.X - size.Y, playerPos.Y + 12 - size.X / 2);
+                pos = new Vector2(playerPos.X - size.Y, playerPos.Y + PLAYERSIZE.Y/2 - size.X / 2);
                 collisionBox = Rect.getSpriteBounds(pos, new Vector2(size.Y, size.X));
             }
             else if ((dir - new Vector2(0, 1)).Equals(Vector2.Zero))
             {
-                pos = new Vector2(playerPos.X + 12 - size.X / 2, playerPos.Y + 24);
+                pos = new Vector2(playerPos.X + PLAYERSIZE.X/2 - size.X / 2, playerPos.Y + 24);
                 collisionBox = Rect.getSpriteBounds(pos, size);
             }
             else if ((dir - new Vector2(1, 0)).Equals(Vector2.Zero))
             {
-                pos = new Vector2(playerPos.X + 24, playerPos.Y + 12 - size.X / 2);
+                pos = new Vector2(playerPos.X + PLAYERSIZE.X, playerPos.Y + PLAYERSIZE.Y/2 - size.X / 2);
                 collisionBox = Rect.getSpriteBounds(pos, new Vector2(size.Y, size.X));
             }
         }
