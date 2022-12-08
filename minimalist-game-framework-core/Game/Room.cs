@@ -11,13 +11,19 @@ class Room
     Texture bg;
     Vector2 pos;
     List<Dodo> enemies;
+    List<Item> items;
 
     public Room(Vector2 pos) {
         String name = "" + pos.X + pos.Y;
         CollisionZones = readCollisionZones("rooms/" + name + "/" + name + "c.txt");
         bg = Engine.LoadTexture("rooms/" + name + "/" + name + "i.png");
+        
         enemies = new List<Dodo>();
         enemies.Add(new Dodo(new Vector2(200, 200)));
+
+        items = new List<Item>();
+        items.Add(new Sword("textures/player.png", new Vector2(200, 200), false, new Vector2(20, 50), 1));
+
         this.pos = pos;
     }
 
@@ -35,6 +41,11 @@ class Room
         foreach (Dodo d in enemies)
         {
             d.Update(p.position(), 960);
+        }
+
+        foreach (Item i in items)
+        {
+            i.Update(Rect.getSpriteBounds(p.position(), PLAYER_SIZE));
         }
     }
 
@@ -129,16 +140,21 @@ class Room
         {
             d.DrawDodo();
         }
+
+        foreach (Item i in items)
+        {
+            i.draw();
+        }
     }
 
-    public void addObject()
+    public void addObject(Item i)
     {
-
+        items.Add(i);
     }
 
-    public void removeObject()
+    public void removeObject(Item i)
     {
-
+        items.Remove(i);
     }
 
     public void pickup()

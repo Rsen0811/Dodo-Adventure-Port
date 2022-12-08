@@ -73,6 +73,7 @@ class Sword : Item
     }
     public void draw()
     {
+        Engine.DrawRectEmpty(collisionBox.toBounds(), Color.Red);
     }
 
     public bool isHeld()
