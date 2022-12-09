@@ -14,19 +14,21 @@ class Sword : Item
     private Vector2 size;
     private Rect collisionBox;
     private bool held;
+    private float r;
     public Sword(Vector2 pos, bool isHoly)
     {
         this.pos = pos;
         this.dir = new Vector2(1, 0);
+        r = 90f;
         if (isHoly)
         {
-            this.spriteMap = Engine.LoadTexture("textures/player.png");
+            this.spriteMap = Engine.LoadTexture("textures/sword.png");
             this.size = new Vector2(18,36);
             this.damage = 2;
         }
         else {
-            this.spriteMap = Engine.LoadTexture("textures/player.png");
-            this.size = new Vector2(12, 24);
+            this.spriteMap = Engine.LoadTexture("textures/sword.png");
+            this.size = new Vector2(141,358);
             this.damage = 1;
         }
         this.isHoly = isHoly;
@@ -76,6 +78,14 @@ class Sword : Item
     public void draw()
     {
         Engine.DrawRectEmpty(collisionBox.toBounds(), Color.Red);
+        if(r == 0f || r == 180f)
+        {
+            Engine.DrawTexture(spriteMap, pos, size: size, rotation: r);
+        } else
+        {
+            Engine.DrawTexture(spriteMap, new Vector2(collisionBox.X.min, pos.Y - size.Y / 4), size: size, rotation: r);
+        }
+        
     }
 
     public bool isHeld()
@@ -114,17 +124,21 @@ class Sword : Item
         if (Engine.GetKeyHeld(Key.W))
         {
             dir = new Vector2(0, -1);
+            r = 0f;
         }
         else if (Engine.GetKeyHeld(Key.A))
         {
             dir = new Vector2(-1, 0);
+            r = 270f;
         }
         else if (Engine.GetKeyHeld(Key.S))
         {
             dir = new Vector2(0, 1);
+            r = 180f;
         }
         else if (Engine.GetKeyHeld(Key.D)) {
             dir = new Vector2(1, 0);
+            r = 90f;
         }   
     }
     public void pickup()
