@@ -34,56 +34,56 @@ class Sword : Item
         this.collisionBox = new Rect(new Range(pos.X, pos.X + size.X),new Range(pos.Y, pos.Y + size.Y));
         
     }
-    public void drop()
+    public void Drop()
     {
         held = false;
     }
     public void Update(Rect Player)
     {
         Vector2 playerPos = new Vector2(Player.X.min, Player.Y.min);
-        collectInput(playerPos);
+        CollectInput(playerPos);
         if (!held)
         {
-            collides(Player);
+            Collides(Player);
         }
         else
         {
             if ((dir-new Vector2(0, -1)).Equals(Vector2.Zero))
             {
                 pos = new Vector2(playerPos.X + PLAYERSIZE.X/2 - size.X / 2, playerPos.Y - size.Y);
-                collisionBox = Rect.getSpriteBounds(pos, size);
+                collisionBox = Rect.GetSpriteBounds(pos, size);
 
             }
             else if ((dir - new Vector2(-1, 0)).Equals(Vector2.Zero))
             {
                 pos = new Vector2(playerPos.X - size.Y, playerPos.Y + PLAYERSIZE.Y/2 - size.X / 2);
-                collisionBox = Rect.getSpriteBounds(pos, new Vector2(size.Y, size.X));
+                collisionBox = Rect.GetSpriteBounds(pos, new Vector2(size.Y, size.X));
             }
             else if ((dir - new Vector2(0, 1)).Equals(Vector2.Zero))
             {
                 pos = new Vector2(playerPos.X + PLAYERSIZE.X/2 - size.X / 2, playerPos.Y + 24);
-                collisionBox = Rect.getSpriteBounds(pos, size);
+                collisionBox = Rect.GetSpriteBounds(pos, size);
             }
             else if ((dir - new Vector2(1, 0)).Equals(Vector2.Zero))
             {
                 pos = new Vector2(playerPos.X + PLAYERSIZE.X, playerPos.Y + PLAYERSIZE.Y/2 - size.X / 2);
-                collisionBox = Rect.getSpriteBounds(pos, new Vector2(size.Y, size.X));
+                collisionBox = Rect.GetSpriteBounds(pos, new Vector2(size.Y, size.X));
             }
         }
     }
-    public void draw()
+    public void Draw()
     {
-        Engine.DrawRectEmpty(collisionBox.toBounds(), Color.Red);
+        Engine.DrawRectEmpty(collisionBox.ToBounds(), Color.Red);
     }
 
-    public bool isHeld()
+    public bool IsHeld()
     {
         return held;
     }
 
-    public bool collides(Rect player)
+    public bool Collides(Rect player)
     {
-        if(Rect.checkRectIntersect(player, collisionBox))
+        if(Rect.CheckRectIntersect(player, collisionBox))
         {
             held = true;
             return true;
@@ -91,11 +91,11 @@ class Sword : Item
         return false ;
     }
     
-    public Rect collisionZone()
+    public Rect CollisionZone()
     {
         return collisionBox;
     }
-    public void collectInput(Vector2 playerPos)
+    public void CollectInput(Vector2 playerPos)
     {
         if (Engine.GetKeyHeld(Key.W))
         {
@@ -113,7 +113,7 @@ class Sword : Item
             dir = new Vector2(1, 0);
         }   
     }
-    public void pickup()
+    public void Pickup()
     {
         this.held = true;
     }
