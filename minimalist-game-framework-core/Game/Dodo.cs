@@ -259,4 +259,12 @@ class Dodo
             damTimer = 1.5f;
         }
     }
+
+    public Rect getBounds()
+    {
+        Vector2 bodyTLC = new Vector2((mirror ? 10:2), 2);
+        Vector2 size = new Vector2(46, 74);
+
+        return Rect.getSpriteBounds(bodyTLC + dodoPos, size);
+    }
 }

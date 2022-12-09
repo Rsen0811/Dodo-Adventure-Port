@@ -11,13 +11,12 @@ class Game
     Vector2 tileSize = new Vector2(32, 32);
     Vector2 startpos = new Vector2(250, 300);
     Vector2 currRoom = new Vector2(2, 4);
-   
 
     Player player;
     Room[,] rooms;
     
     public Game()
-    {        
+    {
         rooms = new Room[30, 20];
         rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
         player = new Player(startpos, currRoom);
@@ -39,7 +38,7 @@ class Game
         if (Engine.GetKeyHeld(Key.Right)) moveVector.X += 1;
         if (Engine.GetKeyHeld(Key.Left)) moveVector.X -= 1;
 
-        if (Engine.GetKeyHeld(Key.D)) rooms[(int)currRoom.X, (int)currRoom.Y].testaddDodo();
+        if (Engine.GetKeyHeld(Key.P)) rooms[(int)currRoom.X, (int)currRoom.Y].testaddDodo();
         
         //normalize the movement
         moveVector = moveVector.Normalized();
@@ -50,14 +49,14 @@ class Game
         //update player
         bool successfulMove = player.move(moveVector, rooms[(int)currRoom.X, (int)currRoom.Y]);
         if (successfulMove) wrap();
-
+        player.changeRoom(rooms[(int)currRoom.X, (int)currRoom.Y]);
         rooms[(int)currRoom.X, (int)currRoom.Y].Update(player);
         idle();
+        player.Update();
         // Graphics ------------------------------------
         rooms[(int)currRoom.X, (int)currRoom.Y].drawRoom();
         player.drawPlayer();
-
-        // Dodo ----------------------------------------
+        // Dodo ----------------------------------------        
     }
 
     public void idle() 
@@ -65,7 +64,7 @@ class Game
         foreach(Room r in rooms)
         {
             // if room is neighboring
-            if (r != null && Math.Abs((r.position() - currRoom).Length() - 1) < 1)
+            if (r != null && Math.Abs((r.position() - currRoom).Length() - 1) <= 0)
             {
                 r.idle();
             }
