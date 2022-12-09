@@ -12,7 +12,6 @@ class Game
     Vector2 startpos = new Vector2(250, 300);
     Vector2 currRoom = new Vector2(2, 4);
 
-    Sword sword;
     Player player;
     Room[,] rooms;
     
@@ -49,15 +48,14 @@ class Game
 
         //update player
         bool successfulMove = player.move(moveVector, rooms[(int)currRoom.X, (int)currRoom.Y]);
-        if (successfulMove) wrap();        
+        if (successfulMove) wrap();
+        player.changeRoom(rooms[(int)currRoom.X, (int)currRoom.Y]);
         rooms[(int)currRoom.X, (int)currRoom.Y].Update(player);
-
         idle();
-
+        player.Update();
         // Graphics ------------------------------------
         rooms[(int)currRoom.X, (int)currRoom.Y].drawRoom();
         player.drawPlayer();
-
         // Dodo ----------------------------------------        
     }
 

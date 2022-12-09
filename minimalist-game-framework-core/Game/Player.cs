@@ -4,6 +4,7 @@ using System.Text;
 
 class Player
 {
+    Vector2 PLAYER_SIZE = new Vector2(24, 24);
     Vector2 pos;
     bool active;
     Item holding;
@@ -11,13 +12,20 @@ class Player
     Vector2 checkpointPos;
     readonly int PLAYER_SPEED = 400;
     Texture player = Engine.LoadTexture("textures/player.png");
-
+    Room currRoom;
     public Player(Vector2 position, Vector2 room)
     {
         active = true;
         pos = position;
         checkpointPos = position;
         checkpointRoom = room;
+    }
+    public void Update()
+    {
+        if (holding != null)
+        {
+            holding.Update(Rect.getSpriteBounds(pos, PLAYER_SIZE));
+        }
     }
     public bool move(Vector2 moveVector, Room currRoom = null)
     {
@@ -34,20 +42,32 @@ class Player
 
         return true;
     }
-    public Item pickup()
+    public void pickup(Item i)
     {
-        return null;
+        if (holding != null)
+        {
+            this.drop();
+        }
+        holding = i;
     }
-    public Item drop()
+    public void drop()
     {
-        return null;
+        holding.drop();
+        currRoom.addObject(holding);
     }
 
     public void drawPlayer()
     {
         Engine.DrawTexture(player, pos, size: new Vector2(24, 24));
+        if (holding != null)
+        {
+            holding.draw();
+        }
     }
-
+    public void changeRoom(Room room)
+    {
+        currRoom = room;
+    }
 
     public Vector2 position()
     {
