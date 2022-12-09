@@ -38,4 +38,12 @@ class GateKey : Item
     {
         return false;
     }
+    public void drop()
+    {
+
+    }
+    public void pickup()
+    {
+
+    }
 }

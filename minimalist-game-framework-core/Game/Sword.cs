@@ -125,5 +125,9 @@ class Sword : Item
             dir = new Vector2(1, 0);
         }   
     }
+    public void pickup()
+    {
+        this.held = true;
+    }
 
 }

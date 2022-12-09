@@ -16,6 +16,6 @@ interface Item
 
     void drop();
 
-
+    void pickup();
 
 }

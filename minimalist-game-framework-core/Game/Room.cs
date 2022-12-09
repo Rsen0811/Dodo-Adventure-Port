@@ -22,7 +22,7 @@ class Room
         enemies.Add(new Dodo(new Vector2(200, 200)));
 
         items = new List<Item>();
-        items.Add(new Sword("textures/player.png", new Vector2(200, 200), false, new Vector2(20, 50), 1));
+        items.Add(new Sword(new Vector2(100,100),false));
 
         this.pos = pos;
     }
@@ -42,10 +42,18 @@ class Room
         {
             d.Update(p.position(), 960);
         }
-
+        List<Item> toRemove = new List<Item>();
         foreach (Item i in items)
         {
             i.Update(Rect.getSpriteBounds(p.position(), PLAYER_SIZE));
+            if (i.isHeld())
+            {
+                toRemove.Add(i);
+            }
+        }
+        foreach(Item i in toRemove)
+        {
+            this.pickup(p,i);
         }
     }
 
@@ -157,9 +165,11 @@ class Room
         items.Remove(i);
     }
 
-    public void pickup()
+    public void pickup(Player p, Item i)
     {
-
+        removeObject(i);
+        i.pickup();
+        p.pickup(i);
     }
 
     //read rectangle collisions from a text file
