@@ -34,4 +34,10 @@ class Rect
 		Engine.DrawRectEmpty(sBound.toBounds(), Color.Black);
 		return sBound;
 	}
+
+	public static bool checkRectIntersect(Rect rect, Rect playerBounds)
+	{
+		return Range.checkIntervalIntersect(rect.X, playerBounds.X)
+			 && Range.checkIntervalIntersect(rect.Y, playerBounds.Y);
+	}
 }

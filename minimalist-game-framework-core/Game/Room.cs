@@ -68,13 +68,13 @@ class Room
 
         foreach (Rect collider in CollisionZones)
         { // position is actual x range and size is actually y range
-            if (checkRectIntersect(collider, playerBounds))
+            if (Rect.checkRectIntersect(collider, playerBounds))
             { // does handle corners
                 Vector2 moveToY = start + new Vector2(0, movement.Y);
                 Rect playerBoundsY = Rect.getSpriteBounds(moveToY, PLAYER_SIZE);
                 Vector2 moveToX = start + new Vector2(movement.X, 0);
                 Rect playerBoundsX = Rect.getSpriteBounds(moveToX, PLAYER_SIZE);
-                if (!checkRectIntersect(collider, playerBoundsY) && !checkRectIntersect(collider, playerBoundsX))
+                if (!Rect.checkRectIntersect(collider, playerBoundsY) && !Rect.checkRectIntersect(collider, playerBoundsX))
                 {
                     //check just x and just y and which ever moves farther is the one we use
                     Vector2 Xmove= move(start, new Vector2(movement.X, 0));
@@ -85,7 +85,7 @@ class Room
                 }
                 else
                 {
-                    if (checkRectIntersect(collider, playerBoundsX))
+                    if (Rect.checkRectIntersect(collider, playerBoundsX))
                     {
                         //need to check if you are to the right or to the left
                         //if player to the right of the wall
@@ -99,7 +99,7 @@ class Room
                             moveTo.X = collider.X.min - PLAYER_SIZE.X;
                         }
                     }
-                    if (checkRectIntersect(collider, playerBoundsY))
+                    if (Rect.checkRectIntersect(collider, playerBoundsY))
                     {
                         //need to check if you are to the up or to the down
                         //if player is above the wall
@@ -118,19 +118,6 @@ class Room
             }
         }
         return moveTo;
-    }
-    private bool checkIntervalIntersect(Range barrier, Range player)
-    {
-        if (player.min < barrier.max && player.min > barrier.min) return true;
-        if (player.max < barrier.max && player.max > barrier.min) return true;
-        if (barrier.min < player.max && barrier.min > player.max) return true;
-        return false;
-    }
-
-    private bool checkRectIntersect(Rect rect, Rect playerBounds)
-    {
-        return checkIntervalIntersect(rect.X, playerBounds.X)
-             && checkIntervalIntersect(rect.Y, playerBounds.Y);
     }
 
     public void drawRoom()

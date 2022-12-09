@@ -83,26 +83,14 @@ class Sword : Item
 
     public bool collides(Rect player)
     {
-        if(checkRectIntersect(player, collisionBox))
+        if(Rect.checkRectIntersect(player, collisionBox))
         {
             held = true;
             return true;
         }
         return false ;
     }
-    private bool checkIntervalIntersect(Range barrier, Range player)
-    {
-        if (player.min < barrier.max && player.min > barrier.min) return true;
-        if (player.max < barrier.max && player.max > barrier.min) return true;
-        if (barrier.min < player.max && barrier.min > player.max) return true;
-        return false;
-    }
-
-    private bool checkRectIntersect(Rect rect, Rect playerBounds)
-    {
-        return checkIntervalIntersect(rect.X, playerBounds.X)
-             && checkIntervalIntersect(rect.Y, playerBounds.Y);
-    }
+    
     public Rect collisionZone()
     {
         return collisionBox;
