@@ -13,9 +13,9 @@ class Player
     Vector2 checkpointPos;
     readonly int PLAYER_SPEED = 400;
     Texture player = Engine.LoadTexture("textures/player.png");
-    
+    Room currRoom;
     Random random = new Random();
-
+   
     float deathTimer = -1;
     float respawnTimer = 1;
     float deathHits = 0;
@@ -97,7 +97,7 @@ class Player
     {
         if (deathTimer == 1.5f)
         {
-            deathHits = random.Next(15, 20);
+            deathHits = random.Next(13, 25);
         }
         if (Engine.GetKeyDown(Key.Space))
         {
