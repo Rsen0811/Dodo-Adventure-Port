@@ -19,11 +19,10 @@ class Room
         bg = Engine.LoadTexture("rooms/" + name + "/" + name + "i.png");
         
         enemies = new List<Dodo>();
-        enemies.Add(new Dodo(new Vector2(200, 200)));
+        enemies.Add(new Dodo(new Vector2(700, 400)));
 
         items = new List<Item>();
         items.Add(new Sword(new Vector2(100,100),false));
-
         this.pos = pos;
     }
 
@@ -40,7 +39,7 @@ class Room
     {
         foreach (Dodo d in enemies)
         {
-            d.Update(p.position(), 960);
+            d.Update(p, 960);
         }
         List<Item> toRemove = new List<Item>();
         foreach (Item i in items)
