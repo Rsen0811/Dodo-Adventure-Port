@@ -22,8 +22,13 @@ class Player
     }
     public void Update()
     {
-        if (holding != null)
+        if (Engine.GetKeyDown(Key.X))
         {
+            drop();
+        }
+        else if (holding != null)
+        {
+            
             holding.Update(Rect.getSpriteBounds(pos, PLAYER_SIZE));
         }
     }
@@ -52,8 +57,11 @@ class Player
     }
     public void drop()
     {
-        holding.drop();
-        currRoom.addObject(holding);
+        if (holding != null)
+        {
+            holding.drop();
+            currRoom.addObject(holding);
+        }
     }
 
     public void drawPlayer()

@@ -44,7 +44,10 @@ class Sword : Item
         collectInput(playerPos);
         if (!held)
         {
-            collides(Player);
+            if (Engine.GetKeyDown(Key.R))
+            {
+                collides(Player);
+            }
         }
         else
         {
@@ -52,7 +55,6 @@ class Sword : Item
             {
                 pos = new Vector2(playerPos.X + PLAYERSIZE.X/2 - size.X / 2, playerPos.Y - size.Y);
                 collisionBox = Rect.getSpriteBounds(pos, size);
-
             }
             else if ((dir - new Vector2(-1, 0)).Equals(Vector2.Zero))
             {
