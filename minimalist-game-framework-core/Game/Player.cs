@@ -20,6 +20,8 @@ class Player
     float respawnTimer = 1;
     float deathHits = 0;
 
+    bool gameOver = false;
+
     public Player(Vector2 position, Vector2 room)
     {
         active = true;
@@ -32,10 +34,10 @@ class Player
     {
         if (holding != null)
         {
-            holding.Update(Rect.getSpriteBounds(pos, PLAYER_SIZE));
+            holding.Update(Rect.GetSpriteBounds(pos, PLAYER_SIZE));
         }
     }
-    public bool move(Vector2 moveVector, Room currRoom = null)
+    public bool Move(Vector2 moveVector, Room currRoom = null)
     {
         bool absolute = (currRoom == null);
         if (!alive || !active || moveVector.Equals(Vector2.Zero))
@@ -45,7 +47,7 @@ class Player
                 respawnTimer -= Engine.TimeDelta;
                 if (respawnTimer <= 0)
                 {
-                    respawn();
+                    gameOver = true;
                 }
             }
             return false;
@@ -57,33 +59,33 @@ class Player
             return true;
         }
         Vector2 moveDir = moveVector.Normalized() * (PLAYER_SPEED * Engine.TimeDelta);
-        pos = currRoom.move(pos, moveDir);
+        pos = currRoom.Move(pos, moveDir);
 
         return true;
     }
-    public void pickup(Item i)
+    public void Pickup(Item i)
     {
         if (holding != null)
         {
-            this.drop();
+            this.Drop();
         }
         holding = i;
     }
-    public void drop()
+    public void Drop()
     {
-        holding.drop();
-        currRoom.addObject(holding);
+        holding.Drop();
+        currRoom.AddObject(holding);
     }
 
-    public void drawPlayer()
+    public void DrawPlayer()
     {
         Engine.DrawTexture(player, pos, size: new Vector2(24, 24));
         if (holding != null)
         {
-            holding.draw();
+            holding.Draw();
         }
     }
-    public void changeRoom(Room room)
+    public void ChangeRoom(Room room)
     {
         currRoom = room;
     }
@@ -93,7 +95,7 @@ class Player
         return pos;
     }
 
-    public void getEaten(Vector2 deathPos)
+    public void GetEaten(Vector2 deathPos)
     {
         if (deathTimer == 1.5f)
         {
@@ -122,7 +124,7 @@ class Player
         }
         else if(deathHits > 0)
         {
-            die(deathPos);
+            Die(deathPos);
         }
         else
         {
@@ -134,7 +136,7 @@ class Player
     {
         this.deathTimer = deathTimer;
     }
-    public Vector2 respawn()
+    public Vector2 Respawn()
     {
         pos = checkpointPos;
         alive = true;
@@ -145,16 +147,21 @@ class Player
         return checkpointRoom;
     }
 
-    public void die(Vector2 deathPos)
+    public void Die(Vector2 deathPos)
     {
         alive = false;
         pos = deathPos;
         respawnTimer -= Engine.TimeDelta;
     }
 
-    public bool isAlive()
+    public bool IsAlive()
     {
         return alive;
+    }
+
+    public bool GameOver()
+    {
+        return gameOver;
     }
 }
 

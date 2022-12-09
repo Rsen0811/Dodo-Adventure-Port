@@ -58,7 +58,7 @@ class Dodo
 
     public void Update(Player player, float screenWidth)
     {
-        if (health > 0 && player.isAlive())
+        if (health > 0 && player.IsAlive())
         {
             Vector2 playerPos = player.position() + new Vector2(12, 12);
             float dist = (float)Math.Sqrt(Math.Pow(dodoPos.X + dimentions.X / 2 - playerPos.X, 2) +
@@ -75,7 +75,7 @@ class Dodo
                     stunTimer = 0;
                     damTimer = 0;
                 }
-                player.getEaten(deathPos);
+                player.GetEaten(deathPos);
                 eatTimer -= Engine.TimeDelta;
             }
             else
@@ -260,11 +260,11 @@ class Dodo
         }
     }
 
-    public Rect getBounds()
+    public Rect GetBounds()
     {
         Vector2 bodyTLC = new Vector2((mirror ? 10:2), 2);
         Vector2 size = new Vector2(46, 74);
 
-        return Rect.getSpriteBounds(bodyTLC + dodoPos, size);
+        return Rect.GetSpriteBounds(bodyTLC + dodoPos, size);
     }
 }

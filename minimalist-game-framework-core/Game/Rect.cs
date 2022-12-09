@@ -20,24 +20,24 @@ class Rect
 		return Y.max - Y.min;
 	}
 
-	public Bounds2 toBounds()
+	public Bounds2 ToBounds()
     {
 		return new Bounds2(new Vector2(X.min, Y.min), new Vector2(XRange(), YRange()));
 
 	}
-	static public Rect getSpriteBounds(Vector2 position, Vector2 spriteSize)
+	static public Rect GetSpriteBounds(Vector2 position, Vector2 spriteSize)
 	{ // a -1 makes the boundaries even
 		Rect sBound = new Rect(new Range(position.X, position.X + spriteSize.X),
 								   new Range(position.Y, position.Y + spriteSize.Y));
 
 		// for debug use only - bounding boxes
-		Engine.DrawRectEmpty(sBound.toBounds(), Color.Black);
+		Engine.DrawRectEmpty(sBound.ToBounds(), Color.Black);
 		return sBound;
 	}
 
-	public static bool checkRectIntersect(Rect rect, Rect playerBounds)
+	public static bool CheckRectIntersect(Rect rect, Rect playerBounds)
 	{
-		return Range.checkIntervalIntersect(rect.X, playerBounds.X)
-			 && Range.checkIntervalIntersect(rect.Y, playerBounds.Y);
+		return Range.CheckIntervalIntersect(rect.X, playerBounds.X)
+			 && Range.CheckIntervalIntersect(rect.Y, playerBounds.Y);
 	}
 }
