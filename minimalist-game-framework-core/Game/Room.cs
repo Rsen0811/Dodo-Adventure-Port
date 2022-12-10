@@ -15,24 +15,23 @@ class Room
 
     public Room(Vector2 pos) {
         String name = "" + pos.X + pos.Y;
-        CollisionZones = readCollisionZones("rooms/" + name + "/" + name + "c.txt");
+        CollisionZones = ReadCollisionZones("rooms/" + name + "/" + name + "c.txt");
         bg = Engine.LoadTexture("rooms/" + name + "/" + name + "i.png");
         
         enemies = new List<Dodo>();
-        enemies.Add(new Dodo(new Vector2(200, 200)));
+        enemies.Add(new Dodo(new Vector2(700, 400)));
 
         items = new List<Item>();
         items.Add(new Sword(new Vector2(100,100),false));
-
         this.pos = pos;
     }
 
-    public Vector2 position()
+    public Vector2 Position()
     {
         return pos;
     }
 
-    public void testaddDodo()
+    public void TestaddDodo()
     {
         enemies.Add(new Dodo(new Vector2(200, 200)));
     }
@@ -40,24 +39,24 @@ class Room
     {
         foreach (Dodo d in enemies)
         {
-            d.Update(p.position(), 960);
+            d.Update(p, 960);
         }
         List<Item> toRemove = new List<Item>();
         foreach (Item i in items)
         {
-            i.Update(Rect.getSpriteBounds(p.position(), PLAYER_SIZE));
-            if (i.isHeld())
+            i.Update(Rect.GetSpriteBounds(p.position(), PLAYER_SIZE));
+            if (i.IsHeld())
             {
                 toRemove.Add(i);
             }
         }
         foreach(Item i in toRemove)
         {
-            this.pickup(p,i);
+            this.Pickup(p,i);
         }
     }
 
-    public void idle()
+    public void Idle()
     {
         foreach (Dodo d in enemies)
         {
@@ -65,39 +64,39 @@ class Room
         }
     }
 
-    public Vector2 move(Vector2 start, Vector2 movement)
+    public Vector2 Move(Vector2 start, Vector2 movement)
     {
         // why do calcs if none needed
         if (movement.Equals(Vector2.Zero)) return start;
 
         Vector2 moveTo = start + movement;
-        Rect playerBounds = Rect.getSpriteBounds(moveTo, PLAYER_SIZE);
+        Rect playerBounds = Rect.GetSpriteBounds(moveTo, PLAYER_SIZE);
 
 
         foreach (Rect collider in CollisionZones)
         { // position is actual x range and size is actually y range
-            if (checkRectIntersect(collider, playerBounds))
+            if (Rect.CheckRectIntersect(collider, playerBounds))
             { // does handle corners
                 Vector2 moveToY = start + new Vector2(0, movement.Y);
-                Rect playerBoundsY = Rect.getSpriteBounds(moveToY, PLAYER_SIZE);
+                Rect playerBoundsY = Rect.GetSpriteBounds(moveToY, PLAYER_SIZE);
                 Vector2 moveToX = start + new Vector2(movement.X, 0);
-                Rect playerBoundsX = Rect.getSpriteBounds(moveToX, PLAYER_SIZE);
-                if (!checkRectIntersect(collider, playerBoundsY) && !checkRectIntersect(collider, playerBoundsX))
+                Rect playerBoundsX = Rect.GetSpriteBounds(moveToX, PLAYER_SIZE);
+                if (!Rect.CheckRectIntersect(collider, playerBoundsY) && !Rect.CheckRectIntersect(collider, playerBoundsX))
                 {
                     //check just x and just y and which ever moves farther is the one we use
-                    Vector2 Xmove= move(start, new Vector2(movement.X, 0));
+                    Vector2 Xmove= Move(start, new Vector2(movement.X, 0));
                     float XmoveLength = (Xmove - start).Length();
-                    Vector2 Ymove = move(start, new Vector2(0, movement.Y));
+                    Vector2 Ymove = Move(start, new Vector2(0, movement.Y));
                     float YmoveLength = (Ymove - start).Length();
                     return XmoveLength > YmoveLength ? Xmove : Ymove;
                 }
                 else
                 {
-                    if (checkRectIntersect(collider, playerBoundsX))
+                    if (Rect.CheckRectIntersect(collider, playerBoundsX))
                     {
                         //need to check if you are to the right or to the left
                         //if player to the right of the wall
-                        if (collider.X.max<= Rect.getSpriteBounds(start, PLAYER_SIZE).X.min)
+                        if (collider.X.max<= Rect.GetSpriteBounds(start, PLAYER_SIZE).X.min)
                         {
                             moveTo.X = collider.X.max;
                         }
@@ -107,11 +106,11 @@ class Room
                             moveTo.X = collider.X.min - PLAYER_SIZE.X;
                         }
                     }
-                    if (checkRectIntersect(collider, playerBoundsY))
+                    if (Rect.CheckRectIntersect(collider, playerBoundsY))
                     {
                         //need to check if you are to the up or to the down
                         //if player is above the wall
-                        if (collider.Y.min >= Rect.getSpriteBounds(start, PLAYER_SIZE).Y.max)
+                        if (collider.Y.min >= Rect.GetSpriteBounds(start, PLAYER_SIZE).Y.max)
                         {
                             moveTo.Y = collider.Y.min - PLAYER_SIZE.Y;
                         }
@@ -127,21 +126,8 @@ class Room
         }
         return moveTo;
     }
-    private bool checkIntervalIntersect(Range barrier, Range player)
-    {
-        if (player.min < barrier.max && player.min > barrier.min) return true;
-        if (player.max < barrier.max && player.max > barrier.min) return true;
-        if (barrier.min < player.max && barrier.min > player.max) return true;
-        return false;
-    }
 
-    private bool checkRectIntersect(Rect rect, Rect playerBounds)
-    {
-        return checkIntervalIntersect(rect.X, playerBounds.X)
-             && checkIntervalIntersect(rect.Y, playerBounds.Y);
-    }
-
-    public void drawRoom()
+    public void DrawRoom()
     {
         Engine.DrawTexture(bg, new Vector2(0, 0));
         foreach (Dodo d in enemies)
@@ -151,29 +137,29 @@ class Room
 
         foreach (Item i in items)
         {
-            i.draw();
+            i.Draw();
         }
     }
 
-    public void addObject(Item i)
+    public void AddObject(Item i)
     {
         items.Add(i);
     }
 
-    public void removeObject(Item i)
+    public void RemoveObject(Item i)
     {
         items.Remove(i);
     }
 
-    public void pickup(Player p, Item i)
+    public void Pickup(Player p, Item i)
     {
-        removeObject(i);
-        i.pickup();
-        p.pickup(i);
+        RemoveObject(i);
+        i.Pickup();
+        p.Pickup(i);
     }
 
     //read rectangle collisions from a text file
-    public List<Rect> readCollisionZones(String file)
+    public List<Rect> ReadCollisionZones(String file)
     {
         List<Rect> loader = new List<Rect>();
 

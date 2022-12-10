@@ -17,12 +17,12 @@ class Gate : Rect
         
     }
 
-    private bool collides()
+    private bool Collides()
     {
         return false;
     }
 
-    private void draw()
+    private void Draw()
     {
 
     }
