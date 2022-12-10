@@ -4,7 +4,6 @@ using System.Text;
 
 class Sword : Item
 {
-    Vector2 PLAYERSIZE =new Vector2(24, 24);
     public bool isHoly;
     public int damage;
     private Texture spriteMap;
@@ -38,7 +37,7 @@ class Sword : Item
     {
         held = false;
     }
-    public void move(Vector2 pos)
+    public void Move(Vector2 pos)
     {
         this.pos = pos;
         this.collisionBox = new Rect(new Range(pos.X, pos.X + size.X), new Range(pos.Y, pos.Y + size.Y));
@@ -51,34 +50,34 @@ class Sword : Item
         {
             if (Engine.GetKeyDown(Key.R))
             {
-                collides(Player);
+                Collides(Player);
             }
         }
         else
         {
             if ((dir-new Vector2(0, -1)).Equals(Vector2.Zero))
             {
-                pos = new Vector2(playerPos.X + PLAYERSIZE.X/2 - size.X / 2, playerPos.Y - size.Y);
-                collisionBox = Rect.getSpriteBounds(pos, size);
+                pos = new Vector2(playerPos.X + Game.PLAYER_SIZE.X/2 - size.X / 2, playerPos.Y - size.Y);
+                collisionBox = Rect.GetSpriteBounds(pos, size);
             }
             else if ((dir - new Vector2(-1, 0)).Equals(Vector2.Zero))
             {
-                pos = new Vector2(playerPos.X - size.Y, playerPos.Y + PLAYERSIZE.Y/2 - size.X / 2);
+                pos = new Vector2(playerPos.X - size.Y, playerPos.Y + Game.PLAYER_SIZE.Y/2 - size.X / 2);
                 collisionBox = Rect.GetSpriteBounds(pos, new Vector2(size.Y, size.X));
             }
             else if ((dir - new Vector2(0, 1)).Equals(Vector2.Zero))
             {
-                pos = new Vector2(playerPos.X + PLAYERSIZE.X/2 - size.X / 2, playerPos.Y + 24);
+                pos = new Vector2(playerPos.X + Game.PLAYER_SIZE.X/2 - size.X / 2, playerPos.Y + 24);
                 collisionBox = Rect.GetSpriteBounds(pos, size);
             }
             else if ((dir - new Vector2(1, 0)).Equals(Vector2.Zero))
             {
-                pos = new Vector2(playerPos.X + PLAYERSIZE.X, playerPos.Y + PLAYERSIZE.Y/2 - size.X / 2);
+                pos = new Vector2(playerPos.X + Game.PLAYER_SIZE.X, playerPos.Y + Game.PLAYER_SIZE.Y/2 - size.X / 2);
                 collisionBox = Rect.GetSpriteBounds(pos, new Vector2(size.Y, size.X));
             }
         }
     }
-    public Vector2 getSize()
+    public Vector2 GetSize()
     {
         if(dir.Equals(new Vector2(-1, 0))||dir.Equals(new Vector2(1, 0)))
         {
@@ -86,7 +85,7 @@ class Sword : Item
         }
         return size;
     }
-    public void draw()
+    public void Draw()
     {
         Engine.DrawRectEmpty(collisionBox.ToBounds(), Color.Red);
     }
