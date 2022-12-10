@@ -5,12 +5,12 @@ using System.Text;
 interface Item
 {
 
-    void move(Vector2 pos);
-    void draw();
+    void Move(Vector2 pos);
+    void Draw();
 
-    Vector2 getSize();
+    Vector2 GetSize();
     
-    Rect collisionZone();
+    Rect CollisionZone();
 
 
     bool IsHeld();
