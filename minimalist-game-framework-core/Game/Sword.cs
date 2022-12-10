@@ -89,7 +89,7 @@ class Sword : Item
     }
     public void Draw()
     {
-        Engine.DrawRectEmpty(collisionBox.toBounds(), Color.Red);
+        Engine.DrawRectEmpty(collisionBox.ToBounds(), Color.Red);
         if(r == 0f || r == 180f)
         {
             Engine.DrawTexture(spriteMap, pos, size: size, rotation: r);
@@ -97,8 +97,6 @@ class Sword : Item
         {
             Engine.DrawTexture(spriteMap, new Vector2(pos.X + 6, pos.Y - size.Y / 4), size: size, rotation: r);
         }
-        
-        Engine.DrawRectEmpty(collisionBox.ToBounds(), Color.Red);
     }
 
     public bool IsHeld()
