@@ -28,7 +28,7 @@ class Sword : Item
         }
         else {
             this.spriteMap = Engine.LoadTexture("textures/sword.png");
-            this.size = new Vector2(141,358);
+            this.size = new Vector2(12, 24);
             this.damage = 1;
         }
         this.isHoly = isHoly;
@@ -83,7 +83,7 @@ class Sword : Item
             Engine.DrawTexture(spriteMap, pos, size: size, rotation: r);
         } else
         {
-            Engine.DrawTexture(spriteMap, new Vector2(collisionBox.X.min, pos.Y - size.Y / 4), size: size, rotation: r);
+            Engine.DrawTexture(spriteMap, new Vector2(pos.X + 6, pos.Y - size.Y / 4), size: size, rotation: r);
         }
         
     }
@@ -129,7 +129,7 @@ class Sword : Item
         else if (Engine.GetKeyHeld(Key.A))
         {
             dir = new Vector2(-1, 0);
-            r = 270f;
+            r = -90f;
         }
         else if (Engine.GetKeyHeld(Key.S))
         {
