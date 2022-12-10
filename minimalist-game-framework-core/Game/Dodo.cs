@@ -126,6 +126,7 @@ class Dodo
 
     public void DrawDodo()
     {
+        GetBounds();
         switch(health)
         { 
             case 2: 
