@@ -13,7 +13,7 @@ class Game
     Vector2 currRoom = new Vector2(2, 4);
 
     Player player;
-    Room[,] rooms;
+    static Room[,] rooms;
     
     public Game()
     {
@@ -108,4 +108,13 @@ class Game
         }
         player.move(playerPos);
     }
+    public static Room getRoom(Vector2 address)
+    {
+        if(rooms[(int)address.X, (int)address.Y] == null)
+        {
+            rooms[(int)address.X, (int)address.Y] = new Room(address);
+        }
+        return rooms[(int)address.X, (int)address.Y];
+    }
+
 }

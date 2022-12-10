@@ -60,8 +60,41 @@ class Player
         if (holding != null)
         {
             holding.drop();
-            currRoom.addObject(holding);
+            Room dropRoom = this.wrap();
+            dropRoom.addObject(holding);
+            holding = null;
         }
+    }
+    public Room wrap()
+    {
+        Vector2 pos = new Vector2(holding.collisionZone().X.min,holding.collisionZone().Y.min);
+        Vector2 tempRoom = currRoom.position();
+        
+        if (pos.X > Game.Resolution.X)
+        {
+            holding.move(new Vector2(Math.Abs(pos.X % Game.Resolution.X), Math.Abs(pos.Y % Game.Resolution.Y)));
+            tempRoom.X++;
+        }
+        //doesnt work
+        if (pos.X + holding.getSize().X < 0)
+        {
+            holding.move(new Vector2(Game.Resolution.X-Math.Abs(pos.X), Math.Abs(pos.Y % Game.Resolution.Y)));
+            tempRoom.X--;
+        }
+        if (pos.Y > Game.Resolution.Y)
+        {
+            holding.move(new Vector2(Math.Abs(pos.X % Game.Resolution.X), Math.Abs(pos.Y % Game.Resolution.Y)));
+            tempRoom.Y++;
+            
+        }
+        //doesnt work
+        if (pos.Y + holding.getSize().Y < 0)
+        {
+            holding.move(new Vector2(Math.Abs(pos.X % Game.Resolution.X), Game.Resolution.Y-Math.Abs(pos.Y)));
+            tempRoom.Y--;
+        }
+        
+        return Game.getRoom(tempRoom);
     }
 
     public void drawPlayer()

@@ -13,6 +13,14 @@ class GateKey : Item
     {
 
     }
+    public void move(Vector2 pos)
+    {
+
+    }
+    public Vector2 getSize()
+    {
+        return Vector2.Zero;
+    }
     public Gate getGate()
     {
         return gate;

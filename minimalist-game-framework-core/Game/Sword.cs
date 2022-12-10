@@ -38,6 +38,11 @@ class Sword : Item
     {
         held = false;
     }
+    public void move(Vector2 pos)
+    {
+        this.pos = pos;
+        this.collisionBox = new Rect(new Range(pos.X, pos.X + size.X), new Range(pos.Y, pos.Y + size.Y));
+    }
     public void Update(Rect Player)
     {
         Vector2 playerPos = new Vector2(Player.X.min, Player.Y.min);
@@ -72,6 +77,14 @@ class Sword : Item
                 collisionBox = Rect.getSpriteBounds(pos, new Vector2(size.Y, size.X));
             }
         }
+    }
+    public Vector2 getSize()
+    {
+        if(dir.Equals(new Vector2(-1, 0))||dir.Equals(new Vector2(1, 0)))
+        {
+            return new Vector2(size.Y, size.X);
+        }
+        return size;
     }
     public void draw()
     {
