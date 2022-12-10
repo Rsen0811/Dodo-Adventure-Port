@@ -13,7 +13,7 @@ class Game
     Vector2 currRoom = new Vector2(2, 4);
 
     Player player;
-    Room[,] rooms;
+    static Room[,] rooms;
     
     public Game()
     {
@@ -24,6 +24,7 @@ class Game
 
     public void Update()
     {
+        if (player.GameOver()) GameOver();
         //three steps
         //1. collect input and predict the movement without colisions
         //2. check if the character intersects with a wall at those coordinates
@@ -38,7 +39,7 @@ class Game
         if (Engine.GetKeyHeld(Key.Right)) moveVector.X += 1;
         if (Engine.GetKeyHeld(Key.Left)) moveVector.X -= 1;
 
-        if (Engine.GetKeyHeld(Key.P)) rooms[(int)currRoom.X, (int)currRoom.Y].testaddDodo();
+        if (Engine.GetKeyHeld(Key.P)) rooms[(int)currRoom.X, (int)currRoom.Y].TestaddDodo();
         
         //normalize the movement
         moveVector = moveVector.Normalized();
@@ -47,40 +48,46 @@ class Game
         // Processing ----------------------------------
 
         //update player
-        bool successfulMove = player.move(moveVector, rooms[(int)currRoom.X, (int)currRoom.Y]);
-        if (successfulMove) wrap();
-        player.changeRoom(rooms[(int)currRoom.X, (int)currRoom.Y]);
+        bool successfulMove = player.Move(moveVector, rooms[(int)currRoom.X, (int)currRoom.Y]);
+        if (successfulMove) Wrap();
+        player.ChangeRoom(rooms[(int)currRoom.X, (int)currRoom.Y]);
         rooms[(int)currRoom.X, (int)currRoom.Y].Update(player);
-        idle();
+        Idle();
         player.Update();
         // Graphics ------------------------------------
-        rooms[(int)currRoom.X, (int)currRoom.Y].drawRoom();
-        player.drawPlayer();
+        rooms[(int)currRoom.X, (int)currRoom.Y].DrawRoom();
+        player.DrawPlayer();
         // Dodo ----------------------------------------        
     }
 
-    public void idle() 
+    public void Idle() 
     { 
         foreach(Room r in rooms)
         {
             // if room is neighboring
-            if (r != null && Math.Abs((r.position() - currRoom).Length() - 1) <= 0)
+            if (r != null && Math.Abs((r.Position() - currRoom).Length() - 1) <= 0)
             {
-                r.idle();
+                r.Idle();
             }
         }
     }
-    public void wrap()
+
+    public void GameOver()
+    {
+        // add game over code here
+        return;
+    }
+    public void Wrap()
     {
         Vector2 playerPos = player.position();
 
-        if (playerPos.X > Resolution.X) swapRoom(0);
-        if (playerPos.X + PLAYER_SIZE.X < 0) swapRoom(1);
-        if (playerPos.Y > Resolution.Y) swapRoom(2);
-        if (playerPos.Y + PLAYER_SIZE.Y < 0) swapRoom(3);
+        if (playerPos.X > Resolution.X) SwapRoom(0);
+        if (playerPos.X + PLAYER_SIZE.X < 0) SwapRoom(1);
+        if (playerPos.Y > Resolution.Y) SwapRoom(2);
+        if (playerPos.Y + PLAYER_SIZE.Y < 0) SwapRoom(3);
     }
 
-    public void swapRoom(int i)
+    public void SwapRoom(int i)
     {
         Vector2 playerPos = player.position();
         switch(i)
@@ -106,6 +113,15 @@ class Game
         {
             rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
         }
-        player.move(playerPos);
+        player.Move(playerPos);
     }
+    public static Room getRoom(Vector2 address)
+    {
+        if(rooms[(int)address.X, (int)address.Y] == null)
+        {
+            rooms[(int)address.X, (int)address.Y] = new Room(address);
+        }
+        return rooms[(int)address.X, (int)address.Y];
+    }
+
 }

@@ -13,19 +13,28 @@ class GateKey : Item
     {
 
     }
+
+    public void Move(Vector2 pos)
+    {
+
+    }
+    public Vector2 GetSize()
+    {
+        return Vector2.Zero;
+    }
     public Gate getGate()
     {
         return gate;
     }
-    public void draw()
+    public void Draw()
     {
 
     }
-    public Rect collisionZone()
+    public Rect CollisionZone()
     {
         return null;
     }
-    public bool isHeld()
+    public bool IsHeld()
     {
         return false;
     }
@@ -34,15 +43,15 @@ class GateKey : Item
     {
 
     }
-    public bool collides(Rect Rect)
+    public bool Collides(Rect Rect)
     {
         return false;
     }
-    public void drop()
+    public void Drop()
     {
 
     }
-    public void pickup()
+    public void Pickup()
     {
 
     }

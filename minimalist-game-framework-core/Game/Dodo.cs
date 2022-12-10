@@ -29,6 +29,7 @@ class Dodo
     private Random random = new Random();
 
     private Vector2 dodoPos;
+    private Vector2 deathPos;
     public Dodo(Vector2 dodoPos)
     {
         this.dodoPos = dodoPos;
@@ -55,56 +56,68 @@ class Dodo
         move = new Vector2(random.Next(), random.Next());
     }
 
-    public void Update(Vector2 playerPos, float screenWidth)
+    public void Update(Player player, float screenWidth)
     {
-        if (health > 0)
+        if (health > 0 && player.IsAlive())
         {
-            playerPos += new Vector2(12, 12);
+            Vector2 playerPos = player.position() + new Vector2(12, 12);
             float dist = (float)Math.Sqrt(Math.Pow(dodoPos.X + dimentions.X / 2 - playerPos.X, 2) +
                 Math.Pow(dodoPos.Y + dimentions.Y / 4 - playerPos.Y, 2));
-            if (dist < 30) Damage();
-            if (chargeTimer > 1.4 && !charge)
+            if (eatTimer > 0 || dist < 35f && stunTimer <= 0)
             {
-                if (random.Next(chargeChance) == 1)
+                if (eatTimer <= 0)
                 {
-                    charge = true;
+                    player.SetDeathTimer(1.5f);
+                    eatTimer = 2f;
+                    dodoPos = playerPos + new Vector2((mirror ? 5 : -dimentions.X - 5), -dimentions.Y / 4);
+                    deathPos = new Vector2(dodoPos.X + dimentions.X / 4 + (mirror ? 5 : 0), dodoPos.Y + dimentions.Y / 2);
+                    chargeTimer = 0;
+                    stunTimer = 0;
+                    damTimer = 0;
                 }
-                chargeTimer = 0;
-            }
-
-            if (stunTimer > 0)
-            {
-                if (stunTimer > 0.65 && Move(dodoPos + chargeDir * -1))
-                {
-                    dodoPos += chargeDir * stunSpeed;
-                    stunSpeed -= stunSpeed / 10;
-                }
-                stunTimer -= Engine.TimeDelta;
-            }
-            else if (eatTimer > 0)
-            {
+                player.GetEaten(deathPos);
                 eatTimer -= Engine.TimeDelta;
-            }
-            else if (damTimer > 0)
-            {
-                damTimer -= Engine.TimeDelta;
             }
             else
             {
-                if (charge)
+                if (chargeTimer > 1.4 && !charge)
                 {
-                    chaseDist = screenWidth;
-                    charge = Charge(playerPos);
+                    if (random.Next(chargeChance) == 1)
+                    {
+                        charge = true;
+                    }
+                    chargeTimer = 0;
                 }
-                else if (dist > chaseDist)
+                if (stunTimer > 0)
                 {
-                    Idle();
+                    if (stunTimer > 0.65 && Move(dodoPos + chargeDir * -1))
+                    {
+                        dodoPos += chargeDir * stunSpeed;
+                        stunSpeed -= stunSpeed / 10;
+                    }
+                    stunTimer -= Engine.TimeDelta;
                 }
-
+                else if (damTimer > 0)
+                {
+                    damTimer -= Engine.TimeDelta;
+                }
                 else
                 {
-                    Run(playerPos);
-                    chargeTimer += Engine.TimeDelta;
+                    if (charge)
+                    {
+                        chaseDist = screenWidth;
+                        charge = Charge(playerPos);
+                    }
+                    else if (dist > chaseDist)
+                    {
+                        Idle();
+                    }
+
+                    else
+                    {
+                        Run(playerPos);
+                        chargeTimer += Engine.TimeDelta;
+                    }
                 }
             }
         }
@@ -247,11 +260,11 @@ class Dodo
         }
     }
 
-    public Rect getBounds()
+    public Rect GetBounds()
     {
         Vector2 bodyTLC = new Vector2((mirror ? 10:2), 2);
         Vector2 size = new Vector2(46, 74);
 
-        return Rect.getSpriteBounds(bodyTLC + dodoPos, size);
+        return Rect.GetSpriteBounds(bodyTLC + dodoPos, size);
     }
 }

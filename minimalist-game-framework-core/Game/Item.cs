@@ -4,18 +4,23 @@ using System.Text;
 
 interface Item
 {
-    void draw();
 
-    Rect collisionZone();
+    void Move(Vector2 pos);
+    void Draw();
 
-    bool isHeld();
+    Vector2 GetSize();
+    
+    Rect CollisionZone();
+
+
+    bool IsHeld();
 
     void Update(Rect Player);
 
-    bool collides(Rect bounds);
+    bool Collides(Rect bounds);
 
-    void drop();
+    void Drop();
 
-    void pickup();
+    void Pickup();
 
 }
