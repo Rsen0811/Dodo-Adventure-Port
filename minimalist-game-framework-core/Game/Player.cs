@@ -131,6 +131,11 @@ class Player
         currRoom = room;
     }
 
+    public Item getItem()
+    {
+        return holding;
+    }
+
     public Vector2 position()
     {
         return pos;
