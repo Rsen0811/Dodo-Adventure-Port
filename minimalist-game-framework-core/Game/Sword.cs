@@ -38,21 +38,28 @@ class Sword : Item
     {
         held = false;
     }
+    public void move(Vector2 pos)
+    {
+        this.pos = pos;
+        this.collisionBox = new Rect(new Range(pos.X, pos.X + size.X), new Range(pos.Y, pos.Y + size.Y));
+    }
     public void Update(Rect Player)
     {
         Vector2 playerPos = new Vector2(Player.X.min, Player.Y.min);
         CollectInput(playerPos);
         if (!held)
         {
-            Collides(Player);
+            if (Engine.GetKeyDown(Key.R))
+            {
+                collides(Player);
+            }
         }
         else
         {
             if ((dir-new Vector2(0, -1)).Equals(Vector2.Zero))
             {
                 pos = new Vector2(playerPos.X + PLAYERSIZE.X/2 - size.X / 2, playerPos.Y - size.Y);
-                collisionBox = Rect.GetSpriteBounds(pos, size);
-
+                collisionBox = Rect.getSpriteBounds(pos, size);
             }
             else if ((dir - new Vector2(-1, 0)).Equals(Vector2.Zero))
             {
@@ -71,7 +78,15 @@ class Sword : Item
             }
         }
     }
-    public void Draw()
+    public Vector2 getSize()
+    {
+        if(dir.Equals(new Vector2(-1, 0))||dir.Equals(new Vector2(1, 0)))
+        {
+            return new Vector2(size.Y, size.X);
+        }
+        return size;
+    }
+    public void draw()
     {
         Engine.DrawRectEmpty(collisionBox.ToBounds(), Color.Red);
     }

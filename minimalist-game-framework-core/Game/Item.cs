@@ -4,9 +4,14 @@ using System.Text;
 
 interface Item
 {
-    void Draw();
 
-    Rect CollisionZone();
+    void move(Vector2 pos);
+    void draw();
+
+    Vector2 getSize();
+    
+    Rect collisionZone();
+
 
     bool IsHeld();
 

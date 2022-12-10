@@ -32,9 +32,13 @@ class Player
     }
     public void Update()
     {
-        if (holding != null)
+        if (Engine.GetKeyDown(Key.X))
         {
-            holding.Update(Rect.GetSpriteBounds(pos, PLAYER_SIZE));
+            drop();
+        }
+        else if (holding != null)
+        {            
+            holding.Update(Rect.getSpriteBounds(pos, PLAYER_SIZE));
         }
     }
     public bool Move(Vector2 moveVector, Room currRoom = null)
@@ -73,8 +77,45 @@ class Player
     }
     public void Drop()
     {
-        holding.Drop();
-        currRoom.AddObject(holding);
+
+        if (holding != null)
+        {
+            holding.drop();
+            Room dropRoom = this.wrap();
+            dropRoom.addObject(holding);
+            holding = null;
+        }
+    }
+    public Room wrap()
+    {
+        Vector2 pos = new Vector2(holding.collisionZone().X.min,holding.collisionZone().Y.min);
+        Vector2 tempRoom = currRoom.position();
+        
+        if (pos.X > Game.Resolution.X)
+        {
+            holding.move(new Vector2(Math.Abs(pos.X % Game.Resolution.X), Math.Abs(pos.Y % Game.Resolution.Y)));
+            tempRoom.X++;
+        }
+        //doesnt work
+        if (pos.X + holding.getSize().X < 0)
+        {
+            holding.move(new Vector2(Game.Resolution.X-Math.Abs(pos.X), Math.Abs(pos.Y % Game.Resolution.Y)));
+            tempRoom.X--;
+        }
+        if (pos.Y > Game.Resolution.Y)
+        {
+            holding.move(new Vector2(Math.Abs(pos.X % Game.Resolution.X), Math.Abs(pos.Y % Game.Resolution.Y)));
+            tempRoom.Y++;
+            
+        }
+        //doesnt work
+        if (pos.Y + holding.getSize().Y < 0)
+        {
+            holding.move(new Vector2(Math.Abs(pos.X % Game.Resolution.X), Game.Resolution.Y-Math.Abs(pos.Y)));
+            tempRoom.Y--;
+        }
+        
+        return Game.getRoom(tempRoom);
     }
 
     public void DrawPlayer()
