@@ -32,11 +32,15 @@ class Room
     }
 
     public void TestaddDodo()
-    {
+    { 
         enemies.Add(new Dodo(new Vector2(200, 200)));
     }
     public void Update(Player p)
     {
+        if (p.getItem() != null && p.getItem().GetType() == typeof(Sword))
+        {
+            swordSweep((Sword) p.getItem());
+        }
         foreach (Dodo d in enemies)
         {
             d.Update(p, 960);
@@ -175,6 +179,16 @@ class Room
             }
         }
         return loader;
+    }
+
+    public void swordSweep(Sword s) { 
+        foreach(Dodo enemy in enemies)
+        {
+            if (Rect.CheckRectIntersect(s.CollisionZone(), enemy.GetBounds()))
+            {
+                enemy.Damage();
+            }
+        }
     }
 }
 
