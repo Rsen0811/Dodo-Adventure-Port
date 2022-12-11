@@ -27,7 +27,8 @@ class Game
     {
         if (start)
         {
-            startScreen.draw();
+            startScreen.Update();
+            startScreen.Draw();
             return;
         }
         if (player.GameOver()) GameOver();
