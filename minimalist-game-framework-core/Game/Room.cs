@@ -37,9 +37,9 @@ class Room
     }
     public void Update(Player p)
     {
-        if (p.getItem() != null && p.getItem().GetType() == typeof(Sword))
+        if (p.GetItem() != null && p.GetItem().GetType() == typeof(Sword))
         {
-            swordSweep((Sword) p.getItem());
+            swordSweep((Sword) p.GetItem());
         }
         foreach (Dodo d in enemies)
         {
@@ -48,7 +48,7 @@ class Room
         List<Item> toRemove = new List<Item>();
         foreach (Item i in items)
         {
-            i.Update(Rect.GetSpriteBounds(p.position(), PLAYER_SIZE));
+            i.Update(Rect.GetSpriteBounds(p.Position(), PLAYER_SIZE));
             if (i.IsHeld())
             {
                 toRemove.Add(i);
@@ -186,7 +186,7 @@ class Room
         {
             if (Rect.CheckRectIntersect(s.CollisionZone(), enemy.GetBounds()))
             {
-                enemy.Damage();
+                 enemy.Damage();
             }
         }
     }

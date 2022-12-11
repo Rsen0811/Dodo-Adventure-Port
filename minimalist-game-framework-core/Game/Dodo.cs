@@ -15,6 +15,7 @@ class Dodo
     private bool charge = false;
     private readonly int chargeChance = 2;
     private Vector2 chargeDir;
+    private Vector2 stunDir;
     private float stunTimer = 0;
     private float damTimer = 0;
     private float eatTimer = 0;
@@ -24,12 +25,13 @@ class Dodo
     private readonly Texture dodoDead;
     private readonly Texture dodoDamaged;
     private bool mirror;
-    private Vector2 dimentions = new Vector2(58, 82);
+    private static Vector2 dimentions = new Vector2(58, 82);
 
     private Random random = new Random();
 
     private Vector2 dodoPos;
     private Vector2 deathPos;
+    private Player player;
     public Dodo(Vector2 dodoPos)
     {
         this.dodoPos = dodoPos;
@@ -58,12 +60,13 @@ class Dodo
 
     public void Update(Player player, float screenWidth)
     {
+        this.player = player;
         if (health > 0 && player.IsAlive())
         {
-            Vector2 playerPos = player.position() + new Vector2(12, 12);
+            Vector2 playerPos = player.Position() + new Vector2(12, 12);
             float dist = (float)Math.Sqrt(Math.Pow(dodoPos.X + dimentions.X / 2 - playerPos.X, 2) +
                 Math.Pow(dodoPos.Y + dimentions.Y / 4 - playerPos.Y, 2));
-            if (eatTimer > 0 || dist < 35f && stunTimer <= 0)
+            if (eatTimer > 0 || dist < 15f && stunTimer <= 0)
             {
                 if (eatTimer <= 0)
                 {
@@ -88,18 +91,18 @@ class Dodo
                     }
                     chargeTimer = 0;
                 }
+                if (damTimer > 0)
+                {
+                    damTimer -= Engine.TimeDelta;
+                }
                 if (stunTimer > 0)
                 {
                     if (stunTimer > 0.65 && Move(dodoPos + chargeDir * -1))
                     {
-                        dodoPos += chargeDir * stunSpeed;
+                        dodoPos += stunDir * stunSpeed;
                         stunSpeed -= stunSpeed / 10;
                     }
                     stunTimer -= Engine.TimeDelta;
-                }
-                else if (damTimer > 0)
-                {
-                    damTimer -= Engine.TimeDelta;
                 }
                 else
                 {
@@ -194,6 +197,7 @@ class Dodo
             {
                 stunTimer = 1;
                 stunSpeed = chargeSpeed * -0.5f;
+                stunDir = -chargeDir;
                 return false;
             }
         }
@@ -257,8 +261,16 @@ class Dodo
         if (damTimer <= 0)
         {
             health--;
-            damTimer = 1.5f;
+            stunDir = player.Rebound(dodoPos);
+            stunSpeed = chargeSpeed * -0.3f;
+            stunTimer = 1;
+            damTimer = 1f;
         }
+    }
+
+    public static Vector2 GetSize()
+    {
+        return dimentions;
     }
 
     public Rect GetBounds()
