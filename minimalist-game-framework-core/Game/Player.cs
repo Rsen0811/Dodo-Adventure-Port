@@ -15,7 +15,10 @@ class Player
     Texture player = Engine.LoadTexture("textures/player.png");
     Room currRoom;
     Random random = new Random();
-   
+
+    float reboundTimer = 0;
+    float reboundSpeed;
+    Vector2 reboundDir;
     float deathTimer = -1;
     float respawnTimer = 1;
     float deathHits = 0;
@@ -44,7 +47,7 @@ class Player
     public bool Move(Vector2 moveVector, Room currRoom = null)
     {
         bool absolute = (currRoom == null);
-        if (!alive || !active || moveVector.Equals(Vector2.Zero))
+        if ((moveVector.Equals(Vector2.Zero) && reboundTimer <= 0) || !alive || !active)
         {
             if(respawnTimer < 1)
             {
@@ -63,6 +66,12 @@ class Player
             return true;
         }
         Vector2 moveDir = moveVector.Normalized() * (PLAYER_SPEED * Engine.TimeDelta);
+        if(reboundTimer > 0)
+        {
+            moveDir += reboundDir * (reboundSpeed * Engine.TimeDelta);
+            reboundSpeed -= reboundSpeed / 15f;
+            reboundTimer -= Engine.TimeDelta;
+        }
         pos = currRoom.Move(pos, moveDir);
 
         return true;
@@ -131,12 +140,12 @@ class Player
         currRoom = room;
     }
 
-    public Item getItem()
+    public Item GetItem()
     {
         return holding;
     }
 
-    public Vector2 position()
+    public Vector2 Position()
     {
         return pos;
     }
@@ -208,6 +217,15 @@ class Player
     public bool GameOver()
     {
         return gameOver;
+    }
+
+    public Vector2 Rebound(Vector2 dodoPos)
+    {
+        reboundDir = (new Vector2((pos.X + PLAYER_SIZE.X / 2) - (dodoPos.X + Dodo.GetSize().X / 2), 
+            (pos.Y + PLAYER_SIZE.Y / 2) - (dodoPos.Y + Dodo.GetSize().Y / 2))).Normalized();
+        reboundTimer = 0.7f;
+        reboundSpeed = PLAYER_SPEED * 2f;
+        return reboundDir;
     }
 }
 

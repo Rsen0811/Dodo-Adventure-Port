@@ -79,7 +79,7 @@ class Game
     }
     public void Wrap()
     {
-        Vector2 playerPos = player.position();
+        Vector2 playerPos = player.Position();
 
         if (playerPos.X > Resolution.X) SwapRoom(0);
         if (playerPos.X + PLAYER_SIZE.X < 0) SwapRoom(1);
@@ -89,7 +89,7 @@ class Game
 
     public void SwapRoom(int i)
     {
-        Vector2 playerPos = player.position();
+        Vector2 playerPos = player.Position();
         switch(i)
         {
             case 0:
