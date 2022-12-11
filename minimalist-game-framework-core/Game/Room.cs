@@ -17,13 +17,8 @@ class Room
         String name = "" + pos.X + pos.Y;
         CollisionZones = ReadCollisionZones("rooms/" + name + "/" + name + "c.txt");
         bg = Engine.LoadTexture("rooms/" + name + "/" + name + "i.png");
-        
-        enemies = new List<Dodo>();
-        enemies.Add(new Dodo(new Vector2(700, 400)));
 
-        items = new List<Item>();
-        items.Add(new Sword(new Vector2(100,100),false));
-        this.pos = pos;
+        (items, enemies) = ReadObjects("rooms/" + name + "/" + name + "o.txt");
     }
 
     public Vector2 Position()
@@ -176,6 +171,64 @@ class Room
 
                 loader.Add(new Rect(new Range(float.Parse(nums[0]) , float.Parse(nums[1])),
                                                 new Range(float.Parse(nums[2]), float.Parse(nums[3]))));
+            }
+        }
+        return loader;
+    }
+
+    public (List<Item>, List<Dodo>) ReadObjects(String file)
+    {
+        List<Rect> loader = new List<Rect>();
+
+        using (StreamReader sr = File.OpenText("Assets/" + file))
+        {
+            string s = sr.ReadToEnd();
+            String[] filesplit = s.Split("---");
+
+            return (ReadItems(filesplit[0].Trim()), ReadDodos(filesplit[1].Trim()));
+        }
+    }
+
+    public List<Item> ReadItems(String items)
+    {
+        List<Item> loader = new List<Item>();
+
+        byte[] byteArray = Encoding.ASCII.GetBytes(items);
+        MemoryStream stream = new MemoryStream(byteArray);
+
+        using (StreamReader sr = new StreamReader(stream))
+        {
+            String s;
+            while ((s = sr.ReadLine()) != null)
+            {
+                String[] args = s.Split(' ');
+                if (args[0].Equals("S")) {
+                    Vector2 pos = new Vector2(int.Parse(args[1]), int.Parse(args[2]));
+                    bool isHoly = (args[3].Equals(true));
+                    loader.Add(new Sword(pos, isHoly));
+                }                
+            }
+        }
+        return loader;
+    }
+
+    public List<Dodo> ReadDodos(String dodos)
+    {
+        List<Dodo> loader = new List<Dodo>();
+
+        byte[] byteArray = Encoding.ASCII.GetBytes(dodos);
+        MemoryStream stream = new MemoryStream(byteArray);
+        using (StreamReader sr = new StreamReader(stream))
+        {
+            String s;
+            while ((s = sr.ReadLine()) != null)
+            {
+                String[] args = s.Split(' ');
+                if (args[0].Equals("D"))
+                {
+                    Vector2 pos = new Vector2(int.Parse(args[1]), int.Parse(args[2]));
+                    loader.Add(new Dodo(pos));
+                }
             }
         }
         return loader;
