@@ -152,6 +152,7 @@ class Player
 
     public void GetEaten(Vector2 deathPos)
     {
+        Drop();
         if (deathTimer == 1.5f)
         {
             deathHits = random.Next(13, 25);
@@ -226,6 +227,15 @@ class Player
         reboundTimer = 0.7f;
         reboundSpeed = PLAYER_SPEED * 2f;
         return reboundDir;
+    }
+
+    public bool isActive()
+    {
+        return active;
+    }
+    public void setActive()
+    {
+        active = true;
     }
 }
 

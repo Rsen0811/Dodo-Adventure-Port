@@ -124,6 +124,13 @@ class Dodo
                 }
             }
         }
+        else
+        {
+            if (!player.isActive())
+            {
+                player.setActive();
+            }
+        }
         DrawDodo();
     }
 
