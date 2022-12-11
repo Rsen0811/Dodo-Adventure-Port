@@ -11,7 +11,6 @@ class Game
     Vector2 tileSize = new Vector2(32, 32);
     Vector2 startpos = new Vector2(250, 300);
     Vector2 currRoom = new Vector2(2, 4);
-    bool start = true;
     Player player;
     static Room[,] rooms;
     StartScreen startScreen;
@@ -25,7 +24,7 @@ class Game
 
     public void Update()
     {
-        if (start)
+        if (startScreen.ShouldRun())
         {
             startScreen.Update();
             startScreen.Draw();
