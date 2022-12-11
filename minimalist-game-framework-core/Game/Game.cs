@@ -11,19 +11,25 @@ class Game
     Vector2 tileSize = new Vector2(32, 32);
     Vector2 startpos = new Vector2(250, 300);
     Vector2 currRoom = new Vector2(2, 4);
-
     Player player;
     static Room[,] rooms;
-    
+    StartScreen startScreen;
     public Game()
     {
         rooms = new Room[30, 20];
         rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
         player = new Player(startpos, currRoom);
+        startScreen = new StartScreen();
     }
 
     public void Update()
     {
+        if (startScreen.ShouldRun())
+        {
+            startScreen.Update();
+            startScreen.Draw();
+            return;
+        }
         if (player.GameOver()) GameOver();
         //three steps
         //1. collect input and predict the movement without colisions
