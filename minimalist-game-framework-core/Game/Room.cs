@@ -19,6 +19,8 @@ class Room
         bg = Engine.LoadTexture("rooms/" + name + "/" + name + "i.png");
 
         (items, enemies) = ReadObjects("rooms/" + name + "/" + name + "o.txt");
+
+        this.pos = pos;
     }
 
     public Vector2 Position()
