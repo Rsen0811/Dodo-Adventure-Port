@@ -31,7 +31,7 @@ class Rect
 								   new Range(position.Y, position.Y + spriteSize.Y));
 
 		// for debug use only - bounding boxes
-		Engine.DrawRectEmpty(sBound.ToBounds(), Color.Black);
+		//Engine.DrawRectEmpty(sBound.ToBounds(), Color.Black);
 		return sBound;
 	}
 
