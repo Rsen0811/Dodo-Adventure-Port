@@ -14,12 +14,14 @@ class Game
     Player player;
     static Room[,] rooms;
     StartScreen startScreen;
+    GameOver endScreen;
     public Game()
     {
         rooms = new Room[30, 20];
         rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
         player = new Player(startpos, currRoom);
         startScreen = new StartScreen();
+        endScreen = new GameOver();
     }
 
     public void Update()
@@ -30,7 +32,11 @@ class Game
             startScreen.Draw();
             return;
         }
-        if (player.GameOver()) GameOver();
+        if (player.GameOver())
+        {
+            endScreen.Draw();
+            return;
+        }
         //three steps
         //1. collect input and predict the movement without colisions
         //2. check if the character intersects with a wall at those coordinates
@@ -78,11 +84,7 @@ class Game
         }
     }
 
-    public void GameOver()
-    {
-        // add game over code here
-        return;
-    }
+
     public void Wrap()
     {
         Vector2 playerPos = player.Position();
