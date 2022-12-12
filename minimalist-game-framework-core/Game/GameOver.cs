@@ -4,7 +4,7 @@ using System.Text;
 
 public class GameOver
 {
-    Texture end = Engine.LoadTexture("textures/end.png");
+    Texture end = Engine.LoadTexture("textures/end2.png");
     Font font = Engine.LoadFont("startScreen/font.ttf", 18);
     bool isGameOver;
 
