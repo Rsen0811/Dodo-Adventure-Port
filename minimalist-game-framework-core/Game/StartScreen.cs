@@ -17,6 +17,9 @@ class StartScreen
     public void Draw()
     {
         Engine.DrawTexture(startScreen, Vector2.Zero, size: Game.Resolution);
+        Engine.DrawString("Store", new Vector2(0.25f * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
+        Engine.DrawString("Trophies", new Vector2(1.5f * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
+
         if (Math.Abs(difficulty) % 3 == 0)
         {
             Engine.DrawString("Easy" , new Vector2(7 * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
