@@ -34,7 +34,20 @@ class Game
         }
         if (player.GameOver())
         {
-            endScreen.Draw();
+            // temp score code
+            int deadDodoCount = 0;
+            foreach(Room r in rooms)
+            {
+                if (r == null) continue;
+                foreach(Dodo d in r.enemies)
+                {
+                    if (d.health <= 0) 
+                    {
+                        deadDodoCount++;
+                    }
+                }
+            }
+            endScreen.Draw(deadDodoCount);
             return;
         }
         //three steps

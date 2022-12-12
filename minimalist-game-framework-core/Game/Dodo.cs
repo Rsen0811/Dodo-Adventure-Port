@@ -20,7 +20,7 @@ class Dodo
     private float damTimer = 0;
     private float eatTimer = 0;
     private Vector2 move;
-    private int health = 2;
+    public int health = 2; ///// change back to private
     private readonly Texture dodoAlive;
     private readonly Texture dodoDead;
     private readonly Texture dodoDamaged;

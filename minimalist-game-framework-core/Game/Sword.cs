@@ -89,12 +89,12 @@ class Sword : Item
     }
     public void Draw()
     {
-        /*if (!IsHeld())
+        if (!IsHeld())
         {
             Engine.DrawTexture(spriteMap, pos, size: size, rotation: 0);
             return;
-        }*/
-        Engine.DrawRectEmpty(collisionBox.ToBounds(), Color.Red);
+        }
+        //Engine.DrawRectEmpty(collisionBox.ToBounds(), Color.Red);
         if(r == 0f || r == 180f)
         {
             Engine.DrawTexture(spriteMap, pos, size: size, rotation: r);

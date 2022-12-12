@@ -10,7 +10,7 @@ class Room
     List<Rect> CollisionZones;
     Texture bg;
     Vector2 pos;
-    List<Dodo> enemies;
+    public List<Dodo> enemies; /// change back to private
     List<Item> items;
 
     public Room(Vector2 pos) {
