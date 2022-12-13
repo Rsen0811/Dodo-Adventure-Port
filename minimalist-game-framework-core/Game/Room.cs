@@ -45,7 +45,7 @@ class Room
         List<Item> toRemove = new List<Item>();
         foreach (Item i in items)
         {
-            i.Update(Rect.GetSpriteBounds(p.Position(), PLAYER_SIZE));
+            i.Update(p.getPlayerBounds());
             if (i.IsHeld())
             {
                 toRemove.Add(i);

@@ -237,6 +237,11 @@ class Player
     {
         active = true;
     }
+
+    public Rect getPlayerBounds()
+    {
+        return Rect.GetSpriteBounds(pos, PLAYER_SIZE);
+    }
 }
 
 
