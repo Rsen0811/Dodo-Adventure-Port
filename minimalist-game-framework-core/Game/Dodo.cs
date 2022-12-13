@@ -272,6 +272,12 @@ class Dodo
         return dimentions;
     }
 
+    public bool isAlive()
+    {
+        if (health >= 0) return true;
+        return false;
+    }
+
     public Rect GetBounds()
     {
         Vector2 bodyTLC = new Vector2((mirror ? 10:2), 2);

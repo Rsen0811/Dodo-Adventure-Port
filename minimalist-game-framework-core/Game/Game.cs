@@ -43,7 +43,7 @@ class Game
                 if (r == null) continue;
                 foreach(Dodo d in r.enemies)
                 {
-                    if (d.health <= 0) 
+                    if (d. <= 0) 
                     {
                         deadDodoCount++;
                     }
