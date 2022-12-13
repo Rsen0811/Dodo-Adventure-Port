@@ -274,7 +274,7 @@ class Dodo
 
     public bool isAlive()
     {
-        if (health >= 0) return true;
+        if (health > 0) return true;
         return false;
     }
 
