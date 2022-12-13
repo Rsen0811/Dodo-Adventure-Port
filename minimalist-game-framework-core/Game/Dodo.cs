@@ -67,7 +67,7 @@ class Dodo
             Vector2 playerPos = player.Position() + new Vector2(12, 12);
             float dist = (float)Math.Sqrt(Math.Pow(dodoPos.X + dimentions.X / 2 - playerPos.X, 2) +
                 Math.Pow(dodoPos.Y + dimentions.Y / 4 - playerPos.Y, 2));
-            if (eatTimer > 0 || Rect.CheckRectIntersect(player.GetBounds(), GetBounds()) && stunTimer <= 0)
+            if (eatTimer > 0 || Rect.CheckRectIntersect(player.getPlayerBounds(), GetBounds()) && stunTimer <= 0)
             {
                 if (eatTimer <= 0)
                 {
