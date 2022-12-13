@@ -6,11 +6,13 @@ class Game
     public static readonly string Title = "Minimalist Game Framework";
     public static readonly Vector2 Resolution = new Vector2(960, 640);
     public static readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
+    public static readonly Vector2 SPAWN = new Vector2(2, 4);
+    public static readonly Vector2 SPAWNPOS = new Vector2(250, 300);
     //readonly int PLAYER_SPEED = 400;
 
     Vector2 tileSize = new Vector2(32, 32);
-    Vector2 startpos = new Vector2(250, 300);
-    Vector2 currRoom = new Vector2(2, 4);
+    Vector2 startpos = SPAWNPOS;
+    Vector2 currRoom = SPAWN;
     Player player;
     static Room[,] rooms;
     StartScreen startScreen;
@@ -48,6 +50,10 @@ class Game
                 }
             }
             endScreen.Draw(deadDodoCount);
+            if(Engine.GetMouseButtonUp(MouseButton.Left))
+            {
+                reset();
+            }
             return;
         }
         //three steps
@@ -143,6 +149,18 @@ class Game
             rooms[(int)address.X, (int)address.Y] = new Room(address);
         }
         return rooms[(int)address.X, (int)address.Y];
+    }
+
+    public void reset()
+    {
+        currRoom = SPAWN;
+        startpos = SPAWNPOS;
+        rooms = new Room[30, 20];
+        rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
+        player = new Player(startpos, currRoom);
+        startScreen = new StartScreen();
+        endScreen = new GameOver();
+
     }
 
 }
