@@ -43,7 +43,7 @@ class Game
                 if (r == null) continue;
                 foreach(Dodo d in r.enemies)
                 {
-                    if (d. <= 0) 
+                    if (!d.isAlive()) 
                     {
                         deadDodoCount++;
                     }
