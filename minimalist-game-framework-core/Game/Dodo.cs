@@ -35,9 +35,9 @@ class Dodo
     public Dodo(Vector2 dodoPos)
     {
         this.dodoPos = dodoPos;
-        walkSpeed = 1;
-        runSpeed = 5;
-        chargeSpeed = 10;
+        walkSpeed = 120;
+        runSpeed = 340;
+        chargeSpeed = runSpeed * 2;
         chaseDist = 400;
         move = new Vector2(random.Next(), random.Next());
         dodoAlive = Engine.LoadTexture("textures/dodoAlive.png");
@@ -66,7 +66,7 @@ class Dodo
             Vector2 playerPos = player.Position() + new Vector2(12, 12);
             float dist = (float)Math.Sqrt(Math.Pow(dodoPos.X + dimentions.X / 2 - playerPos.X, 2) +
                 Math.Pow(dodoPos.Y + dimentions.Y / 4 - playerPos.Y, 2));
-            if (eatTimer > 0 || dist < 15f && stunTimer <= 0)
+            if (eatTimer > 0 || Rect.CheckRectIntersect(player.GetBounds(), GetBounds()) && stunTimer <= 0)
             {
                 if (eatTimer <= 0)
                 {
@@ -97,10 +97,10 @@ class Dodo
                 }
                 if (stunTimer > 0)
                 {
-                    if (stunTimer > 0.65 && Move(dodoPos + chargeDir * -1))
+                    if (stunTimer > 0.65 && Move(dodoPos + stunDir * stunSpeed / 10 * Engine.TimeDelta))
                     {
-                        dodoPos += stunDir * stunSpeed;
-                        stunSpeed -= stunSpeed / 10;
+                        dodoPos += stunDir * stunSpeed * Engine.TimeDelta;
+                        stunSpeed -= stunSpeed / 5;
                     }
                     stunTimer -= Engine.TimeDelta;
                 }
@@ -171,7 +171,7 @@ class Dodo
             }
             else
             {
-                dodoPos += move;
+                dodoPos += move * Engine.TimeDelta;
             }
             mirror = move.X < 0;
             timer += Engine.TimeDelta;
@@ -183,9 +183,9 @@ class Dodo
         Vector2 dir = new Vector2(playerPos.X + 12 - dodoPos.X - dimentions.X / 2, 
             playerPos.Y + 12 - dodoPos.Y - dimentions.Y / 4).Normalized();
         move = dir * runSpeed;
-        if (Move(dodoPos + move))
+        if (Move(dodoPos + move * Engine.TimeDelta))
         {
-            dodoPos += move;
+            dodoPos += move * Engine.TimeDelta;
         }
         mirror = move.X < 0;
     }
@@ -196,20 +196,20 @@ class Dodo
         else if (chargeTimer >= 0.5)
         {
             Vector2 move = chargeDir * chargeSpeed;
-            if (Move(dodoPos + move))
+            if (Move(dodoPos + move * Engine.TimeDelta))
             {
-                dodoPos += move;
+                dodoPos += move * Engine.TimeDelta;
             }
             else
             {
                 stunTimer = 1;
-                stunSpeed = chargeSpeed * -0.5f;
+                stunSpeed = chargeSpeed * 0.5f;
                 stunDir = -chargeDir;
                 return false;
             }
         }
         else if(chargeTimer >= 0.45) chargeDir = new Vector2(playerPos.X + 12 - dodoPos.X - 
-            dimentions.X / 2, playerPos.Y + 12 - dodoPos.Y - dimentions.Y / 4).Normalized();
+            dimentions.X / 2 + random.Next(-50, 50), playerPos.Y + 12 - dodoPos.Y - dimentions.Y / 4 + random.Next(-50, 50)).Normalized();
         chargeTimer += Engine.TimeDelta;
         return true;
     }
