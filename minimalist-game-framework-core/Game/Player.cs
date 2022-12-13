@@ -16,6 +16,8 @@ class Player
     Room currRoom;
     Random random = new Random();
 
+    private readonly int maxDeathHits; // must be greater than 8
+
     float reboundTimer = 0;
     float reboundSpeed;
     Vector2 reboundDir;
@@ -25,13 +27,14 @@ class Player
 
     bool gameOver = false;
 
-    public Player(Vector2 position, Vector2 room)
+    public Player(Vector2 position, Vector2 room, int maxDeathHits = 15)
     {
         active = true;
         alive = true;
         pos = position;
         checkpointPos = position;
         checkpointRoom = room;
+        this.maxDeathHits = maxDeathHits;
     }
     public void Update()
     {
@@ -155,17 +158,10 @@ class Player
         Drop();
         if (deathTimer == 1.5f)
         {
-            deathHits = random.Next(13, 25);
-        }
-        if (Engine.GetKeyDown(Key.Space))
-        {
-            deathHits -= 2;
+            deathHits = random.Next(maxDeathHits - 8, maxDeathHits);
         }
         if(Engine.GetKeyDown(Key.Up) || Engine.GetKeyDown(Key.Down) || Engine.GetKeyDown(Key.Right) || 
-            Engine.GetKeyDown(Key.Left))
-        {
-            deathHits--;
-        }
+            Engine.GetKeyDown(Key.Left)) deathHits--;
         if(deathTimer > 0)
         {
             if (deathHits > 0)
