@@ -13,7 +13,17 @@ class GateKey : Item
     private Vector2 dir;
     private float r;
 
-    public GateKey(Gate g, String texturePath)
+    public GateKey(String texturePath)
+    {
+        gate = null;
+        spriteMap = Engine.LoadTexture(texturePath);
+        this.dir = new Vector2(1, 0);
+        this.size = new Vector2(12, 24);
+        this.collisionBox = new Rect(new Range(pos.X, pos.X + size.X), new Range(pos.Y, pos.Y + size.Y));
+        this.held = false;
+        r = 90f;
+    }
+    public GateKey(Gate g , String texturePath)
     {
         gate = g;
         spriteMap = Engine.LoadTexture(texturePath);
@@ -101,6 +111,17 @@ class GateKey : Item
                 collisionBox = Rect.GetSpriteBounds(pos, new Vector2(size.Y, size.X));
             }
         }
+    }
+    public bool CheckGateIntersect(Room r)
+    {
+        if (held&& gate!=null)
+        {
+            if (gate.getRoom().Equals(r) && Rect.CheckRectIntersect(gate, collisionBox))
+            {
+                gate.isOpen = true;
+            }
+        }
+        return false;
     }
     public bool Collides(Rect player)
     {
