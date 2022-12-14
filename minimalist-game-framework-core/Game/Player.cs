@@ -25,6 +25,7 @@ class Player
     float respawnTimer = 1;
     float deathHits = 0;
 
+
     bool gameOver = false;
 
     public Player(Vector2 position, Vector2 room, int maxDeathHits = 15)
@@ -161,7 +162,11 @@ class Player
             deathHits = random.Next(maxDeathHits - 8, maxDeathHits);
         }
         if(Engine.GetKeyDown(Key.Up) || Engine.GetKeyDown(Key.Down) || Engine.GetKeyDown(Key.Right) || 
-            Engine.GetKeyDown(Key.Left)) deathHits--;
+            Engine.GetKeyDown(Key.Left))
+        {
+            deathHits--;
+            pos = currRoom.Move(pos, new Vector2(random.Next(-2, 3), random.Next(-2, 3)));
+        }
         if(deathTimer > 0)
         {
             if (deathHits > 0)
@@ -206,11 +211,6 @@ class Player
         respawnTimer -= Engine.TimeDelta;
     }
 
-    public bool IsAlive()
-    {
-        return alive;
-    }
-
     public bool GameOver()
     {
         return gameOver;
@@ -225,9 +225,19 @@ class Player
         return reboundDir;
     }
 
+    public void Shake()
+    {
+
+    }
+
     public bool isActive()
     {
         return active;
+    }
+
+    public bool IsAlive()
+    {
+        return alive;
     }
     public void setActive()
     {
