@@ -8,6 +8,7 @@ class Room
 {
     readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
     List<Rect> CollisionZones;
+    List<Gate> gates;
     Texture bg;
     Vector2 pos;
     public List<Dodo> enemies; /// change back to private
@@ -72,9 +73,16 @@ class Room
 
         Vector2 moveTo = start + movement;
         Rect playerBounds = Rect.GetSpriteBounds(moveTo, PLAYER_SIZE);
+        List<Rect> temp =new List<Rect>();
+        temp.AddRange(CollisionZones);
+        foreach(Gate g in gates){
+            if (!g.isOpen)
+            {
+                temp.Add(g);
+            }
+        }
 
-
-        foreach (Rect collider in CollisionZones)
+        foreach (Rect collider in temp)
         { // position is actual x range and size is actually y range
             if (Rect.CheckRectIntersect(collider, playerBounds))
             { // does handle corners
@@ -122,7 +130,6 @@ class Room
                         }
                     }
                 }
-               
             }
         }
         return moveTo;
@@ -139,6 +146,11 @@ class Room
         foreach (Item i in items)
         {
             i.Draw();
+        }
+        
+        foreach(Gate g in gates)
+        {
+            g.Draw();
         }
     }
 
