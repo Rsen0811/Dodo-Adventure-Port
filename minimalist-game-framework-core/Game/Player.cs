@@ -243,7 +243,10 @@ class Player
     {
         active = true;
     }
-
+    public void DeleteItem()
+    {
+        holding = null;
+    }
     public Rect getPlayerBounds()
     {
         return Rect.GetSpriteBounds(pos, PLAYER_SIZE);

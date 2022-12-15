@@ -4,27 +4,27 @@ using System.Text;
 
 class Gate : Rect
  {
-    public Vector2 room;
     private Texture map;
     public bool isOpen;
-    
+    private Vector2 pos;
+    private String name;
 
-    public Gate(Vector2 r, Texture m, Rect c) : base(c.X,c.Y)
+    public Gate(String gateName, Rect c) : base(c.X,c.Y)
     {
+        name = gateName;
         isOpen = false;
-        room = r;
-        map = m;
+        map = Engine.LoadTexture("textures/gates/"+gateName+".png");
+        this.pos = new Vector2(c.X.min,c.Y.min);
         
     }
-
-    private bool Collides()
+    public void Draw()
     {
-        return false;
+        int width=map.Width / 2;
+        Engine.DrawTexture(map,pos,size: this.ToBounds().Size, source: new Bounds2(isOpen ? width:0, 0,width,map.Height));
     }
-
-    private void Draw()
+    public String getName()
     {
-
+        return name;
     }
 
  }

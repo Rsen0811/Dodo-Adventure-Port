@@ -8,6 +8,7 @@ class Room
 {
     readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
     List<Rect> CollisionZones;
+    List<Gate> Gates;
     Texture bg;
     Vector2 pos;
     public List<Dodo> enemies; /// change back to private
@@ -15,7 +16,8 @@ class Room
 
     public Room(Vector2 pos) {
         String name = "" + pos.X + pos.Y;
-        CollisionZones = ReadCollisionZones("rooms/" + name + "/" + name + "c.txt");
+        
+        (CollisionZones, Gates) = ReadOnlyCollisions("rooms/" + name + "/" + name + "c.txt");
         bg = Engine.LoadTexture("rooms/" + name + "/" + name + "i.png");
 
         (items, enemies) = ReadObjects("rooms/" + name + "/" + name + "o.txt");
@@ -55,6 +57,18 @@ class Room
         {
             this.Pickup(p,i);
         }
+        if (p.GetItem() != null && p.GetItem().GetType()==typeof(GateKey)){
+            GateKey gateKey = (GateKey) p.GetItem();
+            foreach (Gate g in Gates)
+            {
+                //somehow check if p.holding is a gatekey and if it intersects with g
+                if (gateKey.CheckGateIntersect(g))
+                {
+                    g.isOpen = true;
+                    p.DeleteItem();
+                }
+            }
+        }
     }
 
     public void Idle()
@@ -72,9 +86,16 @@ class Room
 
         Vector2 moveTo = start + movement;
         Rect playerBounds = Rect.GetSpriteBounds(moveTo, PLAYER_SIZE);
+        List<Rect> temp =new List<Rect>();
+        temp.AddRange(CollisionZones);
+        foreach(Gate g in Gates){
+            if (!g.isOpen)
+            {
+                temp.Add(g);
+            }
+        }
 
-
-        foreach (Rect collider in CollisionZones)
+        foreach (Rect collider in temp)
         { // position is actual x range and size is actually y range
             if (Rect.CheckRectIntersect(collider, playerBounds))
             { // does handle corners
@@ -122,7 +143,6 @@ class Room
                         }
                     }
                 }
-               
             }
         }
         return moveTo;
@@ -139,6 +159,11 @@ class Room
         foreach (Item i in items)
         {
             i.Draw();
+        }
+        
+        foreach(Gate g in Gates)
+        {
+            g.Draw();
         }
     }
 
@@ -160,19 +185,59 @@ class Room
     }
 
     //read rectangle collisions from a text file
-    public List<Rect> ReadCollisionZones(String file)
+    public (List<Rect>, List<Gate>) ReadOnlyCollisions(String file)
+    {
+        using (StreamReader sr = File.OpenText("Assets/" + file))
+        {
+            string s = sr.ReadToEnd();
+            String[] filesplit = s.Split("---");
+            if (filesplit.Length == 2)
+            {
+                return (ReadCollisionZones(filesplit[0].Trim()), ReadGates(filesplit[1].Trim()));
+            }
+            else
+            {
+                return (ReadCollisionZones(filesplit[0].Trim()), ReadGates(""));
+            }
+        }
+    }
+    
+    public List<Gate> ReadGates(String gates)
+    {
+        List<Gate> loader = new List<Gate>();
+
+        byte[] byteArray = Encoding.ASCII.GetBytes(gates);
+        MemoryStream stream = new MemoryStream(byteArray);
+
+        using (StreamReader sr = new StreamReader(stream))
+        {
+            String s;
+            while ((s = sr.ReadLine()) != null)
+            {
+                String[] args = s.Split(' ');
+                String name = args[4];
+                Rect rect = new Rect(new Range(float.Parse(args[0]), float.Parse(args[1])),
+                                    new Range(float.Parse(args[2]), float.Parse(args[3]))); 
+                loader.Add(new Gate(name,rect));
+            }
+        }
+        return loader;
+    }
+    public List<Rect> ReadCollisionZones(String collisionZones)
     {
         List<Rect> loader = new List<Rect>();
 
-        using (StreamReader sr = File.OpenText("Assets/" + file))
+        byte[] byteArray = Encoding.ASCII.GetBytes(collisionZones);
+        MemoryStream stream = new MemoryStream(byteArray);
+
+        using (StreamReader sr = new StreamReader(stream))
         {
-            string s;
+            String s;
             while ((s = sr.ReadLine()) != null)
             {
-                String[] nums = s.Split(' ');
-
-                loader.Add(new Rect(new Range(float.Parse(nums[0]) , float.Parse(nums[1])),
-                                                new Range(float.Parse(nums[2]), float.Parse(nums[3]))));
+                String[] args = s.Split(' ');
+                loader.Add(new Rect(new Range(float.Parse(args[0]), float.Parse(args[1])),
+                            new Range(float.Parse(args[2]), float.Parse(args[3]))));
             }
         }
         return loader;
@@ -180,8 +245,6 @@ class Room
 
     public (List<Item>, List<Dodo>) ReadObjects(String file)
     {
-        List<Rect> loader = new List<Rect>();
-
         using (StreamReader sr = File.OpenText("Assets/" + file))
         {
             string s = sr.ReadToEnd();
@@ -208,7 +271,12 @@ class Room
                     Vector2 pos = new Vector2(int.Parse(args[1]), int.Parse(args[2]));
                     bool isHoly = (args[3].Equals(true));
                     loader.Add(new Sword(pos, isHoly));
-                }                
+                }   
+                else if (args[0].Equals("K"))
+                {
+                    // in text file format as K X Y GateName
+                    loader.Add(new GateKey(args[3], new Vector2(int.Parse(args[1]), int.Parse(args[2]))));
+                }
             }
         }
         return loader;
@@ -235,7 +303,6 @@ class Room
         }
         return loader;
     }
-
     public void swordSweep(Sword s) { 
         foreach(Dodo enemy in enemies)
         {
