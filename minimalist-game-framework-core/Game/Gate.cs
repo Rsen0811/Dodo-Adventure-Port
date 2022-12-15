@@ -9,10 +9,11 @@ class Gate : Rect
     private Vector2 pos;
     private String name;
 
-    public Gate(String texturePath, Rect c) : base(c.X,c.Y)
+    public Gate(String gateName, Rect c) : base(c.X,c.Y)
     {
+        name = gateName;
         isOpen = false;
-        map = Engine.LoadTexture(texturePath);
+        map = Engine.LoadTexture("textures/gates/"+gateName+".png");
         this.pos = new Vector2(c.X.min,c.Y.min);
         
     }

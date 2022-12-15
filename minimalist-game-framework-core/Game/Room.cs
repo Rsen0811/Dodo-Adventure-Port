@@ -57,9 +57,8 @@ class Room
         {
             this.Pickup(p,i);
         }
-        if (p.GetItem().GetType().Equals(new GateKey("", Vector2.Zero)));
-        {
-            GateKey gateKey =(GateKey) p.GetItem();
+        if (p.GetItem() != null && p.GetItem().GetType()==typeof(GateKey)){
+            GateKey gateKey = (GateKey) p.GetItem();
             foreach (Gate g in Gates)
             {
                 //somehow check if p.holding is a gatekey and if it intersects with g
@@ -192,8 +191,14 @@ class Room
         {
             string s = sr.ReadToEnd();
             String[] filesplit = s.Split("---");
-
-            return (ReadCollisionZones(filesplit[0].Trim()), ReadGates(filesplit[1].Trim()));
+            if (filesplit.Length == 2)
+            {
+                return (ReadCollisionZones(filesplit[0].Trim()), ReadGates(filesplit[1].Trim()));
+            }
+            else
+            {
+                return (ReadCollisionZones(filesplit[0].Trim()), ReadGates(""));
+            }
         }
     }
     
@@ -210,9 +215,9 @@ class Room
             while ((s = sr.ReadLine()) != null)
             {
                 String[] args = s.Split(' ');
-                String name = "textures/gates/" + args[0];
-                Rect rect = new Rect(new Range(float.Parse(args[1]), float.Parse(args[2])),
-                                    new Range(float.Parse(args[3]), float.Parse(args[4]))); 
+                String name = args[4];
+                Rect rect = new Rect(new Range(float.Parse(args[0]), float.Parse(args[1])),
+                                    new Range(float.Parse(args[2]), float.Parse(args[3]))); 
                 loader.Add(new Gate(name,rect));
             }
         }
@@ -297,10 +302,6 @@ class Room
             }
         }
         return loader;
-    }
-    public void readGates(String fileName)
-    {
-
     }
     public void swordSweep(Sword s) { 
         foreach(Dodo enemy in enemies)

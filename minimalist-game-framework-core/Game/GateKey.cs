@@ -13,14 +13,19 @@ class GateKey : Item
     private Vector2 dir;
     private float r;
 
+    public GateKey()
+    {
+
+    }
     public GateKey(String gateName,Vector2 pos)
     {
-        gateName = null;
-        spriteMap = Engine.LoadTexture("textures/gates/"+ gateName +".png");
+        this.gateName = gateName;
+        spriteMap = Engine.LoadTexture("textures/keys/"+ gateName +".png");
         this.dir = new Vector2(1, 0);
         this.size = new Vector2(12, 24);
         this.collisionBox = new Rect(new Range(pos.X, pos.X + size.X), new Range(pos.Y, pos.Y + size.Y));
         this.held = false;
+        this.pos = pos;
         r = 90f;
     }
 
