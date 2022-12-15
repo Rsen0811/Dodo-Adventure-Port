@@ -4,17 +4,16 @@ using System.Text;
 
 class Gate : Rect
  {
-    private Vector2 room;
     private Texture map;
     public bool isOpen;
     private Vector2 pos;
+    private String name;
 
-    public Gate(Vector2 r,Vector2 pos, String texturePath, Rect c) : base(c.X,c.Y)
+    public Gate(String texturePath, Rect c) : base(c.X,c.Y)
     {
         isOpen = false;
-        room = r;
         map = Engine.LoadTexture(texturePath);
-        this.pos = pos;
+        this.pos = new Vector2(c.X.min,c.Y.min);
         
     }
     public void Draw()
@@ -22,9 +21,9 @@ class Gate : Rect
         int width=map.Width / 2;
         Engine.DrawTexture(map,pos,size: this.ToBounds().Size, source: new Bounds2(isOpen ? width:0, 0,width,map.Height));
     }
-    public Vector2 getRoom()
+    public String getName()
     {
-        return room;
+        return name;
     }
 
  }

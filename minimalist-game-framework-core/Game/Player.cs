@@ -237,6 +237,10 @@ class Player
     {
         active = true;
     }
+    public void DeleteItem()
+    {
+        holding = null;
+    }
 }
 
 

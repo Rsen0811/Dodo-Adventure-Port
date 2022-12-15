@@ -4,7 +4,7 @@ using System.Text;
 
 class GateKey : Item
 {
-    private Gate gate;
+    private String gateName;
     private Texture spriteMap;
     private bool held;
     private Rect collisionBox;
@@ -13,20 +13,10 @@ class GateKey : Item
     private Vector2 dir;
     private float r;
 
-    public GateKey(String texturePath)
+    public GateKey(String gateName,Vector2 pos)
     {
-        gate = null;
-        spriteMap = Engine.LoadTexture(texturePath);
-        this.dir = new Vector2(1, 0);
-        this.size = new Vector2(12, 24);
-        this.collisionBox = new Rect(new Range(pos.X, pos.X + size.X), new Range(pos.Y, pos.Y + size.Y));
-        this.held = false;
-        r = 90f;
-    }
-    public GateKey(Gate g , String texturePath)
-    {
-        gate = g;
-        spriteMap = Engine.LoadTexture(texturePath);
+        gateName = null;
+        spriteMap = Engine.LoadTexture("textures/gates/"+ gateName +".png");
         this.dir = new Vector2(1, 0);
         this.size = new Vector2(12, 24);
         this.collisionBox = new Rect(new Range(pos.X, pos.X + size.X), new Range(pos.Y, pos.Y + size.Y));
@@ -47,9 +37,9 @@ class GateKey : Item
         }
         return size;
     }
-    public Gate getGate()
+    public String getGate()
     {
-        return gate;
+        return gateName;
     }
     public void Draw()
     {
@@ -77,7 +67,6 @@ class GateKey : Item
         return held;
     }
     public void Update(Rect Player)
-
     {
         Vector2 playerPos = new Vector2(Player.X.min, Player.Y.min);
         CollectInput(playerPos);
@@ -112,11 +101,11 @@ class GateKey : Item
             }
         }
     }
-    public bool CheckGateIntersect(Room r)
+    public bool CheckGateIntersect(Gate gate)
     {
-        if (held&& gate!=null)
+        if (held)
         {
-            if (gate.getRoom().Equals(r) && Rect.CheckRectIntersect(gate, collisionBox))
+            if (gate.getName().Equals(gateName) && Rect.CheckRectIntersect(gate, collisionBox))
             {
                 gate.isOpen = true;
             }
