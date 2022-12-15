@@ -180,10 +180,7 @@ class Dodo
         Vector2 dir = new Vector2(playerPos.X + 12 - dodoPos.X - dimentions.X / 2, 
             playerPos.Y + 12 - dodoPos.Y - dimentions.Y / 4).Normalized();
         move = dir * runSpeed;
-        if (Move(dodoPos + move * Engine.TimeDelta))
-        {
-            dodoPos += move * Engine.TimeDelta;
-        }
+        dodoPos += move * Engine.TimeDelta;
         mirror = move.X < 0;
     }
 
