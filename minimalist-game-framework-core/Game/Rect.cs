@@ -40,4 +40,10 @@ class Rect
 		return Range.CheckIntervalIntersect(rect.X, playerBounds.X)
 			 && Range.CheckIntervalIntersect(rect.Y, playerBounds.Y);
 	}
+
+	public static Rect toRect(Bounds2 b)
+    {
+		return new Rect(new Range(b.Position.X, b.Position.X + b.Size.X), 
+						new Range(b.Position.Y, b.Position.Y + b.Size.Y));
+    }
 }

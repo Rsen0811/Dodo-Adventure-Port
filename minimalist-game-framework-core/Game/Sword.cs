@@ -4,6 +4,7 @@ using System.Text;
 
 class Sword : Item
 {
+    private readonly int PICKUP = 20;
     public bool isHoly;
     public int damage;
     private Texture spriteMap;
@@ -14,6 +15,9 @@ class Sword : Item
     private Rect collisionBox;
     private bool held;
     private float r;
+
+
+    private Vector2 swordCenterPos;
     public Sword(Vector2 pos, bool isHoly)
     {
         this.pos = pos;
@@ -46,6 +50,7 @@ class Sword : Item
     }
     public void Update(Rect Player)
     {
+        swordCenterPos = new Vector2(pos.X + size.X / 2, pos.Y + size.Y / 2); // debug
         Vector2 playerPos = new Vector2(Player.X.min, Player.Y.min);
         CollectInput(playerPos);
         if (!held)
@@ -89,9 +94,12 @@ class Sword : Item
     }
     public void Draw()
     {
+        // debug
+        //Engine.DrawRectEmpty(new Bounds2(swordCenterPos.X - PICKUP, swordCenterPos.Y - PICKUP, PICKUP * 2, PICKUP * 2), Color.Green); // debug
         if (!IsHeld())
         {
             Engine.DrawTexture(spriteMap, pos, size: size, rotation: 0);
+            
             return;
         }
         //Engine.DrawRectEmpty(collisionBox.ToBounds(), Color.Red);
@@ -102,6 +110,8 @@ class Sword : Item
         {
             Engine.DrawTexture(spriteMap, new Vector2(pos.X + 6, pos.Y - size.Y / 4), size: size, rotation: r);
         }
+
+        
     }
 
     public bool IsHeld()
@@ -111,12 +121,18 @@ class Sword : Item
 
     public bool Collides(Rect player)
     {
-        if(Rect.CheckRectIntersect(player, collisionBox))
+        Vector2 playerCenterPos = new Vector2(player.X.min + Game.PLAYER_SIZE.X / 2, player.Y.min + Game.PLAYER_SIZE.Y / 2);
+
+        Bounds2 swordCollider = new Bounds2((playerCenterPos - new Vector2(PICKUP, PICKUP) / 2),
+                                new Vector2(PICKUP, PICKUP));
+        if (Rect.CheckRectIntersect(Rect.toRect(swordCollider), player))
         {
             held = true;
+            Engine.DrawRectEmpty(swordCollider, Color.Red);
             return true;
         }
-        return false ;
+
+        return false;
     }
     
     public Rect CollisionZone()
