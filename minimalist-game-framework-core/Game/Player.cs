@@ -25,7 +25,7 @@ class Player
     float respawnTimer = 1;
     float deathHits = 0;
 
-
+    bool spaceDown = false;
     bool gameOver = false;
 
     public Player(Vector2 position, Vector2 room, int maxDeathHits = 15)
@@ -39,13 +39,21 @@ class Player
     }
     public void Update()
     {
-        if (Engine.GetKeyDown(Key.X))
+        if (Engine.GetKeyDown(Key.Space)&&!spaceDown)
         {
-            Drop();
+            if (!spaceDown)
+            {
+                Drop();
+                spaceDown = true;
+            }
         }
         else if (holding != null)
         {            
             holding.Update(Rect.GetSpriteBounds(pos, PLAYER_SIZE));
+        }
+        if (Engine.GetKeyUp(Key.Space))
+        {
+            spaceDown = false;
         }
     }
     public bool Move(Vector2 moveVector, Room currRoom = null)
@@ -87,6 +95,7 @@ class Player
             this.Drop();
         }
         holding = i;
+        spaceDown = true;
     }
     public void Drop()
     {
