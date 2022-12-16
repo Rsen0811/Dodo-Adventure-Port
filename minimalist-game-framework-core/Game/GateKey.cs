@@ -119,7 +119,10 @@ class GateKey : Item
     }
     public bool Collides(Rect player)
     {
-        if (Rect.CheckRectIntersect(player, collisionBox))
+        int radius = 100;
+        Vector2 playerCenter = new Vector2((player.X.min+player.X.max)/2, (player.Y.min + player.Y.max) / 2);
+        Vector2 keyCenter = pos;
+        if (Math.Sqrt(Math.Pow((playerCenter.X - keyCenter.X), 2) + Math.Pow((playerCenter.Y - keyCenter.Y), 2)) <= radius)
         {
             held = true;
             return true;
