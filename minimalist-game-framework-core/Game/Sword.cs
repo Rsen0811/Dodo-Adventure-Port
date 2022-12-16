@@ -50,7 +50,7 @@ class Sword : Item
         CollectInput(playerPos);
         if (!held)
         {
-            if (Engine.GetKeyDown(Key.R))
+            if (Engine.GetKeyDown(Key.Space))
             {
                 Collides(Player);
             }
