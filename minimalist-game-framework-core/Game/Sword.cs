@@ -4,7 +4,7 @@ using System.Text;
 
 class Sword : Item
 {
-    private readonly int PICKUP = 20;
+    private readonly int PICKUP = 40;
     public bool isHoly;
     public int damage;
     private Texture spriteMap;
@@ -95,7 +95,7 @@ class Sword : Item
     public void Draw()
     {
         // debug
-        //Engine.DrawRectEmpty(new Bounds2(swordCenterPos.X - PICKUP, swordCenterPos.Y - PICKUP, PICKUP * 2, PICKUP * 2), Color.Green); // debug
+        Engine.DrawRectEmpty(new Bounds2(swordCenterPos.X - PICKUP, swordCenterPos.Y - PICKUP, PICKUP * 2, PICKUP * 2), Color.Green); // debug
         if (!IsHeld())
         {
             Engine.DrawTexture(spriteMap, pos, size: size, rotation: 0);
@@ -122,13 +122,13 @@ class Sword : Item
     public bool Collides(Rect player)
     {
         Vector2 playerCenterPos = new Vector2(player.X.min + Game.PLAYER_SIZE.X / 2, player.Y.min + Game.PLAYER_SIZE.Y / 2);
-
+        Vector2 swordCenterPos = new Vector2(pos.X + this.GetSize().X, pos.Y + this.GetSize().Y);
         Bounds2 swordCollider = new Bounds2((playerCenterPos - new Vector2(PICKUP, PICKUP) / 2),
                                 new Vector2(PICKUP, PICKUP));
-        if (Rect.CheckRectIntersect(Rect.toRect(swordCollider), player))
+        if (Math.Abs((playerCenterPos - swordCenterPos).Length()) < PICKUP)
         {
             held = true;
-            Engine.DrawRectEmpty(swordCollider, Color.Red);
+            //Engine.DrawRectEmpty(swordCollider, Color.Red);
             return true;
         }
 
