@@ -94,7 +94,8 @@ class Sword : Item
     }
     public void Draw()
     {
-        Engine.DrawRectEmpty(new Bounds2(swordCenterPos.X - PICKUP, swordCenterPos.Y - PICKUP, PICKUP * 2, PICKUP * 2), Color.Green); // debug
+        // debug
+        //Engine.DrawRectEmpty(new Bounds2(swordCenterPos.X - PICKUP, swordCenterPos.Y - PICKUP, PICKUP * 2, PICKUP * 2), Color.Green); // debug
         if (!IsHeld())
         {
             Engine.DrawTexture(spriteMap, pos, size: size, rotation: 0);
