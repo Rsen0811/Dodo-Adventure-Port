@@ -297,7 +297,19 @@ class Room
                 if (args[0].Equals("D"))
                 {
                     Vector2 pos = new Vector2(int.Parse(args[1]), int.Parse(args[2]));
-                    loader.Add(new Dodo(pos));
+                    switch(StartScreen.GetDifficulty())
+                    {
+                        case 0:
+                            loader.Add(Dodo.EasyDodo(pos));
+                            break;
+                        case 1:
+                            loader.Add(Dodo.MidDodo(pos));
+                            break;
+                        case 2:
+                            loader.Add(Dodo.HardDodo(pos));
+                            break;
+                    }
+                    
                 }
             }
         }

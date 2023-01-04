@@ -141,22 +141,22 @@ class Sword : Item
     }
     public void CollectInput(Vector2 playerPos)
     {
-        if (Engine.GetKeyHeld(Key.W))
+        if (Engine.GetKeyHeld(Key.Up))
         {
             dir = new Vector2(0, -1);
             r = 0f;
         }
-        else if (Engine.GetKeyHeld(Key.A))
+        else if (Engine.GetKeyHeld(Key.Left))
         {
             dir = new Vector2(-1, 0);
             r = -90f;
         }
-        else if (Engine.GetKeyHeld(Key.S))
+        else if (Engine.GetKeyHeld(Key.Down))
         {
             dir = new Vector2(0, 1);
             r = 180f;
         }
-        else if (Engine.GetKeyHeld(Key.D)) {
+        else if (Engine.GetKeyHeld(Key.Right)) {
             dir = new Vector2(1, 0);
             r = 90f;
         }   

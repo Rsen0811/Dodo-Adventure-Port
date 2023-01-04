@@ -4,17 +4,14 @@ using System.Text;
 
 class StartScreen
 {
-    Texture startScreen = Engine.LoadTexture("startScreen/startScreen.png");
-    Font font = Engine.LoadFont("startScreen/font.ttf",18);
-    int difficulty = 0;
-    Rect topTriangle = new Rect(new Range(880, 905), new Range(45, 70));
-    Rect bottomTriangle = new Rect(new Range(880, 905), new Range(135, 160));
-    bool shouldRun=true;
-    public StartScreen()
-    {
-
-    }
-    public void Draw()
+    static Texture startScreen = Engine.LoadTexture("startScreen/startScreen.png");
+    static Font font = Engine.LoadFont("startScreen/font.ttf",18);
+    static int difficulty = 0;
+    static Rect topTriangle = new Rect(new Range(880, 905), new Range(45, 70));
+    static Rect bottomTriangle = new Rect(new Range(880, 905), new Range(135, 160));
+    static bool shouldRun=true;
+    
+    public static void Draw()
     {
         Engine.DrawTexture(startScreen, Vector2.Zero, size: Game.Resolution);
         Engine.DrawString("Store", new Vector2(0.25f * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
@@ -33,7 +30,7 @@ class StartScreen
             Engine.DrawString("Hard", new Vector2(7 * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
         }
     }
-    public void Update()
+    public static void Update()
     {
         if (Engine.GetMouseButtonDown(MouseButton.Left))
         {
@@ -53,13 +50,26 @@ class StartScreen
             }
             
         }
+        if (difficulty >= 3)
+        {
+            difficulty = 0;
+        }
     }
-    public int GetDifficulty()
+    public static int GetDifficulty()
     {
         return Math.Abs(difficulty)%3;
     }
-    public bool ShouldRun()
+    public static bool ShouldRun()
     {
         return shouldRun;
+    }
+    public static void reset()
+    {
+        startScreen = Engine.LoadTexture("startScreen/startScreen.png");
+        font = Engine.LoadFont("startScreen/font.ttf", 18);
+        difficulty = 0;
+        topTriangle = new Rect(new Range(880, 905), new Range(45, 70));
+        bottomTriangle = new Rect(new Range(880, 905), new Range(135, 160));
+        shouldRun = true;
     }
 }

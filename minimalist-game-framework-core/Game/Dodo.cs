@@ -59,6 +59,20 @@ class Dodo
         this.chargePauseLength = chargePauseLength;
     }
 
+    public static Dodo HardDodo(Vector2 dodoPos)
+    {
+        return new Dodo(dodoPos);
+    }
+
+    public static Dodo MidDodo(Vector2 dodoPos)
+    {
+        return new Dodo(dodoPos, walkSpeed: 110, runSpeed: 280, chaseDist: 350, chargePauseLength: 0.8f, stunLength: 1.1f);
+    }
+    public static Dodo EasyDodo(Vector2 dodoPos)
+    {
+        return new Dodo(dodoPos, walkSpeed: 100, runSpeed: 200, chaseDist: 300, maxHealth: 1, chargePauseLength: 0.9f, stunLength: 1.3f);
+    }
+
     public void Update(Player player, float screenWidth)
     {
         this.player = player;
