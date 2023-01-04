@@ -15,23 +15,25 @@ class Game
     Vector2 currRoom = SPAWN;
     Player player;
     static Room[,] rooms;
-    StartScreen startScreen;
     GameOver endScreen;
+    Music music = Engine.LoadMusic("sounds/adventureSoundtrack.mp3");
     public Game()
     {
+        Engine.PlayMusic(music, looping: true);
         rooms = new Room[30, 20];
         rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
-        player = new Player(startpos, currRoom);
-        startScreen = new StartScreen();
+        player = new Player(startpos, currRoom,
+            maxDeathHits: StartScreen.GetDifficulty() == 3 ? 15 : 12);
         endScreen = new GameOver();
     }
 
     public void Update()
     {
-        if (startScreen.ShouldRun())
+        
+        if (StartScreen.ShouldRun())
         {
-            startScreen.Update();
-            startScreen.Draw();
+            StartScreen.Update();
+            StartScreen.Draw();
             return;
         }
         if (player.GameOver())
@@ -65,10 +67,10 @@ class Game
         //collect input and predict movement
         Vector2 moveVector = Vector2.Zero;
         //collect unnormalized movement
-        if (Engine.GetKeyHeld(Key.Up)) moveVector.Y -= 1;
-        if (Engine.GetKeyHeld(Key.Down)) moveVector.Y += 1;
-        if (Engine.GetKeyHeld(Key.Right)) moveVector.X += 1;
-        if (Engine.GetKeyHeld(Key.Left)) moveVector.X -= 1;
+        if (Engine.GetKeyHeld(Key.W)) moveVector.Y -= 1;
+        if (Engine.GetKeyHeld(Key.S)) moveVector.Y += 1;
+        if (Engine.GetKeyHeld(Key.D)) moveVector.X += 1;
+        if (Engine.GetKeyHeld(Key.A)) moveVector.X -= 1;
 
         if (Engine.GetKeyHeld(Key.P)) rooms[(int)currRoom.X, (int)currRoom.Y].TestaddDodo();
         
@@ -153,12 +155,14 @@ class Game
 
     public void reset()
     {
+        Engine.PlayMusic(music, looping: true);
         currRoom = SPAWN;
         startpos = SPAWNPOS;
         rooms = new Room[30, 20];
         rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
-        player = new Player(startpos, currRoom);
-        startScreen = new StartScreen();
+        player = new Player(startpos, currRoom, 
+            maxDeathHits: StartScreen.GetDifficulty() == 3 ? 15 : 11);
+        StartScreen.reset();
         endScreen = new GameOver();
 
     }

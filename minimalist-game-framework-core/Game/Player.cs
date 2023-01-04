@@ -171,8 +171,8 @@ class Player
         {
             deathHits = random.Next(maxDeathHits - 8, maxDeathHits);
         }
-        if(Engine.GetKeyDown(Key.Up) || Engine.GetKeyDown(Key.Down) || Engine.GetKeyDown(Key.Right) || 
-            Engine.GetKeyDown(Key.Left))
+        if(Engine.GetKeyDown(Key.W) || Engine.GetKeyDown(Key.S) || Engine.GetKeyDown(Key.D) || 
+            Engine.GetKeyDown(Key.A))
         {
             deathHits--;
             pos = currRoom.Move(pos, new Vector2(random.Next(-2, 3), random.Next(-2, 3)));
