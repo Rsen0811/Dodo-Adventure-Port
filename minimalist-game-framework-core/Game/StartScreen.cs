@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 class StartScreen
@@ -9,25 +10,37 @@ class StartScreen
     static int difficulty = 0;
     static Rect topTriangle = new Rect(new Range(880, 905), new Range(45, 70));
     static Rect bottomTriangle = new Rect(new Range(880, 905), new Range(135, 160));
+    static Rect trophies = new Rect(new Range(0.25f * Game.Resolution.X / 8 + 40, 300), new Range(Game.Resolution.Y / 8 + 5, 115));
+    static Rect trophiesBack = new Rect(new Range(830, 960), new Range(30, 70));
+    static Rect trophiesReset = new Rect(new Range(840, 940), new Range(588, 620));
+
     static bool shouldRun=true;
+    static bool showTrophies = false;
     
     public static void Draw()
     {
-        Engine.DrawTexture(startScreen, Vector2.Zero, size: Game.Resolution);
-        Engine.DrawString("Store", new Vector2(0.25f * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
-        Engine.DrawString("Trophies", new Vector2(1.5f * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
-
-        if (Math.Abs(difficulty) % 3 == 0)
+        if (showTrophies)
         {
-            Engine.DrawString("Easy" , new Vector2(7 * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
-        }
-        else if(Math.Abs(difficulty) % 3==1)
-        {
-            Engine.DrawString("Medium", new Vector2(7 * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
+            Trophies.Draw();
         }
         else
         {
-            Engine.DrawString("Hard", new Vector2(7 * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
+            Engine.DrawTexture(startScreen, Vector2.Zero, size: Game.Resolution);
+            Engine.DrawString("Store", new Vector2(0.25f * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
+            Engine.DrawString("Trophies", new Vector2(1.5f * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
+
+            if (Math.Abs(difficulty) % 3 == 0)
+            {
+                Engine.DrawString("Easy", new Vector2(7 * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
+            }
+            else if (Math.Abs(difficulty) % 3 == 1)
+            {
+                Engine.DrawString("Medium", new Vector2(7 * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
+            }
+            else
+            {
+                Engine.DrawString("Hard", new Vector2(7 * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
+            }
         }
     }
     public static void Update()
@@ -36,17 +49,36 @@ class StartScreen
         {
             Rect mouseCursor = new Rect(new Range(Engine.MousePosition.X, Engine.MousePosition.X), 
                                         new Range(Engine.MousePosition.Y, Engine.MousePosition.Y));
-            if (Rect.CheckRectIntersect(mouseCursor, topTriangle))
+            if (showTrophies)
             {
-                difficulty++;
-            }
-            else if (Rect.CheckRectIntersect(mouseCursor, bottomTriangle))
-            {
-                difficulty--;
+                if (Rect.CheckRectIntersect(mouseCursor, trophiesBack))
+                {
+                    showTrophies = false;
+                }
+                else if (Rect.CheckRectIntersect(mouseCursor, trophiesReset))
+                {
+                    Trophies.Reset();
+                }
             }
             else
             {
-                shouldRun = false;
+                if (Rect.CheckRectIntersect(mouseCursor, topTriangle))
+                {
+                    difficulty++;
+                }
+                else if (Rect.CheckRectIntersect(mouseCursor, bottomTriangle))
+                {
+                    difficulty--;
+                }
+                else if (Rect.CheckRectIntersect(mouseCursor, trophies))
+                {
+                    showTrophies = true;
+                    Trophies.Save();
+                }
+                else
+                {
+                    shouldRun = false;
+                }
             }
             
         }

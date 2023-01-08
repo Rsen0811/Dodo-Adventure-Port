@@ -17,6 +17,7 @@ class Game
     static Room[,] rooms;
     GameOver endScreen;
     Music music = Engine.LoadMusic("sounds/adventureSoundtrack.mp3");
+    float gameTime = 0;
     public Game()
     {
         Engine.PlayMusic(music, looping: true);
@@ -29,9 +30,13 @@ class Game
 
     public void Update()
     {
-        
         if (StartScreen.ShouldRun())
         {
+            if (Engine.GetKeyDown(Key.I))
+            {
+                Trophies.KillDodo();
+                Trophies.Save();
+            }
             StartScreen.Update();
             StartScreen.Draw();
             return;
@@ -52,8 +57,23 @@ class Game
                 }
             }
             endScreen.Draw(deadDodoCount);
-            if(Engine.GetMouseButtonUp(MouseButton.Left))
+            if (Engine.GetMouseButtonUp(MouseButton.Left))
             {
+                Trophies.KillDodo(dodos: deadDodoCount);
+                switch (StartScreen.GetDifficulty())
+                {
+                    case 0:
+                        Trophies.BeatEasy(gameTime);
+                        break;
+                    case 1:
+                        Trophies.BeatMid(gameTime);
+                        break;
+                    case 2:
+                        Trophies.BeatHard(gameTime);
+                        break;
+                }
+                Trophies.Save();
+                gameTime = 0;
                 reset();
             }
             return;
@@ -87,6 +107,8 @@ class Game
         rooms[(int)currRoom.X, (int)currRoom.Y].Update(player);
         Idle();
         player.Update();
+        // Game Timer ----------------------------------
+        gameTime += Engine.TimeDelta;
         // Graphics ------------------------------------
         rooms[(int)currRoom.X, (int)currRoom.Y].DrawRoom();
         player.DrawPlayer();
