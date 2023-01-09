@@ -167,6 +167,11 @@ class Game
         if (playerPos.X + PLAYER_SIZE.X < 0) SwapRoom(1);
         if (playerPos.Y > Resolution.Y) SwapRoom(2);
         if (playerPos.Y + PLAYER_SIZE.Y < 0) SwapRoom(3);
+
+        if (rooms[(int)currRoom.X, (int)currRoom.Y] == null)
+        {
+            rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
+        }
     }
 
     public void SwapRoom(int i)
