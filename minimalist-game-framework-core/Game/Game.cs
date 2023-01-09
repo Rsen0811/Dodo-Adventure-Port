@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 class Game
 {
@@ -10,6 +11,11 @@ class Game
     public static readonly Vector2 SPAWNPOS = new Vector2(250, 300);
     //readonly int PLAYER_SPEED = 400;
 
+    readonly Vector2[] existingRooms = {new Vector2(0,3),new Vector2(0, 4),
+                                        new Vector2(1, 3), new Vector2(1, 4), new Vector2(1, 5),
+                                        new Vector2(2, 4), new Vector2(2, 5),  
+                                        new Vector2(3, 5), new Vector2(3, 6) 
+                                        };
     Vector2 tileSize = new Vector2(32, 32);
     Vector2 startpos = SPAWNPOS;
     Vector2 currRoom = SPAWN;
@@ -22,8 +28,9 @@ class Game
         Engine.PlayMusic(music, looping: true);
         rooms = new Room[30, 20];
         rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
+        loadAllRooms();
         player = new Player(startpos, currRoom,
-            maxDeathHits: StartScreen.GetDifficulty() == 3 ? 15 : 12);
+        maxDeathHits: StartScreen.GetDifficulty() == 3 ? 15 : 12);
         endScreen = new GameOver();
     }
 
@@ -105,7 +112,40 @@ class Game
         }
     }
 
+    public void loadAllRooms()
+    {
+        foreach(Vector2 pos in existingRooms)
+        {
+            rooms[(int)pos.Y, (int)pos.X] = new Room(pos);
+        }
+        
+        //read switches
+        using (StreamReader sr = File.OpenText("Assets/" + "switches.txt"))
+        {
 
+            //ROOM# xmin ymin GateName1 GateName2 GateName3
+            while (sr.Peek() != -1)
+            {
+                string[] s = sr.ReadLine().Split();
+                Vector2 roomPos = new Vector2(int.Parse(s[0].Substring(0, 1)), int.Parse(s[0].Substring(1, 1)));
+                Vector2 pos = new Vector2(int.Parse(s[1]), int.Parse(s[2]));
+                List<Gate> gates = new List<Gate>();
+                for(int i= 3;i< s.Length; i++)
+                {
+                    //find the gate
+                    Gate gate=null;
+                    foreach(Vector2 room in existingRooms)
+                    {
+                        if (rooms[(int)room.Y, (int)room.X].getGate(s[i])!= null)
+                        {
+                            gate = rooms[(int)room.Y, (int)room.X].getGate(s[i]);
+                        }
+                    }
+                    gates.Add(gate);
+                }
+            } 
+        }
+    }
     public void Wrap()
     {
         Vector2 playerPos = player.Position();
