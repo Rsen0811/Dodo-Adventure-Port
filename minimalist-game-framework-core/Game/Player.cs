@@ -39,7 +39,6 @@ class Player
     }
     public void Update()
     {
-
         if (Engine.GetKeyDown(Key.Space))
         {
             if (!spaceDown)

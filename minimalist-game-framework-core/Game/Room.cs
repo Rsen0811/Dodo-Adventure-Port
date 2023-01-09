@@ -9,11 +9,14 @@ class Room
     readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
     List<Rect> CollisionZones;
     List<Gate> Gates;
+    
     Texture bg;
     Vector2 pos;
-    public List<Dodo> enemies; /// change back to private
+    
     List<Item> items;
     List<Switch> switches= new List<Switch>();
+    public List<Dodo> enemies; /// change back to private
+    List<Glyph> glyphs;
 
     public Room(Vector2 pos) {
         
@@ -21,7 +24,7 @@ class Room
         (CollisionZones, Gates) = ReadOnlyCollisions("rooms/" + name + "/" + name + "c.txt");
         bg = Engine.LoadTexture("rooms/" + name + "/" + name + "i.png");
 
-        (items, enemies) = ReadObjects("rooms/" + name + "/" + name + "o.txt");
+        (items, enemies, glyphs) = ReadObjects("rooms/" + name + "/" + name + "o.txt");
 
         this.pos = pos;
     }
@@ -37,6 +40,10 @@ class Room
     }
     public void Update(Player p)
     {
+        if (Engine.GetKeyDown(Key.Escape) && glyphs.Count != 0)
+        {
+            glyphs.RemoveAt(0);            
+        }
         if (p.GetItem() != null && p.GetItem().GetType() == typeof(Sword))
         {
             swordSweep((Sword) p.GetItem());
@@ -178,6 +185,10 @@ class Room
         foreach(Switch s in switches)
         {
             s.Draw();
+         }
+        if (glyphs.Count != 0)
+        {
+            glyphs[0].Draw();
         }
     }
 
@@ -281,14 +292,14 @@ class Room
         return loader;
     }
 
-    public (List<Item>, List<Dodo>) ReadObjects(String file)
+    public (List<Item>, List<Dodo>, List<Glyph>) ReadObjects(String file)
     {
         using (StreamReader sr = File.OpenText("Assets/" + file))
         {
             string s = sr.ReadToEnd();
             String[] filesplit = s.Split("---");
 
-            return (ReadItems(filesplit[0].Trim()), ReadDodos(filesplit[1].Trim()));
+            return (ReadItems(filesplit[0].Trim()), ReadDodos(filesplit[1].Trim()), ReadGlyphs(filesplit[2].Trim()));
         }
     }
 
@@ -353,6 +364,29 @@ class Room
         }
         return loader;
     }
+
+    public List<Glyph> ReadGlyphs(String dodos)
+    {
+        List<Glyph> loader = new List<Glyph>();
+
+        byte[] byteArray = Encoding.ASCII.GetBytes(dodos);
+        MemoryStream stream = new MemoryStream(byteArray);
+        using (StreamReader sr = new StreamReader(stream))
+        {
+            String s;
+            while ((s = sr.ReadLine()) != null)
+            {
+                String[] args = s.Split(' ');
+                if (args[0].Equals("T"))
+                {
+                    Vector2 pos = new Vector2(int.Parse(args[1]), int.Parse(args[2]));
+                    loader.Add(new Glyph(pos, args[3]));
+                }
+            }
+        }
+        return loader;
+    }
+
     public void swordSweep(Sword s) { 
         foreach(Dodo enemy in enemies)
         {
