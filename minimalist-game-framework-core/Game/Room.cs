@@ -13,7 +13,7 @@ class Room
     Vector2 pos;
     public List<Dodo> enemies; /// change back to private
     List<Item> items;
-    List<Switch> switches;
+    List<Switch> switches= new List<Switch>();
 
     public Room(Vector2 pos) {
         
@@ -219,7 +219,7 @@ class Room
     }
     public void addSwitch(List<Gate> pairs, Vector2 pos) 
     {
-        switches.Add(new Switch(pairs, new Rect(new Range(pos.X, pos.X + 32), new Range(pos.Y, pos.Y + 32))));
+        switches.Add(new Switch(pairs, new Rect(new Range(pos.X, pos.X + 320), new Range(pos.Y, pos.Y + 320))));
     }
     public Switch checkSwitchIntersect(Rect player)
     {

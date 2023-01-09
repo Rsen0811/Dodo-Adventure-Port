@@ -127,7 +127,7 @@ class Game
             while (sr.Peek() != -1)
             {
                 string[] s = sr.ReadLine().Split();
-                Vector2 roomPos = new Vector2(int.Parse(s[0].Substring(0, 1)), int.Parse(s[0].Substring(1, 1)));
+                Vector2 roomPos = new Vector2(int.Parse(s[0].Substring(1,1)), int.Parse(s[0].Substring(0, 1)));
                 Vector2 pos = new Vector2(int.Parse(s[1]), int.Parse(s[2]));
                 List<Gate> gates = new List<Gate>();
                 for(int i= 3;i< s.Length; i++)
@@ -143,6 +143,7 @@ class Game
                     }
                     gates.Add(gate);
                 }
+                rooms[(int)roomPos.Y, (int)roomPos.X].addSwitch(gates, pos);
             } 
         }
     }
