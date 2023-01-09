@@ -11,10 +11,10 @@ class Game
     public static readonly Vector2 SPAWNPOS = new Vector2(250, 300);
     //readonly int PLAYER_SPEED = 400;
 
-    static readonly Vector2[] existingRooms = {new Vector2(0,3),new Vector2(0, 4),
-                                        new Vector2(1, 3), new Vector2(1, 4), new Vector2(1, 5),
-                                        new Vector2(2, 4), new Vector2(2, 5),  
-                                        new Vector2(3, 5), new Vector2(3, 6) 
+    static readonly Vector2[] existingRooms = {new Vector2(0,0),new Vector2(0,1),new Vector2(0,2),new Vector2(0,3),new Vector2(0, 4),
+                                        new Vector2(1,0),new Vector2(1,1),new Vector2(1,2),new Vector2(1, 3), new Vector2(1, 4), new Vector2(1, 5),
+                                        new Vector2(2,0),new Vector2(2,1),new Vector2(2,2),new Vector2(2, 4), new Vector2(2, 5),  
+                                        new Vector2(3, 5), new Vector2(3, 6), 
                                         };
     Vector2 tileSize = new Vector2(32, 32);
     Vector2 startpos = SPAWNPOS;
@@ -28,7 +28,6 @@ class Game
     {
         Engine.PlayMusic(music, looping: true);
         rooms = new Room[30, 20];
-        rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
         loadAllRooms();
         player = new Player(startpos, currRoom,
         maxDeathHits: StartScreen.GetDifficulty() == 3 ? 15 : 12);
@@ -192,10 +191,7 @@ class Game
                 currRoom.Y -= 1;
                 break;
         }
-        if (rooms[(int)currRoom.X, (int)currRoom.Y] == null)
-        {
-            rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
-        }
+        
         player.Move(playerPos);
     }
     public static void toggleGate(string gateName)
@@ -209,10 +205,6 @@ class Game
     }
     public static Room getRoom(Vector2 address)
     {
-        if(rooms[(int)address.X, (int)address.Y] == null)
-        {
-            rooms[(int)address.X, (int)address.Y] = new Room(address);
-        }
         return rooms[(int)address.X, (int)address.Y];
     }
 
