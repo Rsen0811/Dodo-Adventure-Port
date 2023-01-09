@@ -4,10 +4,10 @@ using System.Text;
 class Switch : Rect
 {
     private Texture map=Engine.LoadTexture("switch.png");
-    private List<Gate> gates;
+    private List<String> gates;
     private bool state = false;
     private Vector2 pos;
-    public Switch(List<Gate> gates, Rect c) : base(c.X, c.Y)
+    public Switch(List<String> gates, Rect c) : base(c.X, c.Y)
     {
         this.gates = gates;
         this.pos = new Vector2(c.X.min,c.Y.min);
@@ -19,9 +19,9 @@ class Switch : Rect
     }
     public void Toggle()
     {
-        foreach(Gate g in gates)
+        foreach(String g in gates)
         {
-            g.Toggle();
+            Game.toggleGate(g);
         }
         state = !state;
     }

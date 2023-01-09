@@ -148,7 +148,16 @@ class Room
         }
         return moveTo;
     }
-
+    public void toggleGate(String gateName)
+    {
+        foreach(Gate g in Gates)
+        {
+            if (g.getName().Equals(gateName))
+            {
+                g.Toggle();
+            }
+        }
+    }
     public void DrawRoom()
     {
         Engine.DrawTexture(bg, new Vector2(0, 0));
@@ -217,7 +226,7 @@ class Room
         }
         return null;
     }
-    public void addSwitch(List<Gate> pairs, Vector2 pos) 
+    public void addSwitch(List<String> pairs, Vector2 pos) 
     {
         switches.Add(new Switch(pairs, new Rect(new Range(pos.X, pos.X + 320), new Range(pos.Y, pos.Y + 320))));
     }
