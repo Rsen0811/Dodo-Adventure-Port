@@ -228,7 +228,7 @@ class Room
     }
     public void addSwitch(List<String> pairs, Vector2 pos) 
     {
-        switches.Add(new Switch(pairs, new Rect(new Range(pos.X, pos.X + 320), new Range(pos.Y, pos.Y + 320))));
+        switches.Add(new Switch(pairs, new Rect(new Range(pos.X, pos.X + 32), new Range(pos.Y, pos.Y + 32))));
     }
     public Switch checkSwitchIntersect(Rect player)
     {
