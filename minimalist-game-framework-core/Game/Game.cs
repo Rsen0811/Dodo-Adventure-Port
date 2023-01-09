@@ -11,15 +11,11 @@ class Game
     public static readonly Vector2 SPAWNPOS = new Vector2(250, 300);
     //readonly int PLAYER_SPEED = 400;
 
-    static readonly Vector2[] existingRooms = {new Vector2(0,0),new Vector2(0,1),new Vector2(0,2),new Vector2(0,3),new Vector2(0, 4),
-                                        new Vector2(1,0),new Vector2(1,1),new Vector2(1,2),new Vector2(1, 3), new Vector2(1, 4), new Vector2(1, 5),
-                                        new Vector2(2,0),new Vector2(2,1),new Vector2(2,2),new Vector2(2, 4), new Vector2(2, 5),  
-                                        new Vector2(3, 5), new Vector2(3, 6), 
-                                        };
+    static readonly Vector2[] existingRooms = {new Vector2(2, 4), new Vector2(2, 5)};
     Vector2 tileSize = new Vector2(32, 32);
     Vector2 startpos = SPAWNPOS;
     Vector2 currRoom = SPAWN;
-    Player player;
+    Player player=null;
     static Room[,] rooms;
     GameOver endScreen;
     Music music = Engine.LoadMusic("sounds/adventureSoundtrack.mp3");
@@ -28,9 +24,8 @@ class Game
     {
         Engine.PlayMusic(music, looping: true);
         rooms = new Room[30, 20];
-        loadAllRooms();
-        player = new Player(startpos, currRoom,
-        maxDeathHits: StartScreen.GetDifficulty() == 3 ? 15 : 12);
+        rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
+        
         endScreen = new GameOver();
     }
 
@@ -46,6 +41,12 @@ class Game
             StartScreen.Update();
             StartScreen.Draw();
             return;
+        }
+        if (player == null)
+        {
+            loadAllRooms();
+            player = new Player(startpos, currRoom,
+            maxDeathHits: StartScreen.GetDifficulty() == 3 ? 15 : 12);
         }
         if (player.GameOver())
         {
@@ -84,11 +85,12 @@ class Game
             }
             return;
         }
+        
         //three steps
         //1. collect input and predict the movement without colisions
         //2. check if the character intersects with a wall at those coordinates
         //3. change the movement appropriately
-        
+
         // Input ---------------------------------------
         //collect input and predict movement
         Vector2 moveVector = Vector2.Zero;
@@ -167,6 +169,10 @@ class Game
         if (playerPos.X + PLAYER_SIZE.X < 0) SwapRoom(1);
         if (playerPos.Y > Resolution.Y) SwapRoom(2);
         if (playerPos.Y + PLAYER_SIZE.Y < 0) SwapRoom(3);
+        if (rooms[(int)currRoom.X, (int)currRoom.Y] == null)
+        {
+            rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
+        }
     }
 
     public void SwapRoom(int i)
