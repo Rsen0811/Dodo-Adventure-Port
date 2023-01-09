@@ -44,7 +44,15 @@ class Player
         {
             if (!spaceDown)
             {
-                Drop();
+                Switch s = currRoom.checkSwitchIntersect(Rect.GetSpriteBounds(pos, PLAYER_SIZE));
+                if (s != null)
+                {
+                    s.Toggle();
+                }
+                else
+                {
+                    Drop();
+                }
                 spaceDown = true;
             }
         }

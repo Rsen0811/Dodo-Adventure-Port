@@ -166,6 +166,10 @@ class Room
         {
             g.Draw();
         }
+        foreach(Switch s in switches)
+        {
+            s.Draw();
+        }
     }
 
     public void AddObject(Item i)
@@ -216,6 +220,16 @@ class Room
     public void addSwitch(List<Gate> pairs, Vector2 pos) 
     {
         switches.Add(new Switch(pairs, new Rect(new Range(pos.X, pos.X + 32), new Range(pos.Y, pos.Y + 32))));
+    }
+    public Switch checkSwitchIntersect(Rect player)
+    {
+        foreach(Switch s in switches)
+        {
+            if (Rect.CheckRectIntersect(s, player)){
+                return s;
+            }
+        }
+        return null;
     }
     public List<Gate> ReadGates(String gates)
     {
