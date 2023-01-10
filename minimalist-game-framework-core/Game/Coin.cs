@@ -40,8 +40,7 @@ class Coin {
 
     public static async Task WriteCoins()
     {
-        doc.Close();
-        doc = File.OpenText("Assets/userData/coins.txt");
+
         String[] tempCoins = doc.ReadToEnd().Trim().Split(",");
         String coins2 = coins[0];
         for(int i = 1; i < coins.Length; i++)
@@ -51,6 +50,7 @@ class Coin {
         
         doc.Close();
         await File.WriteAllTextAsync("Assets/userData/coins.txt", coins2);
+        doc = File.OpenText("Assets/userData/coins.txt");
     }
 
     public bool isCollected()
@@ -61,5 +61,15 @@ class Coin {
     public void Draw()
     {
         Engine.DrawTexture(coinTexture, position);
+    }
+
+    public static async void Reset()
+    {        
+        for (int i = 0; i < coins.Length; i++)
+        {
+            coins[i] = "0";
+            
+        }
+        await WriteCoins();
     }
 }
