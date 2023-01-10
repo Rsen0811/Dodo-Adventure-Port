@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 class Game
 {
@@ -10,10 +11,11 @@ class Game
     public static readonly Vector2 SPAWNPOS = new Vector2(250, 300);
     //readonly int PLAYER_SPEED = 400;
 
+    static readonly Vector2[] existingRooms = {new Vector2(2, 4), new Vector2(2, 5)};
     Vector2 tileSize = new Vector2(32, 32);
     Vector2 startpos = SPAWNPOS;
     Vector2 currRoom = SPAWN;
-    Player player;
+    Player player=null;
     static Room[,] rooms;
     GameOver endScreen;
     Music music = Engine.LoadMusic("sounds/adventureSoundtrack.mp3");
@@ -23,8 +25,7 @@ class Game
         Engine.PlayMusic(music, looping: true);
         rooms = new Room[30, 20];
         rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
-        player = new Player(startpos, currRoom,
-            maxDeathHits: StartScreen.GetDifficulty() == 3 ? 15 : 12);
+        
         endScreen = new GameOver();
     }
 
@@ -40,6 +41,12 @@ class Game
             StartScreen.Update();
             StartScreen.Draw();
             return;
+        }
+        if (player == null)
+        {
+            loadAllRooms();
+            player = new Player(startpos, currRoom,
+            maxDeathHits: StartScreen.GetDifficulty() == 3 ? 15 : 12);
         }
         if (player.GameOver())
         {
@@ -78,11 +85,12 @@ class Game
             }
             return;
         }
+        
         //three steps
         //1. collect input and predict the movement without colisions
         //2. check if the character intersects with a wall at those coordinates
         //3. change the movement appropriately
-        
+
         // Input ---------------------------------------
         //collect input and predict movement
         Vector2 moveVector = Vector2.Zero;
@@ -127,7 +135,32 @@ class Game
         }
     }
 
+    public void loadAllRooms()
+    {
+        foreach(Vector2 pos in existingRooms)
+        {
+            rooms[(int)pos.X, (int)pos.Y] = new Room(pos);
+        }
+        
+        //read switches
+        using (StreamReader sr = File.OpenText("Assets/" + "switches.txt"))
+        {
 
+            //ROOM# xmin ymin GateName1 GateName2 GateName3
+            while (sr.Peek() != -1)
+            {
+                string[] s = sr.ReadLine().Split();
+                Vector2 roomPos = new Vector2(int.Parse(s[0].Substring(0,1)), int.Parse(s[0].Substring(1, 1)));
+                Vector2 pos = new Vector2(int.Parse(s[1]), int.Parse(s[2]));
+                List<String> gates = new List<String>();
+                for(int i= 3;i< s.Length; i++)
+                {
+                    gates.Add(s[i]);
+                }
+                rooms[(int)roomPos.X, (int)roomPos.Y].addSwitch(gates, pos);
+            } 
+        }
+    }
     public void Wrap()
     {
         Vector2 playerPos = player.Position();
@@ -136,6 +169,11 @@ class Game
         if (playerPos.X + PLAYER_SIZE.X < 0) SwapRoom(1);
         if (playerPos.Y > Resolution.Y) SwapRoom(2);
         if (playerPos.Y + PLAYER_SIZE.Y < 0) SwapRoom(3);
+
+        if (rooms[(int)currRoom.X, (int)currRoom.Y] == null)
+        {
+            rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
+        }
     }
 
     public void SwapRoom(int i)
@@ -160,18 +198,20 @@ class Game
                 currRoom.Y -= 1;
                 break;
         }
-        if (rooms[(int)currRoom.X, (int)currRoom.Y] == null)
-        {
-            rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
-        }
+        
         player.Move(playerPos);
+    }
+    public static void toggleGate(string gateName)
+    {
+        for (int i = 0; i < existingRooms.Length; i++)
+        {
+            Vector2 r = existingRooms[i];
+            rooms[(int)r.X, (int)r.Y].toggleGate(gateName);
+        }
+        
     }
     public static Room getRoom(Vector2 address)
     {
-        if(rooms[(int)address.X, (int)address.Y] == null)
-        {
-            rooms[(int)address.X, (int)address.Y] = new Room(address);
-        }
         return rooms[(int)address.X, (int)address.Y];
     }
 

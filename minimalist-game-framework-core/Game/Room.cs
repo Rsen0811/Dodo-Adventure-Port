@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System    ;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,13 +14,14 @@ class Room
     Vector2 pos;
     
     List<Item> items;
+    List<Switch> switches= new List<Switch>();
     public List<Dodo> enemies; /// change back to private
     List<Glyph> glyphs;
     List<Coin> coins; //COIN CODE
 
     public Room(Vector2 pos) {
-        String name = "" + pos.X + pos.Y;
         
+        String name = "" + pos.X + pos.Y;
         (CollisionZones, Gates) = ReadOnlyCollisions("rooms/" + name + "/" + name + "c.txt");
         bg = Engine.LoadTexture("rooms/" + name + "/" + name + "i.png");
 
@@ -166,7 +167,16 @@ class Room
         }
         return moveTo;
     }
-
+    public void toggleGate(String gateName)
+    {
+        foreach(Gate g in Gates)
+        {
+            if (g.getName().Equals(gateName))
+            {
+                g.Toggle();
+            }
+        }
+    }
     public void DrawRoom()
     {
         Engine.DrawTexture(bg, new Vector2(0, 0));
@@ -185,10 +195,11 @@ class Room
             g.Draw();
         }
 
-        foreach(Coin c in coins)
+        foreach(Switch s in switches)
         {
-            c.Draw();
-        }
+            s.Draw();
+         }
+
         if (glyphs.Count != 0)
         {
             glyphs[0].Draw();
@@ -229,7 +240,31 @@ class Room
             }
         }
     }
-    
+    public Gate getGate(String gateName)
+    {
+        foreach(Gate g in Gates)
+        {
+            if (g.getName().Equals(gateName))
+            {
+                return g;
+            }
+        }
+        return null;
+    }
+    public void addSwitch(List<String> pairs, Vector2 pos) 
+    {
+        switches.Add(new Switch(pairs, new Rect(new Range(pos.X, pos.X + 32), new Range(pos.Y, pos.Y + 32))));
+    }
+    public Switch checkSwitchIntersect(Rect player)
+    {
+        foreach(Switch s in switches)
+        {
+            if (Rect.CheckRectIntersect(s, player)){
+                return s;
+            }
+        }
+        return null;
+    }
     public List<Gate> ReadGates(String gates)
     {
         List<Gate> loader = new List<Gate>();

@@ -26,5 +26,9 @@ class Gate : Rect
     {
         return name;
     }
+    public void Toggle()
+    {
+        this.isOpen = !isOpen;
+    }
 
  }

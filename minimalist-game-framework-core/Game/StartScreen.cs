@@ -99,7 +99,6 @@ class StartScreen
     {
         startScreen = Engine.LoadTexture("startScreen/startScreen.png");
         font = Engine.LoadFont("startScreen/font.ttf", 18);
-        difficulty = 0;
         topTriangle = new Rect(new Range(880, 905), new Range(45, 70));
         bottomTriangle = new Rect(new Range(880, 905), new Range(135, 160));
         shouldRun = true;

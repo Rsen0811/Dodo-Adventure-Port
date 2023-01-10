@@ -107,13 +107,13 @@ class Trophies
     public static void BeatMid(float time)
     {
         beatMid = true;
-        midTime = midTime.Multiply(0).Add(TimeSpan.FromSeconds(time));
+        if (time < midTime.TotalSeconds) midTime = midTime.Multiply(0).Add(TimeSpan.FromSeconds(time));
     }
 
     public static void BeatHard(float time)
     {
         beatHard = true;
-        if (time < easyTime.TotalSeconds) hardTime = hardTime.Multiply(0).Add(TimeSpan.FromSeconds(time));
+        if (time < hardTime.TotalSeconds) hardTime = hardTime.Multiply(0).Add(TimeSpan.FromSeconds(time));
     }
 
     private static async Task WriteTrophies()
