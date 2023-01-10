@@ -204,6 +204,10 @@ class Room
         {
             glyphs[0].Draw();
         }
+        foreach(Coin c in coins)
+        {
+            c.Draw();
+        }
     }
 
     public void AddObject(Item i)

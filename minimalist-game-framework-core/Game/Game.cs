@@ -24,7 +24,7 @@ class Game
     {
         Engine.PlayMusic(music, looping: true);
         rooms = new Room[30, 20];
-        rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
+        //rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
         
         endScreen = new GameOver();
     }
