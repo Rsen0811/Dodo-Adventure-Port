@@ -27,7 +27,7 @@ class Room
         (items, enemies, glyphs) = ReadObjects("rooms/" + name + "/" + name + "o.txt");
 
         coins = new List<Coin>();
-        coins.Add(new Coin(new Vector2(300, 300), 5));
+        coins.Add(new Coin(new Vector2(300, 300), 1));
         this.pos = pos;
     }
 
@@ -79,12 +79,13 @@ class Room
                 }
             }
         }
-        foreach(Coin c in coins)
+
+        for(int i = 0; i < coins.Count; i++)
         {
-            c.coinUpdate(p);
-            if(c.isCollected())
+            coins[i].coinUpdate(p);
+            if (coins[i].isCollected())
             {
-                coins.Remove(c);
+                coins.Remove(coins[i]);
             }
         }
     }

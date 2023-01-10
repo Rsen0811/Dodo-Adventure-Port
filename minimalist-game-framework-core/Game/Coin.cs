@@ -10,45 +10,47 @@ class Coin {
 
     static StreamReader doc = File.OpenText("Assets/userData/coins.txt");
     static Texture coinTexture = Engine.LoadTexture("textures/coin.png");
+    static String[] coins = doc.ReadToEnd().Trim().Split(",");
 
 
     public bool collected;
     private Rect coinBounds;
     private int num;
     private Vector2 position;
+    
 
     public Coin (Vector2 pos, int n)
-    {
+    {       
         position = pos;
         coinBounds = new Rect(new Range(pos.X, pos.X + SIZE), new Range(pos.Y, pos.Y + SIZE));
         num = n;
-        collected = false;
+        collected = int.Parse(coins[num]) == 1;
     }
 
-    public async void coinUpdate(Player p)
+    public void coinUpdate(Player p)
     {
-        if(Rect.CheckRectIntersect(p.getPlayerBounds(), coinBounds))
-        {
-            
-            String[] coins = doc.ReadToEnd().Split(",");
-            coins[num] = "1";
-            await WriteCoins(coins);
 
+        if(Rect.CheckRectIntersect(p.getPlayerBounds(), coinBounds) && !collected)
+        {
+            coins[num] = "1";
             collected = true;
         } 
 
     }
 
-    private static async Task WriteCoins(String[] coins)
+    public static async Task WriteCoins()
     {
+        doc.Close();
+        doc = File.OpenText("Assets/userData/coins.txt");
+        String[] tempCoins = doc.ReadToEnd().Trim().Split(",");
         String coins2 = coins[0];
-        for(int i = 1; i < coins.Length - 1; i++)
+        for(int i = 1; i < coins.Length; i++)
         {
             coins2 += "," + coins[i];
         }
-        String[] coins3 = { coins2 };
+        
         doc.Close();
-        await File.WriteAllLinesAsync("Assets/userData/coins.txt", coins3);
+        await File.WriteAllTextAsync("Assets/userData/coins.txt", coins2);
     }
 
     public bool isCollected()

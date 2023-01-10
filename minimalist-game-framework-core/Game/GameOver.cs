@@ -11,14 +11,20 @@ public class GameOver
     public GameOver()
     {
         isGameOver = false;
+        writeCoins();
         
     }
 
     public void Draw(int score)
     {
+        
         Engine.DrawTexture(end, Vector2.Zero, size: Game.Resolution);
         Engine.DrawString("Dodos Defeated: " + score, new Vector2(480, 480), Color.Black, font);
     }
 
+    private async void writeCoins()
+    {
+        await Coin.WriteCoins();
+    }
     
 }
