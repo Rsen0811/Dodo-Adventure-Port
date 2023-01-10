@@ -17,6 +17,7 @@ class Room
     List<Switch> switches= new List<Switch>();
     public List<Dodo> enemies; /// change back to private
     List<Glyph> glyphs;
+    List<Coin> coins; //COIN CODE
 
     public Room(Vector2 pos) {
         
@@ -26,6 +27,8 @@ class Room
 
         (items, enemies, glyphs) = ReadObjects("rooms/" + name + "/" + name + "o.txt");
 
+        coins = new List<Coin>();
+        coins.Add(new Coin(new Vector2(300, 300), 1));
         this.pos = pos;
     }
 
@@ -75,6 +78,15 @@ class Room
                     g.isOpen = true;
                     p.DeleteItem();
                 }
+            }
+        }
+
+        for(int i = 0; i < coins.Count; i++)
+        {
+            coins[i].coinUpdate(p);
+            if (coins[i].isCollected())
+            {
+                coins.Remove(coins[i]);
             }
         }
     }
@@ -182,10 +194,12 @@ class Room
         {
             g.Draw();
         }
+
         foreach(Switch s in switches)
         {
             s.Draw();
          }
+
         if (glyphs.Count != 0)
         {
             glyphs[0].Draw();
