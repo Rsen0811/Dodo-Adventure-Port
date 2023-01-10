@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-class projectile
+class Projectile
 {
     private static readonly double DEFAULT_SPEED = 100;
     private static readonly Texture fire = Engine.LoadTexture("textures/fireballClear.png");
@@ -13,7 +13,7 @@ class projectile
     private Vector2 position;
     private int animationFrame;
 
-    public projectile(Vector2 pos, Vector2 dir, double speed)
+    public Projectile(Vector2 pos, Vector2 dir, double speed)
     {
         position = pos;
         this.dir = dir;
@@ -21,15 +21,15 @@ class projectile
         animationFrame = 0;
 
     }
-    public projectile(Vector2 pos, Vector2 dir)
+    public Projectile(Vector2 pos, Vector2 dir)
     {
-        new projectile(pos, dir, projectile.DEFAULT_SPEED);
+        new Projectile(pos, dir, Projectile.DEFAULT_SPEED);
     }
-    public void update()
+    public void Update()
     {
         position += dir * (float)(Engine.TimeDelta * speed);
     }
-    public void draw() 
+    public void Draw() 
     {
         Bounds2 firebounds = new Bounds2(((int)animationFrame) * size.X, 0, size.X, size.Y);
         Engine.DrawTexture(fire, position, source: firebounds, mirror: TextureMirror.None);
