@@ -34,14 +34,15 @@ class Coin {
         {
             coins[num] = "1";
             collected = true;
-        } 
+        } else
+        {
+            collected = int.Parse(coins[num]) == 1;
+        }
 
     }
 
     public static async Task WriteCoins()
     {
-
-        String[] tempCoins = doc.ReadToEnd().Trim().Split(",");
         String coins2 = coins[0];
         for(int i = 1; i < coins.Length; i++)
         {

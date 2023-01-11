@@ -17,7 +17,7 @@ class Room
     List<Switch> switches= new List<Switch>();
     public List<Dodo> enemies; /// change back to private
     List<Glyph> glyphs;
-    List<Coin> coins; //COIN CODE
+    List<Coin> coins; 
 
     public Room(Vector2 pos) {
         
