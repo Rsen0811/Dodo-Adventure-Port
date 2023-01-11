@@ -8,6 +8,7 @@ class Projectile
     private static readonly Texture fire = Engine.LoadTexture("textures/fireballClear.png");
     private static readonly Vector2 size = new Vector2(32, 32);
 
+    private bool offScreen;
     private Vector2 dir;
     private double speed;
     private Vector2 position;
@@ -19,6 +20,7 @@ class Projectile
         this.dir = dir;
         this.speed = speed;
         animationFrame = 0;
+        offScreen = false;
 
     }
     public Projectile(Vector2 pos, Vector2 dir)
@@ -27,6 +29,8 @@ class Projectile
     }
     public void Update()
     {
+        offScreen = !(Rect.CheckRectIntersect(Rect.GetSpriteBounds(position, size),
+                                               Rect.GetSpriteBounds(Vector2.Zero, Game.Resolution)));
         position += dir * (float)(Engine.TimeDelta * speed);
     }
     public void Draw() 
