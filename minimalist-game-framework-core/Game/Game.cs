@@ -27,6 +27,7 @@ class Game
         //rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
         
         endScreen = new GameOver();
+        
     }
 
     public void Update()
@@ -222,8 +223,7 @@ class Game
         startpos = SPAWNPOS;
         rooms = new Room[30, 20];
         rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
-        player = new Player(startpos, currRoom, 
-            maxDeathHits: StartScreen.GetDifficulty() == 3 ? 15 : 11);
+        player = null;
         StartScreen.reset();
         endScreen = new GameOver();
 

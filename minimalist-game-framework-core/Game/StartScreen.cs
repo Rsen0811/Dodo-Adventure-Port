@@ -10,24 +10,32 @@ class StartScreen
     static int difficulty = 0;
     static Rect topTriangle = new Rect(new Range(880, 905), new Range(45, 70));
     static Rect bottomTriangle = new Rect(new Range(880, 905), new Range(135, 160));
-    static Rect trophies = new Rect(new Range(0.25f * Game.Resolution.X / 8 + 40, 300), new Range(Game.Resolution.Y / 8 + 5, 115));
-    static Rect trophiesBack = new Rect(new Range(830, 960), new Range(30, 70));
+    static Rect trophies = new Rect(new Range(1.5f * Game.Resolution.X / 8 +15 , 335), new Range(Game.Resolution.Y / 8 + 10, 115));
+    static Rect skins = new Rect(new Range(0.6f * Game.Resolution.X / 8 + 15, 1.5f * Game.Resolution.X / 8 + 20), new Range(Game.Resolution.Y / 8 + 15, 115));
+    static Rect back = new Rect(new Range(830, 960), new Range(30, 70));
+    static Texture shopBackground= Engine.LoadTexture("startScreen/shopScreen/skinRoomBackground.png");
     static Rect trophiesReset = new Rect(new Range(840, 940), new Range(588, 620));
 
     static bool shouldRun=true;
     static bool showTrophies = false;
-    
+    static bool showSkins = false;
+
     public static void Draw()
     {
-        if (showTrophies)
+        if (showSkins)
+        {
+            Engine.DrawTexture(shopBackground, Vector2.Zero, size: Game.Resolution);
+            Engine.DrawString("Back", new Vector2(840, 40), Color.White, font);
+        }
+        else if (showTrophies)
         {
             Trophies.Draw();
         }
         else
         {
             Engine.DrawTexture(startScreen, Vector2.Zero, size: Game.Resolution);
-            Engine.DrawString("Store", new Vector2(0.25f * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
-            Engine.DrawString("Trophies", new Vector2(1.5f * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
+            Engine.DrawString("Skins", new Vector2(0.6f * Game.Resolution.X / 8+20 , Game.Resolution.Y / 8 + 15), Color.White, font);
+            Engine.DrawString("Trophies", new Vector2(1.5f * Game.Resolution.X / 8+20 , Game.Resolution.Y / 8 + 15), Color.White, font);
 
             if (Math.Abs(difficulty) % 3 == 0)
             {
@@ -42,6 +50,7 @@ class StartScreen
                 Engine.DrawString("Hard", new Vector2(7 * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
             }
         }
+        Engine.DrawString(Engine.MousePosition.X + " " + Engine.MousePosition.Y, new Vector2(350, 350), Color.White, font);
     }
     public static void Update()
     {
@@ -49,9 +58,16 @@ class StartScreen
         {
             Rect mouseCursor = new Rect(new Range(Engine.MousePosition.X, Engine.MousePosition.X), 
                                         new Range(Engine.MousePosition.Y, Engine.MousePosition.Y));
-            if (showTrophies)
+            if (showSkins)
             {
-                if (Rect.CheckRectIntersect(mouseCursor, trophiesBack))
+                if (Rect.CheckRectIntersect(mouseCursor, back))
+                {
+                    showSkins = false;
+                }
+            }
+            else if (showTrophies)
+            {
+                if (Rect.CheckRectIntersect(mouseCursor, back))
                 {
                     showTrophies = false;
                 }
@@ -74,6 +90,10 @@ class StartScreen
                 {
                     showTrophies = true;
                     Trophies.Save();
+                }
+                else if(Rect.CheckRectIntersect(mouseCursor, skins))
+                {
+                    showSkins = true;
                 }
                 else
                 {
