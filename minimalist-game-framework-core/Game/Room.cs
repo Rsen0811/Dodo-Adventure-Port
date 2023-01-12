@@ -17,6 +17,7 @@ class Room
     List<Switch> switches= new List<Switch>();
     public List<Dodo> enemies; /// change back to private
     List<Glyph> glyphs;
+    List<Coin> coins; 
 
     public Room(Vector2 pos) {
         
@@ -24,7 +25,7 @@ class Room
         (CollisionZones, Gates) = ReadOnlyCollisions("rooms/" + name + "/" + name + "c.txt");
         bg = Engine.LoadTexture("rooms/" + name + "/" + name + "i.png");
 
-        (items, enemies, glyphs) = ReadObjects("rooms/" + name + "/" + name + "o.txt");
+        (items, enemies, glyphs, coins) = ReadObjects("rooms/" + name + "/" + name + "o.txt");
 
         this.pos = pos;
     }
@@ -52,6 +53,7 @@ class Room
         {
             d.Update(p, 960);
         }
+
         List<Item> toRemove = new List<Item>();
         foreach (Item i in items)
         {
@@ -75,6 +77,15 @@ class Room
                     g.isOpen = true;
                     p.DeleteItem();
                 }
+            }
+        }
+
+        for(int i = 0; i < coins.Count; i++)
+        {
+            coins[i].coinUpdate(p);
+            if (coins[i].isCollected())
+            {
+                coins.Remove(coins[i]);
             }
         }
     }
@@ -182,13 +193,19 @@ class Room
         {
             g.Draw();
         }
+
         foreach(Switch s in switches)
         {
             s.Draw();
          }
+
         if (glyphs.Count != 0)
         {
             glyphs[0].Draw();
+        }
+        foreach(Coin c in coins)
+        {
+            c.Draw();
         }
     }
 
@@ -292,14 +309,15 @@ class Room
         return loader;
     }
 
-    public (List<Item>, List<Dodo>, List<Glyph>) ReadObjects(String file)
+    public (List<Item>, List<Dodo>, List<Glyph>, List<Coin>) ReadObjects(String file)
     {
         using (StreamReader sr = File.OpenText("Assets/" + file))
         {
             string s = sr.ReadToEnd();
             String[] filesplit = s.Split("---");
 
-            return (ReadItems(filesplit[0].Trim()), ReadDodos(filesplit[1].Trim()), ReadGlyphs(filesplit[2].Trim()));
+            return (ReadItems(filesplit[0].Trim()), ReadDodos(filesplit[1].Trim()),
+                ReadGlyphs(filesplit[2].Trim()), (filesplit.GetLength(0) == 4) ? ReadCoins(filesplit[3].Trim()) : new List<Coin>());
         }
     }
 
@@ -381,6 +399,27 @@ class Room
                 {
                     Vector2 pos = new Vector2(int.Parse(args[1]), int.Parse(args[2]));
                     loader.Add(new Glyph(pos, args[3]));
+                }
+            }
+        }
+        return loader;
+    }
+    public List<Coin> ReadCoins(String dodos)
+    {
+        List<Coin> loader = new List<Coin>();
+
+        byte[] byteArray = Encoding.ASCII.GetBytes(dodos);
+        MemoryStream stream = new MemoryStream(byteArray);
+        using (StreamReader sr = new StreamReader(stream))
+        {
+            String s;
+            while ((s = sr.ReadLine()) != null)
+            {
+                String[] args = s.Split(' ');
+                if (args[0].Equals("C"))
+                {
+                    Vector2 pos = new Vector2(int.Parse(args[1]), int.Parse(args[2]));
+                    loader.Add(new Coin(pos, int.Parse(args[3])));
                 }
             }
         }

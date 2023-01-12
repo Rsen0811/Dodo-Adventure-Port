@@ -90,6 +90,7 @@ class Trophies
         midTime = midTime.Multiply(0).Add(TimeSpan.FromSeconds(5999));
         beatHard = false;
         hardTime = hardTime.Multiply(0).Add(TimeSpan.FromSeconds(5999));
+        Coin.Reset();
         Save();
     }
     public static void KillDodo(int dodos = 1)
