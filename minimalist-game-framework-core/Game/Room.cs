@@ -25,10 +25,8 @@ class Room
         (CollisionZones, Gates) = ReadOnlyCollisions("rooms/" + name + "/" + name + "c.txt");
         bg = Engine.LoadTexture("rooms/" + name + "/" + name + "i.png");
 
-        (items, enemies, glyphs) = ReadObjects("rooms/" + name + "/" + name + "o.txt");
+        (items, enemies, glyphs, coins) = ReadObjects("rooms/" + name + "/" + name + "o.txt");
 
-        coins = new List<Coin>();
-        coins.Add(new Coin(new Vector2(300, 300), 1));
         this.pos = pos;
     }
 
@@ -55,6 +53,7 @@ class Room
         {
             d.Update(p, 960);
         }
+
         List<Item> toRemove = new List<Item>();
         foreach (Item i in items)
         {
@@ -310,14 +309,15 @@ class Room
         return loader;
     }
 
-    public (List<Item>, List<Dodo>, List<Glyph>) ReadObjects(String file)
+    public (List<Item>, List<Dodo>, List<Glyph>, List<Coin>) ReadObjects(String file)
     {
         using (StreamReader sr = File.OpenText("Assets/" + file))
         {
             string s = sr.ReadToEnd();
             String[] filesplit = s.Split("---");
 
-            return (ReadItems(filesplit[0].Trim()), ReadDodos(filesplit[1].Trim()), ReadGlyphs(filesplit[2].Trim()));
+            return (ReadItems(filesplit[0].Trim()), ReadDodos(filesplit[1].Trim()),
+                ReadGlyphs(filesplit[2].Trim()), (filesplit.GetLength(0) == 4) ? ReadCoins(filesplit[3].Trim()) : new List<Coin>());
         }
     }
 
@@ -399,6 +399,27 @@ class Room
                 {
                     Vector2 pos = new Vector2(int.Parse(args[1]), int.Parse(args[2]));
                     loader.Add(new Glyph(pos, args[3]));
+                }
+            }
+        }
+        return loader;
+    }
+    public List<Coin> ReadCoins(String dodos)
+    {
+        List<Coin> loader = new List<Coin>();
+
+        byte[] byteArray = Encoding.ASCII.GetBytes(dodos);
+        MemoryStream stream = new MemoryStream(byteArray);
+        using (StreamReader sr = new StreamReader(stream))
+        {
+            String s;
+            while ((s = sr.ReadLine()) != null)
+            {
+                String[] args = s.Split(' ');
+                if (args[0].Equals("C"))
+                {
+                    Vector2 pos = new Vector2(int.Parse(args[1]), int.Parse(args[2]));
+                    loader.Add(new Coin(pos, int.Parse(args[3])));
                 }
             }
         }
