@@ -26,7 +26,6 @@ class GateKey : Item
         this.collisionBox = new Rect(new Range(pos.X, pos.X + size.X), new Range(pos.Y, pos.Y + size.Y));
         this.held = false;
         this.pos = pos;
-        r = 90f;
     }
 
     public void Move(Vector2 pos)
@@ -54,7 +53,7 @@ class GateKey : Item
             return;
         }
         //Engine.DrawRectEmpty(collisionBox.ToBounds(), Color.Red);
-        if (r == 0f || r == 180f)
+        if (dir.Y != 0)
         {
             Engine.DrawTexture(spriteMap, pos, size: size, rotation: r);
         }
@@ -71,10 +70,11 @@ class GateKey : Item
     {
         return held;
     }
-    public void Update(Rect Player)
+    public void Update(Rect Player, Vector2 itemDirection)
     {
         Vector2 playerPos = new Vector2(Player.X.min, Player.Y.min);
-        CollectInput(playerPos);
+        dir = itemDirection;
+        r = 90.0f * dir.X + ((dir.Y == 1) ? 180.0f : 0);
         if (!held)
         {
             if (Engine.GetKeyDown(Key.Space))
@@ -137,27 +137,8 @@ class GateKey : Item
     {
         this.held = true;
     }
-    public void CollectInput(Vector2 playerPos)
+    public Vector2 getDir()
     {
-        if (Engine.GetKeyHeld(Key.Up))
-        {
-            dir = new Vector2(0, -1);
-            r = 0f;
-        }
-        else if (Engine.GetKeyHeld(Key.Left))
-        {
-            dir = new Vector2(-1, 0);
-            r = -90f;
-        }
-        else if (Engine.GetKeyHeld(Key.Down))
-        {
-            dir = new Vector2(0, 1);
-            r = 180f;
-        }
-        else if (Engine.GetKeyHeld(Key.Right))
-        {
-            dir = new Vector2(1, 0);
-            r = 90f;
-        }
+        return dir;
     }
 }

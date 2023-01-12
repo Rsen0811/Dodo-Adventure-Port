@@ -57,7 +57,7 @@ class Room
         List<Item> toRemove = new List<Item>();
         foreach (Item i in items)
         {
-            i.Update(p.getPlayerBounds());
+            i.Update(p.getPlayerBounds(), Vector2.Zero);
             if (i.IsHeld())
             {
                 toRemove.Add(i);

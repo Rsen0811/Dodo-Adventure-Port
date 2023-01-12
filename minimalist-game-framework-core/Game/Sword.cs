@@ -48,11 +48,12 @@ class Sword : Item
         this.pos = pos;
         this.collisionBox = new Rect(new Range(pos.X, pos.X + size.X), new Range(pos.Y, pos.Y + size.Y));
     }
-    public void Update(Rect Player)
+    public void Update(Rect Player, Vector2 itemDirection)
     {
         swordCenterPos = new Vector2(pos.X + size.X / 2, pos.Y + size.Y / 2); // debug
         Vector2 playerPos = new Vector2(Player.X.min, Player.Y.min);
-        CollectInput(playerPos);
+        dir = itemDirection;
+        r = 90.0f * dir.X + ((dir.Y == 1) ? 180.0f : 0);
         if (!held)
         {
             if (Engine.GetKeyDown(Key.Space))
@@ -139,31 +140,8 @@ class Sword : Item
     {
         return collisionBox;
     }
-    public void CollectInput(Vector2 playerPos)
-    {
-        if (Engine.GetKeyHeld(Key.Up))
-        {
-            dir = new Vector2(0, -1);
-            r = 0f;
-        }
-        else if (Engine.GetKeyHeld(Key.Left))
-        {
-            dir = new Vector2(-1, 0);
-            r = -90f;
-        }
-        else if (Engine.GetKeyHeld(Key.Down))
-        {
-            dir = new Vector2(0, 1);
-            r = 180f;
-        }
-        else if (Engine.GetKeyHeld(Key.Right)) {
-            dir = new Vector2(1, 0);
-            r = 90f;
-        }   
-    }
     public void Pickup()
     {
         this.held = true;
     }
-
 }

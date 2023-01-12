@@ -5,14 +5,16 @@ using System.Text;
 class Player
 {
     Vector2 PLAYER_SIZE = new Vector2(24, 24);
+    Vector2 TEXTURE_OFFSET = new Vector2(-12, -16);
     Vector2 pos;
     bool active;
     bool alive;
     Item holding;
+    private Vector2 facing;
     Vector2 checkpointRoom;
     Vector2 checkpointPos;
     readonly int PLAYER_SPEED = 400;
-    Texture player = Engine.LoadTexture("textures/player.png");
+    Texture player = Engine.LoadTexture("textures/playerBlue.png");
     Room currRoom;
     Random random = new Random();
 
@@ -36,9 +38,13 @@ class Player
         checkpointPos = position;
         checkpointRoom = room;
         this.maxDeathHits = maxDeathHits;
+        facing = new Vector2(0, 1);
     }
     public void Update()
     {
+        Vector2 input = getFacingDirection();
+        facing = (input.Equals(Vector2.Zero)) ? facing : input;
+
         if (Engine.GetKeyDown(Key.Space))
         {
             if (!spaceDown)
@@ -56,8 +62,8 @@ class Player
             }
         }
         else if (holding != null)
-        {            
-            holding.Update(Rect.GetSpriteBounds(pos, PLAYER_SIZE));
+        {
+            holding.Update(Rect.GetSpriteBounds(pos, PLAYER_SIZE), facing);
         }
         if (Engine.GetKeyUp(Key.Space))
         {
@@ -69,7 +75,7 @@ class Player
         bool absolute = (currRoom == null);
         if ((moveVector.Equals(Vector2.Zero) && reboundTimer <= 0) || !alive || !active)
         {
-            if(respawnTimer < 1)
+            if (respawnTimer < 1)
             {
                 respawnTimer -= Engine.TimeDelta;
                 if (respawnTimer <= 0)
@@ -86,7 +92,7 @@ class Player
             return true;
         }
         Vector2 moveDir = moveVector.Normalized() * (PLAYER_SPEED * Engine.TimeDelta);
-        if(reboundTimer > 0)
+        if (reboundTimer > 0)
         {
             moveDir += reboundDir * (reboundSpeed * Engine.TimeDelta);
             reboundSpeed -= reboundSpeed / 15f;
@@ -118,9 +124,9 @@ class Player
     }
     public Room wrap()
     {
-        Vector2 pos = new Vector2(holding.CollisionZone().X.min,holding.CollisionZone().Y.min);
+        Vector2 pos = new Vector2(holding.CollisionZone().X.min, holding.CollisionZone().Y.min);
         Vector2 tempRoom = currRoom.Position();
-        
+
         if (pos.X > Game.Resolution.X)
         {
             holding.Move(new Vector2(Math.Abs(pos.X % Game.Resolution.X), Math.Abs(pos.Y % Game.Resolution.Y)));
@@ -129,29 +135,35 @@ class Player
         //doesnt work
         if (pos.X + holding.GetSize().X < 0)
         {
-            holding.Move(new Vector2(Game.Resolution.X-Math.Abs(pos.X), Math.Abs(pos.Y % Game.Resolution.Y)));
+            holding.Move(new Vector2(Game.Resolution.X - Math.Abs(pos.X), Math.Abs(pos.Y % Game.Resolution.Y)));
             tempRoom.X--;
         }
         if (pos.Y > Game.Resolution.Y)
         {
             holding.Move(new Vector2(Math.Abs(pos.X % Game.Resolution.X), Math.Abs(pos.Y % Game.Resolution.Y)));
             tempRoom.Y++;
-            
+
         }
         //doesnt work
         if (pos.Y + holding.GetSize().Y < 0)
         {
-            holding.Move(new Vector2(Math.Abs(pos.X % Game.Resolution.X), Game.Resolution.Y-Math.Abs(pos.Y)));
+            holding.Move(new Vector2(Math.Abs(pos.X % Game.Resolution.X), Game.Resolution.Y - Math.Abs(pos.Y)));
             tempRoom.Y--;
         }
-        
+
         return Game.getRoom(tempRoom);
     }
 
     public void DrawPlayer()
     {
-        Engine.DrawTexture(player, pos, size: new Vector2(24, 24));
-        if (holding != null)
+
+        Bounds2 playerBounds = new Bounds2(0, (facing.Y != -1) ? 0 : 48, 48, 48);
+        TextureMirror playerMirror = (facing.X > 0) ? TextureMirror.Horizontal : TextureMirror.None;
+
+
+        Engine.DrawTexture(player, pos + TEXTURE_OFFSET, source: playerBounds, mirror: playerMirror);
+
+        if (holding != null && facing.Y != -1)
         {
             holding.Draw();
         }
@@ -178,13 +190,13 @@ class Player
         {
             deathHits = random.Next(maxDeathHits - 8, maxDeathHits);
         }
-        if(Engine.GetKeyDown(Key.W) || Engine.GetKeyDown(Key.S) || Engine.GetKeyDown(Key.D) || 
+        if (Engine.GetKeyDown(Key.W) || Engine.GetKeyDown(Key.S) || Engine.GetKeyDown(Key.D) ||
             Engine.GetKeyDown(Key.A))
         {
             deathHits--;
             pos = currRoom.Move(pos, new Vector2(random.Next(-2, 3), random.Next(-2, 3)));
         }
-        if(deathTimer > 0)
+        if (deathTimer > 0)
         {
             if (deathHits > 0)
             {
@@ -196,7 +208,7 @@ class Player
                 active = true;
             }
         }
-        else if(deathHits > 0)
+        else if (deathHits > 0)
         {
             Die(deathPos);
         }
@@ -235,7 +247,7 @@ class Player
 
     public Vector2 Rebound(Vector2 dodoPos)
     {
-        reboundDir = (new Vector2((pos.X + PLAYER_SIZE.X / 2) - (dodoPos.X + Dodo.GetSize().X / 2), 
+        reboundDir = (new Vector2((pos.X + PLAYER_SIZE.X / 2) - (dodoPos.X + Dodo.GetSize().X / 2),
             (pos.Y + PLAYER_SIZE.Y / 2) - (dodoPos.Y + Dodo.GetSize().Y / 2))).Normalized();
         reboundTimer = 0.7f;
         reboundSpeed = PLAYER_SPEED * 2f;
@@ -267,6 +279,27 @@ class Player
     public Rect getPlayerBounds()
     {
         return Rect.GetSpriteBounds(pos, PLAYER_SIZE);
+    }
+
+    public Vector2 getFacingDirection()
+    {
+        if (Engine.GetKeyHeld(Key.Up))
+        {
+            return new Vector2(0, -1);
+        }
+        if (Engine.GetKeyHeld(Key.Left))
+        {
+            return new Vector2(-1, 0);
+        }
+        if (Engine.GetKeyHeld(Key.Down))
+        {
+            return new Vector2(0, 1);
+        }
+        if (Engine.GetKeyHeld(Key.Right))
+        {
+            return new Vector2(1, 0);
+        }
+        return Vector2.Zero;
     }
 }
 
