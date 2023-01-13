@@ -84,24 +84,24 @@ class GateKey : Item
         }
         else
         {
-            if ((dir - new Vector2(0, -1)).Equals(Vector2.Zero))
+            if (dir.Equals(new Vector2(0, -1)))
             {
                 pos = new Vector2(playerPos.X + Game.PLAYER_SIZE.X / 2 - size.X / 2, playerPos.Y - size.Y);
                 collisionBox = Rect.GetSpriteBounds(pos, size);
             }
-            else if ((dir - new Vector2(-1, 0)).Equals(Vector2.Zero))
+            else if (dir.Equals(new Vector2(-1, 0)))
             {
-                pos = new Vector2(playerPos.X - size.Y, playerPos.Y + Game.PLAYER_SIZE.Y / 2 - size.X / 2);
+                pos = new Vector2(playerPos.X - size.Y, playerPos.Y + Game.PLAYER_SIZE.Y / 2 - size.X / 2 + 4);
                 collisionBox = Rect.GetSpriteBounds(pos, new Vector2(size.Y, size.X));
             }
-            else if ((dir - new Vector2(0, 1)).Equals(Vector2.Zero))
+            else if (dir.Equals(new Vector2(0, 1)))
             {
                 pos = new Vector2(playerPos.X + Game.PLAYER_SIZE.X / 2 - size.X / 2, playerPos.Y + 24);
                 collisionBox = Rect.GetSpriteBounds(pos, size);
             }
-            else if ((dir - new Vector2(1, 0)).Equals(Vector2.Zero))
+            else if (dir.Equals(new Vector2(1, 0)))
             {
-                pos = new Vector2(playerPos.X + Game.PLAYER_SIZE.X, playerPos.Y + Game.PLAYER_SIZE.Y / 2 - size.X / 2);
+                pos = new Vector2(playerPos.X + Game.PLAYER_SIZE.X, playerPos.Y + Game.PLAYER_SIZE.Y / 2 - size.X / 2 + 4);
                 collisionBox = Rect.GetSpriteBounds(pos, new Vector2(size.Y, size.X));
             }
         }
@@ -140,5 +140,10 @@ class GateKey : Item
     public Vector2 getDir()
     {
         return dir;
+    }
+
+    public Vector2 GetPos()
+    {
+        return pos;
     }
 }

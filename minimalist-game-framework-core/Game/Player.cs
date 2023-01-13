@@ -117,6 +117,10 @@ class Player
         if (holding != null)
         {
             holding.Drop();
+            holding.CollisionZone();
+            // nudges item into wall to see where it rebounds
+            holding.Move(currRoom.Move(holding.GetPos() + facing * PLAYER_SIZE.Length()/2, pos - holding.GetPos(), holding.GetSize()));
+
             Room dropRoom = this.wrap();
             dropRoom.AddObject(holding);
             holding = null;
@@ -156,8 +160,8 @@ class Player
 
     public void DrawPlayer()
     {
-
-        Bounds2 playerBounds = new Bounds2(0, (facing.Y != -1) ? 0 : 48, 48, 48);
+        Engine.DrawRectEmpty(getPlayerBounds().ToBounds(), Color.Orange);
+        Bounds2 playerBounds = new Bounds2(0, (facing.Y == 0) ? 0 : (72 + facing.Y * 24), 48, 48);
         TextureMirror playerMirror = (facing.X > 0) ? TextureMirror.Horizontal : TextureMirror.None;
 
 
@@ -165,8 +169,10 @@ class Player
 
         if (holding != null && facing.Y != -1)
         {
+            Engine.DrawRectEmpty(holding.CollisionZone().ToBounds(), Color.Red);
             holding.Draw();
         }
+        Engine.DrawRectEmpty(getPlayerBounds().ToBounds(), Color.Orange);
     }
     public void ChangeRoom(Room room)
     {
