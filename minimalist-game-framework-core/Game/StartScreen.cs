@@ -13,9 +13,10 @@ class StartScreen
     static Rect trophies = new Rect(new Range(1.5f * Game.Resolution.X / 8 +15 , 335), new Range(Game.Resolution.Y / 8 + 10, 115));
     static Rect skins = new Rect(new Range(0.6f * Game.Resolution.X / 8 + 15, 1.5f * Game.Resolution.X / 8 + 20), new Range(Game.Resolution.Y / 8 + 15, 115));
     static Rect back = new Rect(new Range(830, 960), new Range(30, 70));
-    static Texture shopBackground= Engine.LoadTexture("startScreen/shopScreen/skinRoomBackground.png");
+    static Texture skinBackground= Engine.LoadTexture("startScreen/shopScreen/skinRoomBackground.png");
     static Rect trophiesReset = new Rect(new Range(840, 940), new Range(588, 620));
-
+    static Rect skinRightArrow = new Rect(new Range(900, 950), new Range(260, 350));
+    static Rect skinLeftArrow = new Rect(new Range(50, 5), new Range(260, 350));
     static bool shouldRun=true;
     static bool showTrophies = false;
     static bool showSkins = false;
@@ -24,7 +25,7 @@ class StartScreen
     {
         if (showSkins)
         {
-            Engine.DrawTexture(shopBackground, Vector2.Zero, size: Game.Resolution);
+            Engine.DrawTexture(skinBackground, Vector2.Zero, size: Game.Resolution);
             Engine.DrawString("Back", new Vector2(840, 40), Color.White, font);
         }
         else if (showTrophies)
@@ -63,6 +64,14 @@ class StartScreen
                 if (Rect.CheckRectIntersect(mouseCursor, back))
                 {
                     showSkins = false;
+                }
+                if(Rect.CheckRectIntersect(mouseCursor, shopRightArrow))
+                {
+
+                }
+                if (Rect.CheckRectIntersect(mouseCursor, shopLeftArrow))
+                {
+
                 }
             }
             else if (showTrophies)
