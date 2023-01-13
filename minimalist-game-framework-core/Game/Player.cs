@@ -156,8 +156,8 @@ class Player
 
     public void DrawPlayer()
     {
-
-        Bounds2 playerBounds = new Bounds2(0, (facing.Y != -1) ? 0 : 48, 48, 48);
+        Engine.DrawRectEmpty(getPlayerBounds().ToBounds(), Color.Orange);
+        Bounds2 playerBounds = new Bounds2(0, (facing.Y == 0) ? 0 : (72 + facing.Y * 24), 48, 48);
         TextureMirror playerMirror = (facing.X > 0) ? TextureMirror.Horizontal : TextureMirror.None;
 
 
@@ -165,8 +165,10 @@ class Player
 
         if (holding != null && facing.Y != -1)
         {
+            Engine.DrawRectEmpty(holding.CollisionZone().ToBounds(), Color.Red);
             holding.Draw();
         }
+        Engine.DrawRectEmpty(getPlayerBounds().ToBounds(), Color.Orange);
     }
     public void ChangeRoom(Room room)
     {

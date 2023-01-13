@@ -31,7 +31,7 @@ class Sword : Item
         }
         else {
             this.spriteMap = Engine.LoadTexture("textures/sword.png");
-            this.size = new Vector2(12, 24);
+            this.size = new Vector2(18, 36);
             this.damage = 1;
         }
         this.isHoly = isHoly;
@@ -63,24 +63,24 @@ class Sword : Item
         }
         else
         {
-            if ((dir-new Vector2(0, -1)).Equals(Vector2.Zero))
+            if (dir.Equals(new Vector2(0, -1)))
             {
                 pos = new Vector2(playerPos.X + Game.PLAYER_SIZE.X/2 - size.X / 2, playerPos.Y - size.Y);
                 collisionBox = Rect.GetSpriteBounds(pos, size);
             }
-            else if ((dir - new Vector2(-1, 0)).Equals(Vector2.Zero))
+            else if (dir.Equals(new Vector2(-1, 0)))
             {
-                pos = new Vector2(playerPos.X - size.Y, playerPos.Y + Game.PLAYER_SIZE.Y/2 - size.X / 2);
+                pos = new Vector2(playerPos.X - size.Y + 6, playerPos.Y + Game.PLAYER_SIZE.Y/2 - size.X / 2 + 8);
                 collisionBox = Rect.GetSpriteBounds(pos, new Vector2(size.Y, size.X));
             }
-            else if ((dir - new Vector2(0, 1)).Equals(Vector2.Zero))
-            {
-                pos = new Vector2(playerPos.X + Game.PLAYER_SIZE.X/2 - size.X / 2, playerPos.Y + 24);
+            else if (dir.Equals(new Vector2(0, 1)))
+            {   
+                pos = new Vector2(playerPos.X + Game.PLAYER_SIZE.X/2 - size.X / 2, playerPos.Y + 16);
                 collisionBox = Rect.GetSpriteBounds(pos, size);
             }
-            else if ((dir - new Vector2(1, 0)).Equals(Vector2.Zero))
+            else if (dir.Equals(new Vector2(1, 0)))
             {
-                pos = new Vector2(playerPos.X + Game.PLAYER_SIZE.X, playerPos.Y + Game.PLAYER_SIZE.Y/2 - size.X / 2);
+                pos = new Vector2(playerPos.X + Game.PLAYER_SIZE.X, playerPos.Y + Game.PLAYER_SIZE.Y/2 - size.X / 2 + 8);
                 collisionBox = Rect.GetSpriteBounds(pos, new Vector2(size.Y, size.X));
             }
         }
@@ -122,11 +122,10 @@ class Sword : Item
 
     public bool Collides(Rect player)
     {
-        Vector2 playerCenterPos = new Vector2(player.X.min + Game.PLAYER_SIZE.X / 2, player.Y.min + Game.PLAYER_SIZE.Y / 2);
         Vector2 swordCenterPos = new Vector2(pos.X + this.GetSize().X, pos.Y + this.GetSize().Y);
-        Bounds2 swordCollider = new Bounds2((playerCenterPos - new Vector2(PICKUP, PICKUP) / 2),
-                                new Vector2(PICKUP, PICKUP));
-        if (Math.Abs((playerCenterPos - swordCenterPos).Length()) < PICKUP)
+        Bounds2 swordCollider = new Bounds2(swordCenterPos.X - PICKUP, swordCenterPos.Y - PICKUP, PICKUP * 2, PICKUP * 2);
+
+        if (Rect.CheckRectIntersect(Rect.toRect(swordCollider), player))
         {
             held = true;
             //Engine.DrawRectEmpty(swordCollider, Color.Red);
