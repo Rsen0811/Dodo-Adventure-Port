@@ -117,10 +117,6 @@ class Player
         if (holding != null)
         {
             holding.Drop();
-            holding.CollisionZone();
-            // nudges item into wall to see where it rebounds
-            holding.Move(currRoom.Move(holding.GetPos() + facing * PLAYER_SIZE.Length()/2, pos - holding.GetPos(), holding.GetSize()));
-
             Room dropRoom = this.wrap();
             dropRoom.AddObject(holding);
             holding = null;

@@ -119,9 +119,9 @@ class GateKey : Item
     }
     public bool Collides(Rect player)
     {
-        int radius = 100;
+        int radius = 80;
         Vector2 playerCenter = new Vector2((player.X.min+player.X.max)/2, (player.Y.min + player.Y.max) / 2);
-        Vector2 keyCenter = pos;
+        Vector2 keyCenter = pos + size/2;
         if (Math.Sqrt(Math.Pow((playerCenter.X - keyCenter.X), 2) + Math.Pow((playerCenter.Y - keyCenter.Y), 2)) <= radius)
         {
             held = true;
@@ -140,10 +140,5 @@ class GateKey : Item
     public Vector2 getDir()
     {
         return dir;
-    }
-
-    public Vector2 GetPos()
-    {
-        return pos;
     }
 }

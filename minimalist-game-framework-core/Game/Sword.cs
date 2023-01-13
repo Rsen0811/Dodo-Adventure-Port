@@ -122,7 +122,6 @@ class Sword : Item
 
     public bool Collides(Rect player)
     {
-        Vector2 playerCenterPos = new Vector2(player.X.min + Game.PLAYER_SIZE.X / 2, player.Y.min + Game.PLAYER_SIZE.Y / 2);
         Vector2 swordCenterPos = new Vector2(pos.X + this.GetSize().X, pos.Y + this.GetSize().Y);
         Bounds2 swordCollider = new Bounds2(swordCenterPos.X - PICKUP, swordCenterPos.Y - PICKUP, PICKUP * 2, PICKUP * 2);
 
@@ -143,10 +142,5 @@ class Sword : Item
     public void Pickup()
     {
         this.held = true;
-    }
-
-    public Vector2 GetPos()
-    {
-        return pos;
     }
 }

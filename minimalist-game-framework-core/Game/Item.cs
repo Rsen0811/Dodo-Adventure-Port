@@ -22,5 +22,4 @@ interface Item
     void Drop();
 
     void Pickup();
-    Vector2 GetPos();
 }
