@@ -30,6 +30,9 @@ class Player
     bool spaceDown = false;
     bool gameOver = false;
 
+    int frameCounter;
+    bool walking;
+
     public Player(Vector2 position, Vector2 room, int maxDeathHits = 15)
     {
         active = true;
@@ -40,6 +43,8 @@ class Player
         this.maxDeathHits = maxDeathHits;
         facing = new Vector2(0, 1);
         player = Shop.GetPlayerTexture();
+        frameCounter = 0;
+        walking = false;
     }
     public void Update()
     {
@@ -73,6 +78,8 @@ class Player
     }
     public bool Move(Vector2 moveVector, Room currRoom = null)
     {
+        walking = !moveVector.Equals(Vector2.Zero);
+
         bool absolute = (currRoom == null);
         if ((moveVector.Equals(Vector2.Zero) && reboundTimer <= 0) || !alive || !active)
         {
@@ -157,8 +164,14 @@ class Player
 
     public void DrawPlayer()
     {
+        frameCounter++;
+
         Engine.DrawRectEmpty(getPlayerBounds().ToBounds(), Color.Orange);
-        Bounds2 playerBounds = new Bounds2(0, (facing.Y == 0) ? 0 : (72 + facing.Y * 24), 48, 48);
+        // framecounter/8 gives 4fps
+        Bounds2 playerBounds = new Bounds2((frameCounter/8)%4 * 48,  // animation frame
+                                            ((facing.Y == 0) ? 0 : (72 + facing.Y * 24)) // facing
+                                            + ((walking) ? 144 : 0), // walking
+                                            48, 48); // size
         TextureMirror playerMirror = (facing.X > 0) ? TextureMirror.Horizontal : TextureMirror.None;
 
 
