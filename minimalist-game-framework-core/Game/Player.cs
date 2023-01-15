@@ -14,7 +14,7 @@ class Player
     Vector2 checkpointRoom;
     Vector2 checkpointPos;
     readonly int PLAYER_SPEED = 400;
-    Texture player = Engine.LoadTexture("textures/playerBlue.png");
+    Texture player;
     Room currRoom;
     Random random = new Random();
 
@@ -39,6 +39,7 @@ class Player
         checkpointRoom = room;
         this.maxDeathHits = maxDeathHits;
         facing = new Vector2(0, 1);
+        player = Shop.GetPlayerTexture();
     }
     public void Update()
     {

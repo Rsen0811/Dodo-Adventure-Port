@@ -10,7 +10,7 @@ class Coin {
 
     static StreamReader doc = File.OpenText("Assets/userData/coins.txt");
     static Texture coinTexture = Engine.LoadTexture("textures/coin.png");
-    static String[] coins = doc.ReadToEnd().Trim().Split(",");
+    public static String[] coins = doc.ReadToEnd().Trim().Split(",");
 
 
     public bool collected;
