@@ -287,8 +287,13 @@ class Room
                 String[] args = s.Split(' ');
                 String name = args[4];
                 Rect rect = new Rect(new Range(float.Parse(args[0]), float.Parse(args[1])),
-                                    new Range(float.Parse(args[2]), float.Parse(args[3]))); 
-                loader.Add(new Gate(name,rect));
+                                    new Range(float.Parse(args[2]), float.Parse(args[3])));
+                Gate temp = new Gate(name, rect);
+                if(args.Length > 5)
+                {
+                    temp.Toggle();
+                }
+                loader.Add(temp);
             }
         }
         return loader;

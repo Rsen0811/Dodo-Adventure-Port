@@ -7,11 +7,13 @@ class Game
     public static readonly string Title = "Minimalist Game Framework";
     public static readonly Vector2 Resolution = new Vector2(960, 640);
     public static readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
-    public static readonly Vector2 SPAWN = new Vector2(2, 4);
+    public static readonly Vector2 SPAWN = new Vector2(0, 2);
     public static readonly Vector2 SPAWNPOS = new Vector2(250, 300);
     //readonly int PLAYER_SPEED = 400;
 
-    static readonly Vector2[] existingRooms = {new Vector2(2, 4), new Vector2(2, 5)};
+    static readonly Vector2[] existingRooms = {new Vector2(2, 4), new Vector2(2, 5),
+        new Vector2(0,2), new Vector2(0, 0), new Vector2(0, 1), new Vector2(1,1),
+        new Vector2(1, 2), new Vector2(2, 2) };
     Vector2 tileSize = new Vector2(32, 32);
     Vector2 startpos = SPAWNPOS;
     Vector2 currRoom = SPAWN;
@@ -121,7 +123,8 @@ class Game
         // Graphics ------------------------------------
         rooms[(int)currRoom.X, (int)currRoom.Y].DrawRoom();
         player.DrawPlayer();
-        // Dodo ----------------------------------------        
+        // Dodo ----------------------------------------
+        
     }
 
     public void Idle() 
@@ -158,7 +161,7 @@ class Game
                 {
                     gates.Add(s[i]);
                 }
-                rooms[(int)roomPos.X, (int)roomPos.Y].addSwitch(gates, pos);
+                rooms[(int)roomPos.X, (int)roomPos.Y].addSwitch(gates, pos); 
             } 
         }
     }

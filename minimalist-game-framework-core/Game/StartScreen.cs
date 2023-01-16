@@ -50,7 +50,7 @@ class StartScreen
                 Engine.DrawString("Hard", new Vector2(7 * Game.Resolution.X / 8 + 50, Game.Resolution.Y / 8 + 15), Color.White, font, TextAlignment.Center);
             }
         }
-        Engine.DrawString(Engine.MousePosition.X + " " + Engine.MousePosition.Y, new Vector2(350, 350), Color.White, font);
+        //Engine.DrawString(Engine.MousePosition.X + " " + Engine.MousePosition.Y, new Vector2(350, 350), Color.White, font);
     }
     public static void Update()
     {
