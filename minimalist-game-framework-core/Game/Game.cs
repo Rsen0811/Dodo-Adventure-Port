@@ -6,6 +6,7 @@ class Game
 {
     public static readonly string Title = "Minimalist Game Framework";
     public static readonly Vector2 Resolution = new Vector2(960, 640);
+    public static readonly Rect SCREEN_RECT = new Rect(new Range(0, Resolution.X), new Range(0, Resolution.Y));
     public static readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
     public static readonly Vector2 SPAWN = new Vector2(2, 4);
     public static readonly Vector2 SPAWNPOS = new Vector2(250, 300);
@@ -20,6 +21,7 @@ class Game
     GameOver endScreen;
     Music music = Engine.LoadMusic("sounds/adventureSoundtrack.mp3");
     float gameTime = 0;
+    Boss boss;
     public Game()
     {
         Engine.PlayMusic(music, looping: true);
@@ -33,11 +35,6 @@ class Game
     {
         if (StartScreen.ShouldRun())
         {
-            if (Engine.GetKeyDown(Key.I))
-            {
-                Trophies.KillDodo();
-                Trophies.Save();
-            }
             StartScreen.Update();
             StartScreen.Draw();
             return;
@@ -121,6 +118,15 @@ class Game
         rooms[(int)currRoom.X, (int)currRoom.Y].DrawRoom();
         player.DrawPlayer();
         // Dodo ----------------------------------------        
+        if (Engine.GetKeyDown(Key.B))
+        {
+            boss = new Boss(new Vector2(200, 200));
+        }
+        if (boss != null)
+        {
+            boss.Update(player);
+            boss.Draw();
+        }   
     }
 
     public void Idle() 

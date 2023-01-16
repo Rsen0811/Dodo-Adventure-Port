@@ -22,6 +22,7 @@ class Player
     float reboundSpeed;
     Vector2 reboundDir;
     float deathTimer = -1;
+    float bossDeathTimer = 2;
     float respawnTimer = 1;
     float deathHits = 0;
 
@@ -205,6 +206,12 @@ class Player
             active = true;
         }
     }
+    public void GetBossEaten(Vector2 beakPos, Vector2 deathPos)
+    {
+        if (bossDeathTimer > 0) pos = beakPos;
+        else Die(deathPos);
+        bossDeathTimer -= Engine.TimeDelta;
+    }
 
     public void SetDeathTimer(float deathTimer)
     {
@@ -240,6 +247,21 @@ class Player
         reboundTimer = 0.7f;
         reboundSpeed = PLAYER_SPEED * 2f;
         return reboundDir;
+    }
+
+    public void BossRebound(Vector2 bossPos)
+    {
+        reboundDir = (new Vector2((pos.X + PLAYER_SIZE.X / 2) - (bossPos.X + Boss.Size().X / 2),
+            (pos.Y + PLAYER_SIZE.Y / 2) - (bossPos.Y + Boss.Size().Y / 2))).Normalized();
+        reboundTimer = 0.7f;
+        reboundSpeed = PLAYER_SPEED * 3f;
+    }
+    public void ProjectileRebound(Vector2 projectilePos)
+    {
+        reboundDir = (new Vector2((pos.X + PLAYER_SIZE.X / 2) - (projectilePos.X + Projectile.Size().X / 2),
+            (pos.Y + PLAYER_SIZE.Y / 2) - (projectilePos.Y + Projectile.Size().Y / 2))).Normalized();
+        reboundTimer = 0.7f;
+        reboundSpeed = PLAYER_SPEED * 1.5f;
     }
 
     public void Shake()

@@ -31,9 +31,41 @@ class Projectile
     }
     public void Draw() 
     {
-        Bounds2 firebounds = new Bounds2(((int)animationFrame) * size.X, 0, size.X, size.Y);
+        Bounds2 firebounds = new Bounds2(((int)animationFrame % 4) * size.X, 0, size.X, size.Y);
         Engine.DrawTexture(fire, position, source: firebounds, mirror: TextureMirror.None);
         animationFrame++;
+    }
+    public Rect GetBounds()
+    {
+        return Rect.GetSpriteBounds(position + size / 2, size);
+    }
+    public bool InBounds()
+    {
+        if (position.X >= Game.Resolution.X)
+        {
+            return false;
+        }
+        else if (position.X <= 0 - size.X)
+        {
+            return false;
+        }
+        if (position.Y >= Game.Resolution.Y)
+        {
+            return false;
+        }
+        else if (position.Y <= 0 - size.X)
+        {
+            return false;
+        }
+        return true;
+    }
+    public Vector2 Pos()
+    {
+        return position;
+    }
+    public static Vector2 Size()
+    {
+        return size;
     }
 }
 

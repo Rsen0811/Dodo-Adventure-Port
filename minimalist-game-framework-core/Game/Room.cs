@@ -16,6 +16,7 @@ class Room
     List<Item> items;
     List<Switch> switches= new List<Switch>();
     public List<Dodo> enemies; /// change back to private
+    Boss boss;
     List<Glyph> glyphs;
 
     public Room(Vector2 pos) {
@@ -38,6 +39,7 @@ class Room
     { 
         enemies.Add(new Dodo(new Vector2(200, 200)));
     }
+
     public void Update(Player p)
     {
         if (Engine.GetKeyDown(Key.Escape) && glyphs.Count != 0)
