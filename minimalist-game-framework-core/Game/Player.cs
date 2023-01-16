@@ -13,7 +13,7 @@ class Player
     private Vector2 facing;
     Vector2 checkpointRoom;
     Vector2 checkpointPos;
-    readonly int PLAYER_SPEED = 400;
+    readonly int PLAYER_SPEED = 400; //400
     Texture player = Engine.LoadTexture("textures/playerBlue.png");
     Room currRoom;
     Random random = new Random();
