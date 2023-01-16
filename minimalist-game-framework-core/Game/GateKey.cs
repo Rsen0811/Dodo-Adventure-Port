@@ -26,7 +26,6 @@ class GateKey : Item
         this.collisionBox = new Rect(new Range(pos.X, pos.X + size.X), new Range(pos.Y, pos.Y + size.Y));
         this.held = false;
         this.pos = pos;
-        r = 90f;
     }
 
     public void Move(Vector2 pos)
@@ -54,7 +53,7 @@ class GateKey : Item
             return;
         }
         //Engine.DrawRectEmpty(collisionBox.ToBounds(), Color.Red);
-        if (r == 0f || r == 180f)
+        if (dir.Y != 0)
         {
             Engine.DrawTexture(spriteMap, pos, size: size, rotation: r);
         }
@@ -71,10 +70,11 @@ class GateKey : Item
     {
         return held;
     }
-    public void Update(Rect Player)
+    public void Update(Rect Player, Vector2 itemDirection)
     {
         Vector2 playerPos = new Vector2(Player.X.min, Player.Y.min);
-        CollectInput(playerPos);
+        dir = itemDirection;
+        r = 90.0f * dir.X + ((dir.Y == 1) ? 180.0f : 0);
         if (!held)
         {
             if (Engine.GetKeyDown(Key.Space))
@@ -84,24 +84,24 @@ class GateKey : Item
         }
         else
         {
-            if ((dir - new Vector2(0, -1)).Equals(Vector2.Zero))
+            if (dir.Equals(new Vector2(0, -1)))
             {
                 pos = new Vector2(playerPos.X + Game.PLAYER_SIZE.X / 2 - size.X / 2, playerPos.Y - size.Y);
                 collisionBox = Rect.GetSpriteBounds(pos, size);
             }
-            else if ((dir - new Vector2(-1, 0)).Equals(Vector2.Zero))
+            else if (dir.Equals(new Vector2(-1, 0)))
             {
-                pos = new Vector2(playerPos.X - size.Y, playerPos.Y + Game.PLAYER_SIZE.Y / 2 - size.X / 2);
+                pos = new Vector2(playerPos.X - size.Y, playerPos.Y + Game.PLAYER_SIZE.Y / 2 - size.X / 2 + 4);
                 collisionBox = Rect.GetSpriteBounds(pos, new Vector2(size.Y, size.X));
             }
-            else if ((dir - new Vector2(0, 1)).Equals(Vector2.Zero))
+            else if (dir.Equals(new Vector2(0, 1)))
             {
                 pos = new Vector2(playerPos.X + Game.PLAYER_SIZE.X / 2 - size.X / 2, playerPos.Y + 24);
                 collisionBox = Rect.GetSpriteBounds(pos, size);
             }
-            else if ((dir - new Vector2(1, 0)).Equals(Vector2.Zero))
+            else if (dir.Equals(new Vector2(1, 0)))
             {
-                pos = new Vector2(playerPos.X + Game.PLAYER_SIZE.X, playerPos.Y + Game.PLAYER_SIZE.Y / 2 - size.X / 2);
+                pos = new Vector2(playerPos.X + Game.PLAYER_SIZE.X, playerPos.Y + Game.PLAYER_SIZE.Y / 2 - size.X / 2 + 4);
                 collisionBox = Rect.GetSpriteBounds(pos, new Vector2(size.Y, size.X));
             }
         }
@@ -119,9 +119,9 @@ class GateKey : Item
     }
     public bool Collides(Rect player)
     {
-        int radius = 100;
+        int radius = 80;
         Vector2 playerCenter = new Vector2((player.X.min+player.X.max)/2, (player.Y.min + player.Y.max) / 2);
-        Vector2 keyCenter = pos;
+        Vector2 keyCenter = pos + size/2;
         if (Math.Sqrt(Math.Pow((playerCenter.X - keyCenter.X), 2) + Math.Pow((playerCenter.Y - keyCenter.Y), 2)) <= radius)
         {
             held = true;
@@ -137,27 +137,8 @@ class GateKey : Item
     {
         this.held = true;
     }
-    public void CollectInput(Vector2 playerPos)
+    public Vector2 getDir()
     {
-        if (Engine.GetKeyHeld(Key.Up))
-        {
-            dir = new Vector2(0, -1);
-            r = 0f;
-        }
-        else if (Engine.GetKeyHeld(Key.Left))
-        {
-            dir = new Vector2(-1, 0);
-            r = -90f;
-        }
-        else if (Engine.GetKeyHeld(Key.Down))
-        {
-            dir = new Vector2(0, 1);
-            r = 180f;
-        }
-        else if (Engine.GetKeyHeld(Key.Right))
-        {
-            dir = new Vector2(1, 0);
-            r = 90f;
-        }
+        return dir;
     }
 }

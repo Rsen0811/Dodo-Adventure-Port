@@ -12,7 +12,9 @@ class Game
     public static readonly Vector2 SPAWNPOS = new Vector2(250, 300);
     //readonly int PLAYER_SPEED = 400;
 
-    static readonly Vector2[] existingRooms = {new Vector2(2, 4), new Vector2(2, 5)};
+    static readonly Vector2[] existingRooms = {new Vector2(2, 4), new Vector2(2, 5),
+        new Vector2(0,2), new Vector2(0, 0), new Vector2(0, 1), new Vector2(1,1),
+        new Vector2(1, 2), new Vector2(1, 0), new Vector2(2, 2) };
     Vector2 tileSize = new Vector2(32, 32);
     Vector2 startpos = SPAWNPOS;
     Vector2 currRoom = SPAWN;
@@ -26,9 +28,10 @@ class Game
     {
         Engine.PlayMusic(music, looping: true);
         rooms = new Room[30, 20];
-        rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
+        //rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
         
         endScreen = new GameOver();
+        
     }
 
     public void Update()
@@ -117,6 +120,7 @@ class Game
         // Graphics ------------------------------------
         rooms[(int)currRoom.X, (int)currRoom.Y].DrawRoom();
         player.DrawPlayer();
+
         // Dodo ----------------------------------------        
         if (Engine.GetKeyDown(Key.B))
         {
@@ -163,7 +167,7 @@ class Game
                 {
                     gates.Add(s[i]);
                 }
-                rooms[(int)roomPos.X, (int)roomPos.Y].addSwitch(gates, pos);
+                rooms[(int)roomPos.X, (int)roomPos.Y].addSwitch(gates, pos); 
             } 
         }
     }
@@ -228,8 +232,7 @@ class Game
         startpos = SPAWNPOS;
         rooms = new Room[30, 20];
         rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
-        player = new Player(startpos, currRoom, 
-            maxDeathHits: StartScreen.GetDifficulty() == 3 ? 15 : 11);
+        player = null;
         StartScreen.reset();
         endScreen = new GameOver();
 

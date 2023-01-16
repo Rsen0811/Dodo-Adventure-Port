@@ -15,12 +15,11 @@ interface Item
 
     bool IsHeld();
 
-    void Update(Rect Player);
+    void Update(Rect Player, Vector2 pos);
 
     bool Collides(Rect bounds);
 
     void Drop();
 
     void Pickup();
-
 }

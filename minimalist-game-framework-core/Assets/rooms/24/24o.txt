@@ -1,6 +1,7 @@
 S 100 100 false
-K 200 200 test
 ---
 D 700 400
 ---
 T 200 200 wasdControl
+---
+C 300 300 1

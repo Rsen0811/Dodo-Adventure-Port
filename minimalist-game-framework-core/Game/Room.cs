@@ -18,6 +18,7 @@ class Room
     public List<Dodo> enemies; /// change back to private
     Boss boss;
     List<Glyph> glyphs;
+    List<Coin> coins; 
 
     public Room(Vector2 pos) {
         
@@ -25,7 +26,7 @@ class Room
         (CollisionZones, Gates) = ReadOnlyCollisions("rooms/" + name + "/" + name + "c.txt");
         bg = Engine.LoadTexture("rooms/" + name + "/" + name + "i.png");
 
-        (items, enemies, glyphs) = ReadObjects("rooms/" + name + "/" + name + "o.txt");
+        (items, enemies, glyphs, coins) = ReadObjects("rooms/" + name + "/" + name + "o.txt");
 
         this.pos = pos;
     }
@@ -54,10 +55,11 @@ class Room
         {
             d.Update(p, 960);
         }
+
         List<Item> toRemove = new List<Item>();
         foreach (Item i in items)
         {
-            i.Update(p.getPlayerBounds());
+            i.Update(p.getPlayerBounds(), Vector2.Zero);
             if (i.IsHeld())
             {
                 toRemove.Add(i);
@@ -79,6 +81,15 @@ class Room
                 }
             }
         }
+
+        for(int i = 0; i < coins.Count; i++)
+        {
+            coins[i].coinUpdate(p);
+            if (coins[i].isCollected())
+            {
+                coins.Remove(coins[i]);
+            }
+        }
     }
 
     public void Idle()
@@ -91,11 +102,15 @@ class Room
 
     public Vector2 Move(Vector2 start, Vector2 movement)
     {
+        return Move(start, movement, PLAYER_SIZE);
+    }
+    public Vector2 Move(Vector2 start, Vector2 movement, Vector2 spriteSize)
+    {
         // why do calcs if none needed
         if (movement.Equals(Vector2.Zero)) return start;
 
         Vector2 moveTo = start + movement;
-        Rect playerBounds = Rect.GetSpriteBounds(moveTo, PLAYER_SIZE);
+        Rect playerBounds = Rect.GetSpriteBounds(moveTo, spriteSize);
         List<Rect> temp =new List<Rect>();
         temp.AddRange(CollisionZones);
         foreach(Gate g in Gates){
@@ -110,10 +125,10 @@ class Room
             if (Rect.CheckRectIntersect(collider, playerBounds))
             { // does handle corners
                 Vector2 moveToY = start + new Vector2(0, movement.Y);
-                Rect playerBoundsY = Rect.GetSpriteBounds(moveToY, PLAYER_SIZE);
+                Rect spriteBoundsY = Rect.GetSpriteBounds(moveToY, spriteSize);
                 Vector2 moveToX = start + new Vector2(movement.X, 0);
-                Rect playerBoundsX = Rect.GetSpriteBounds(moveToX, PLAYER_SIZE);
-                if (!Rect.CheckRectIntersect(collider, playerBoundsY) && !Rect.CheckRectIntersect(collider, playerBoundsX))
+                Rect spriteBoundsX = Rect.GetSpriteBounds(moveToX, spriteSize);
+                if (!Rect.CheckRectIntersect(collider, spriteBoundsY) && !Rect.CheckRectIntersect(collider, spriteBoundsX))
                 {
                     //check just x and just y and which ever moves farther is the one we use
                     Vector2 Xmove= Move(start, new Vector2(movement.X, 0));
@@ -124,27 +139,27 @@ class Room
                 }
                 else
                 {
-                    if (Rect.CheckRectIntersect(collider, playerBoundsX))
+                    if (Rect.CheckRectIntersect(collider, spriteBoundsX))
                     {
                         //need to check if you are to the right or to the left
                         //if player to the right of the wall
-                        if (collider.X.max<= Rect.GetSpriteBounds(start, PLAYER_SIZE).X.min)
+                        if (collider.X.max<= Rect.GetSpriteBounds(start, spriteSize).X.min)
                         {
                             moveTo.X = collider.X.max;
                         }
                         //if player is to the left of the wall
                         else
                         {
-                            moveTo.X = collider.X.min - PLAYER_SIZE.X;
+                            moveTo.X = collider.X.min - spriteSize.X;
                         }
                     }
-                    if (Rect.CheckRectIntersect(collider, playerBoundsY))
+                    if (Rect.CheckRectIntersect(collider, spriteBoundsY))
                     {
                         //need to check if you are to the up or to the down
                         //if player is above the wall
-                        if (collider.Y.min >= Rect.GetSpriteBounds(start, PLAYER_SIZE).Y.max)
+                        if (collider.Y.min >= Rect.GetSpriteBounds(start, spriteSize).Y.max)
                         {
-                            moveTo.Y = collider.Y.min - PLAYER_SIZE.Y;
+                            moveTo.Y = collider.Y.min - spriteSize.Y;
                         }
                         //if player is below the wall
                         else
@@ -184,13 +199,19 @@ class Room
         {
             g.Draw();
         }
+
         foreach(Switch s in switches)
         {
             s.Draw();
          }
+
         if (glyphs.Count != 0)
         {
             glyphs[0].Draw();
+        }
+        foreach(Coin c in coins)
+        {
+            c.Draw();
         }
     }
 
@@ -268,8 +289,13 @@ class Room
                 String[] args = s.Split(' ');
                 String name = args[4];
                 Rect rect = new Rect(new Range(float.Parse(args[0]), float.Parse(args[1])),
-                                    new Range(float.Parse(args[2]), float.Parse(args[3]))); 
-                loader.Add(new Gate(name,rect));
+                                    new Range(float.Parse(args[2]), float.Parse(args[3])));
+                Gate temp = new Gate(name, rect);
+                if(args.Length > 5)
+                {
+                    temp.Toggle();
+                }
+                loader.Add(temp);
             }
         }
         return loader;
@@ -294,14 +320,15 @@ class Room
         return loader;
     }
 
-    public (List<Item>, List<Dodo>, List<Glyph>) ReadObjects(String file)
+    public (List<Item>, List<Dodo>, List<Glyph>, List<Coin>) ReadObjects(String file)
     {
         using (StreamReader sr = File.OpenText("Assets/" + file))
         {
             string s = sr.ReadToEnd();
             String[] filesplit = s.Split("---");
 
-            return (ReadItems(filesplit[0].Trim()), ReadDodos(filesplit[1].Trim()), ReadGlyphs(filesplit[2].Trim()));
+            return (ReadItems(filesplit[0].Trim()), ReadDodos(filesplit[1].Trim()),
+                ReadGlyphs(filesplit[2].Trim()), (filesplit.GetLength(0) == 4) ? ReadCoins(filesplit[3].Trim()) : new List<Coin>());
         }
     }
 
@@ -383,6 +410,27 @@ class Room
                 {
                     Vector2 pos = new Vector2(int.Parse(args[1]), int.Parse(args[2]));
                     loader.Add(new Glyph(pos, args[3]));
+                }
+            }
+        }
+        return loader;
+    }
+    public List<Coin> ReadCoins(String dodos)
+    {
+        List<Coin> loader = new List<Coin>();
+
+        byte[] byteArray = Encoding.ASCII.GetBytes(dodos);
+        MemoryStream stream = new MemoryStream(byteArray);
+        using (StreamReader sr = new StreamReader(stream))
+        {
+            String s;
+            while ((s = sr.ReadLine()) != null)
+            {
+                String[] args = s.Split(' ');
+                if (args[0].Equals("C"))
+                {
+                    Vector2 pos = new Vector2(int.Parse(args[1]), int.Parse(args[2]));
+                    loader.Add(new Coin(pos, int.Parse(args[3])));
                 }
             }
         }
