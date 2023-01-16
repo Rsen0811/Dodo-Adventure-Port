@@ -65,8 +65,8 @@ class Coin {
     }
 
     public static async void Reset()
-    {        
-        for (int i = 0; i < coins.Length; i++)
+    {   // coin 1 always remains unlocked
+        for (int i = 1; i < coins.Length; i++)
         {
             coins[i] = "0";
             
