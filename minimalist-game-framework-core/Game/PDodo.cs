@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-class PDodo
+class PDodo : Enemy
 {
     private readonly float walkSpeed;
     private readonly float runSpeed; // seperate from walkSpeed

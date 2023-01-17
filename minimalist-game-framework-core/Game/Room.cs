@@ -15,7 +15,7 @@ class Room
     
     List<Item> items;
     List<Switch> switches= new List<Switch>();
-    public List<Dodo> enemies; /// change back to private
+    public List<Enemy> enemies; /// change back to private
     Boss boss;
     List<Glyph> glyphs;
     List<Coin> coins; 
@@ -36,9 +36,9 @@ class Room
         return pos;
     }
 
-    public void TestaddDodo()
+    public void AddEnemy(Enemy e)
     { 
-        enemies.Add(new Dodo(new Vector2(200, 200)));
+        enemies.Add(e);
     }
 
     public void Update(Player p)
@@ -320,7 +320,7 @@ class Room
         return loader;
     }
 
-    public (List<Item>, List<Dodo>, List<Glyph>, List<Coin>) ReadObjects(String file)
+    public (List<Item>, List<Enemy>, List<Glyph>, List<Coin>) ReadObjects(String file)
     {
         using (StreamReader sr = File.OpenText("Assets/" + file))
         {
@@ -360,9 +360,9 @@ class Room
         return loader;
     }
 
-    public List<Dodo> ReadDodos(String dodos)
+    public List<Enemy> ReadDodos(String dodos)
     {
-        List<Dodo> loader = new List<Dodo>();
+        List<Enemy> loader = new List<Enemy>();
 
         byte[] byteArray = Encoding.ASCII.GetBytes(dodos);
         MemoryStream stream = new MemoryStream(byteArray);
