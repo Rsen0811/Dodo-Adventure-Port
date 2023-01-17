@@ -7,7 +7,7 @@ class Game
     public static readonly string Title = "Dodventure";
     public static readonly Vector2 Resolution = new Vector2(960, 640);
     public static readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
-    public static readonly Vector2 SPAWN = new Vector2(1, 4);
+    public static readonly Vector2 SPAWN = new Vector2(2, 4);
     public static readonly Vector2 SPAWNPOS = new Vector2(250, 300);
     //readonly int PLAYER_SPEED = 400;
 
@@ -61,7 +61,7 @@ class Game
             foreach(Room r in rooms)
             {
                 if (r == null) continue;
-                foreach(Dodo d in r.enemies)
+                foreach(Enemy d in r.enemies)
                 {
                     if (!d.IsAlive()) 
                     {
@@ -106,7 +106,6 @@ class Game
         if (Engine.GetKeyHeld(Key.D)) moveVector.X += 1;
         if (Engine.GetKeyHeld(Key.A)) moveVector.X -= 1;
 
-        if (Engine.GetKeyHeld(Key.P)) rooms[(int)currRoom.X, (int)currRoom.Y].TestaddDodo();
         
         //normalize the movement
         moveVector = moveVector.Normalized();
