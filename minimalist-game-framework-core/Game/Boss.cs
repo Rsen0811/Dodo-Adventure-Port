@@ -8,14 +8,14 @@ using System.Text;
 
 class Boss
 {
-    Texture bossAlive = Engine.LoadTexture("textures/dodoAlive.png");
-    Texture bossDamaged = Engine.LoadTexture("textures/dodoDamaged.png");
-    Texture bossDead = Engine.LoadTexture("textures/dodoDead.png");
+    readonly Texture bossAlive = Engine.LoadTexture("textures/dodoAlive.png");
+    readonly Texture bossDamaged = Engine.LoadTexture("textures/dodoDamaged.png");
+    readonly Texture bossDead = Engine.LoadTexture("textures/dodoDead.png");
     Vector2 pos;
     static readonly Vector2 size = new Vector2(200, 200);
-    int maxHealth;
+    readonly int maxHealth;
+    readonly float speed;
     int health;
-    float speed;
 
     Vector2 move;
     Random random = new Random();
@@ -25,19 +25,19 @@ class Boss
     float actionTimer;
     float idleTimer;
 
-    float chargeLength;
+    readonly float chargeLength;
     Vector2 chargeDir;
-    float chargeSpeed;
+    readonly float chargeSpeed; // based on speed
 
-    double sprayAngle;
+    double sprayAngle; // used only for FireSpray
 
     private float stunSpeed;
-    private float stunLength;
+    private readonly float stunLength;
 
     private float projectileTimer;
-    private float projectileDelay;
-    private int projectileAmount;
-    private double projectileSpeed;
+    private readonly float projectileDelay;
+    private readonly int projectileAmount;
+    private readonly double projectileSpeed;
 
     List<Projectile> projectiles = new List<Projectile>();
 
@@ -59,26 +59,37 @@ class Boss
 
     public void Update(Player player)
     {
+        // actions:
+        // -1: die
+        // 0: stun (after charge)
+        // 1: charge
+        // 2: shoot projectiles in a circle around boss
+        // 3: spray projectiles rapid fire in a circle around boss
         if (health > 0)
         {
             if(action != -1 && Rect.CheckRectIntersect(player.getPlayerBounds(), GetBounds()))
             {
+                // if intercecting with player, set action to -1: die for 5 seconds
                 action = -1;
                 actionTimer = 5f;
             }
             if (actionTimer <= 0)
             {
+                // when an action is complete, generate a random action to replace the previous
                 action = random.Next(1, 4);
                 switch (action)
                 {
                     case 1:
+                        // starts charge sequence
                         actionTimer = chargeLength;
                         break;
                     case 2:
+                        // starts radial projectile sequence
                         actionTimer = 4f;
                         projectileTimer = 0;
                         break;
                     case 3:
+                        // starts projectile spray sequence
                         actionTimer = 3f;
                         projectileTimer = 0;
                         sprayAngle = 0;
@@ -87,6 +98,7 @@ class Boss
             }
             switch (action)
             {
+                // runs action based on prescribed action state
                 case -1:
                     Eat(player);
                     break;
@@ -107,14 +119,17 @@ class Boss
             }
             actionTimer -= Engine.TimeDelta;
         }
+        // projectiles --------------------------
         for(int i = projectiles.Count - 1; i >= 0; i--)
         {
             if (!projectiles[i].InBounds())
             {
+                // deletes projectiles if off screen
                 projectiles.RemoveAt(i);
             }
             else
             {
+                // updates projectiles and checks for player intersect
                 projectiles[i].Update();
                 if(Rect.CheckRectIntersect(projectiles[i].GetBounds(), player.getPlayerBounds()))
                 {
@@ -140,22 +155,26 @@ class Boss
         }
         for (int i = 0; i < projectiles.Count; i++)
         {
+            // draws projectiles
             projectiles[i].Draw();
         }
     }
 
     public void Walk(Vector2 playerPos)
     {
+        // see Dodo walk method
         if (health > 0)
         {
             if (idleTimer <= 0)
             {
+                // generates random direction
                 idleTimer = 3;
                 move = new Vector2(random.Next() * 2 - 1, random.Next() * 2 - 1);
                 move = move.Normalized() * speed;
             }
             if (!Move(pos + move))
             {
+                // generates new random direction if previous is invalid
                 move = new Vector2(random.Next() * 2 - 1, random.Next() * 2 - 1);
                 move = move.Normalized() * speed;
             }
@@ -167,7 +186,7 @@ class Boss
             idleTimer -= Engine.TimeDelta;
         }
     }
-    private bool Charge(Vector2 playerPos)
+    private void Charge(Vector2 playerPos)
     {
         if (actionTimer <= chargeLength - stunLength / 2)
         {
@@ -175,18 +194,20 @@ class Boss
             if (Move(pos + move * Engine.TimeDelta)) pos += move * Engine.TimeDelta;
             else
             {
+                // begin stun sequence if boss crashes into wall
                 action = 0;
                 actionTimer = stunLength;
                 stunSpeed = chargeSpeed / 2.5f;
             }
         }
+        // pause for fractions of a second, then generate a target lock on player
         else chargeDir = new Vector2(playerPos.X + 12 - pos.X - size.X / 2 + random.Next(-50, 50),
             playerPos.Y + 12 - pos.Y - size.Y / 4 + random.Next(-50, 50)).Normalized();
-        return true;
     }
 
     private void Stun()
     {
+        // simple decceleration
         pos -= chargeDir * stunSpeed * Engine.TimeDelta;
         stunSpeed -= stunSpeed / 20;
     }
@@ -198,6 +219,8 @@ class Boss
             Vector2 beakPos = new Vector2(pos.X + (mirror ? 15 : size.X - 15), pos.Y + size.Y / 4 - 10);
             for(double angle = 0; angle <= 2*Math.PI; angle += 2*Math.PI / projectileAmount)
             {
+                // adds a circle of projectileAmount projectiles each heading in direction angle
+                // to projectiles list. projectiles begin at beak
                 Vector2 dir = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
                 projectiles.Add(new Projectile(beakPos, dir, projectileSpeed));
             }
@@ -209,6 +232,9 @@ class Boss
     {
         if(projectileTimer <= 0)
         {
+            // over a short time dependent on projectileAmount and projectileDelay, fire a
+            // machine gun style spiral of projectiles heading radially outward in direction
+            // sprayAngle (add to projectiles list). projectiles begin at beak
             Vector2 beakPos = new Vector2(pos.X + (mirror ? 15 : size.X - 15), pos.Y + size.Y / 4 - 10);
             Vector2 dir = new Vector2((float)Math.Cos(sprayAngle), (float)Math.Sin(sprayAngle));
             projectiles.Add(new Projectile(beakPos, dir, projectileSpeed));
@@ -219,12 +245,14 @@ class Boss
     }
     private void Eat(Player player)
     {
+        // initiates eat sequence, teleporting player to boss beak, with no chance to escape
         Vector2 beakPos = new Vector2(pos.X + (mirror ? 15 : size.X - 15), pos.Y + size.Y / 4 - 10);
         Vector2 deathPos = new Vector2(pos.X + size.X / 4 + (mirror ? 5 : 0), pos.Y + size.Y / 2);
         player.GetBossEaten(beakPos, deathPos);
     }
     public void Damage(Player player)
     {
+       // boss does not experience knockback, only player does
        health--;
        player.BossRebound(pos);
     }
