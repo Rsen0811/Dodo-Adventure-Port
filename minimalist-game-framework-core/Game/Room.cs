@@ -36,11 +36,6 @@ class Room
         return pos;
     }
 
-    public void TestaddDodo()
-    { 
-        enemies.Add(new Dodo(new Vector2(200, 200)));
-    }
-
     public void Update(Player p)
     {
         if (Engine.GetKeyDown(Key.Escape) && glyphs.Count != 0)
