@@ -159,7 +159,10 @@ class Boss
             projectiles[i].Draw();
         }
     }
-
+    public bool isAlive()
+    {
+        return health > 0;
+    }
     public void Walk(Vector2 playerPos)
     {
         // see Dodo walk method
