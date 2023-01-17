@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-class Dodo
+class PDodo
 {
     private readonly float walkSpeed;
     private readonly float runSpeed; // seperate from walkSpeed
@@ -35,11 +35,16 @@ class Dodo
 
     private Random random = new Random();
 
+    List<Projectile> projectiles = new List<Projectile>();
+    float projectileTimer;
+    float projectileDelay;
+    float projectileSpeed;
+
     private Vector2 dodoPos;
     private Vector2 deathPos;
     private Player player;
-    public Dodo(Vector2 dodoPos, float walkSpeed = 120, float runSpeed = 340, float chaseDist = 400, int maxHealth = 2, float chargeLength = 1.4f, 
-        float chargePauseLength = 0.5f, float stunLength = 1f)
+    public PDodo(Vector2 dodoPos, float walkSpeed = 120, float runSpeed = 250, float chaseDist = 400, int maxHealth = 2, float chargeLength = 1.4f, 
+        float chargePauseLength = 0.5f, float stunLength = 1f, float projectileDelay = 0.75f, float projectileSpeed = 100)
     {
         // private variables --------------------
         this.dodoPos = dodoPos;
@@ -53,28 +58,30 @@ class Dodo
         this.chargePauseLength = chargePauseLength;
         this.stunLength = stunLength;
         this.chargePauseLength = chargePauseLength;
+        this.projectileDelay = projectileDelay;
+        this.projectileSpeed = projectileSpeed;
         // misc variables ----------------------
         move = new Vector2(random.Next(), random.Next());
-        dodoAlive = Engine.LoadTexture("textures/dodoAlive.png");
-        dodoDead = Engine.LoadTexture("textures/dodoDead.png");
-        dodoDamaged = Engine.LoadTexture("textures/dodoDamaged.png");
+        dodoAlive = Engine.LoadTexture("textures/PDodoAlive.png");
+        dodoDead = Engine.LoadTexture("textures/PDodoDead.png");
+        dodoDamaged = Engine.LoadTexture("textures/PDaodoDamaged.png");
         
     }
 
-    public static Dodo HardDodo(Vector2 dodoPos)
+    public static PDodo HardDodo(Vector2 dodoPos)
     {
-        return new Dodo(dodoPos);
+        return new PDodo(dodoPos);
     }
 
-    public static Dodo MidDodo(Vector2 dodoPos)
+    public static PDodo MidDodo(Vector2 dodoPos)
     {
-        return new Dodo(dodoPos, walkSpeed: 110, runSpeed: 280, chaseDist: 350, 
-            chargePauseLength: 0.8f, stunLength: 1.1f);
+        return new PDodo(dodoPos, walkSpeed: 110, runSpeed: 200, chaseDist: 350, stunLength: 1.1f, 
+            projectileDelay: 0.6f, projectileSpeed: 80);
     }
-    public static Dodo EasyDodo(Vector2 dodoPos)
+    public static PDodo EasyDodo(Vector2 dodoPos)
     {
-        return new Dodo(dodoPos, walkSpeed: 100, runSpeed: 200, chaseDist: 300, maxHealth: 1, 
-            chargePauseLength: 0.9f, stunLength: 1.3f);
+        return new PDodo(dodoPos, walkSpeed: 100, runSpeed: 150, chaseDist: 300, maxHealth: 1, 
+            chargePauseLength: 0.9f, stunLength: 1.3f, projectileDelay: 0.4f, projectileSpeed: 70);
     }
 
     public void Update(Player player, float screenWidth)
@@ -104,15 +111,15 @@ class Dodo
             }
             else
             {
-                if (chargeTimer > chargeLength && !charge)
-                {
-                    // decides if dodo will charge every few seconds
-                    if (random.Next(chargeChance) == 1)
-                    {
-                        charge = true;
-                    }
-                    chargeTimer = 0;
-                }
+                //if (chargeTimer > chargeLength && !charge)
+                //{
+                //    // decides if dodo will charge every few seconds
+                //    if (random.Next(chargeChance) == 1)
+                //    {
+                //        charge = true;
+                //    }
+                //    chargeTimer = 0;
+                //}
                 if (damTimer > 0)
                 {
                     damTimer -= Engine.TimeDelta;
@@ -129,21 +136,30 @@ class Dodo
                 }
                 else
                 {
+                    if(projectileTimer <= 0)
+                    {
+                        Vector2 beakPos = new Vector2(dodoPos.X + (mirror ? 0 : dimentions.X), dodoPos.Y + dimentions.Y / 4);
+                        projectiles.Add(new Projectile(beakPos, 
+                            (playerPos - dodoPos).Normalized(), projectileSpeed));
+                        projectileTimer = projectileDelay;
+                    }
+                    projectileTimer -= Engine.TimeDelta;
+                    Idle();
                     // charge, idle, or run sequences -------------
-                    if (charge)
-                    {
-                        chaseDist = screenWidth;
-                        charge = Charge(playerPos);
-                    }
-                    else if (dist > chaseDist)
-                    {
-                        Idle();
-                    }
-                    else
-                    {
-                        Run(playerPos);
-                        chargeTimer += Engine.TimeDelta;
-                    }
+                    //if (charge)
+                    //{
+                    //    chaseDist = screenWidth;
+                    //    charge = Charge(playerPos);
+                    //}
+                    //else if (dist > chaseDist)
+                    //{
+                    //    Idle();
+                    //}
+                    //else
+                    //{
+                    //    Run(playerPos);
+                    //    chargeTimer += Engine.TimeDelta;
+                    //}
                 }
             }
         }
@@ -152,6 +168,25 @@ class Dodo
             if (!player.isActive())
             {
                 player.setActive();
+            }
+        }
+        // projectiles --------------------------
+        for (int i = projectiles.Count - 1; i >= 0; i--)
+        {
+            if (!projectiles[i].InBounds())
+            {
+                // deletes projectiles if off screen
+                projectiles.RemoveAt(i);
+            }
+            else
+            {
+                // updates projectiles and checks for player intersect
+                projectiles[i].Update();
+                if (Rect.CheckRectIntersect(projectiles[i].GetBounds(), player.getPlayerBounds()))
+                {
+                    player.ProjectileRebound(projectiles[i].Pos());
+                    projectiles.RemoveAt(i);
+                }
             }
         }
         DrawDodo();
@@ -171,6 +206,11 @@ class Dodo
         {
             DisplayDodoDamaged();
         }
+        for (int i = 0; i < projectiles.Count; i++)
+        {
+            // draws projectiles
+            projectiles[i].Draw();
+        }
     }
     
     public void Idle()
@@ -182,13 +222,13 @@ class Dodo
                 // generates new move direction
                 timer = 0;
                 move = new Vector2(random.Next() * 2 - 1, random.Next() * 2 - 1);
-                move = move.Normalized() * walkSpeed;
+                move = move.Normalized() * runSpeed;
             }
             if (!Move(dodoPos + move))
             {
                 // generates new move direction if previous move dir is invalid
                 move = new Vector2(random.Next() * 2 - 1, random.Next() * 2 - 1);
-                move = move.Normalized() * walkSpeed;
+                move = move.Normalized() * runSpeed;
             }
             else
             {
@@ -209,33 +249,6 @@ class Dodo
         mirror = move.X < 0;
     }
 
-    private bool Charge(Vector2 playerPos)
-    {
-        if (chargeTimer > chargeLength) return false;
-        else if (chargeTimer >= chargePauseLength)
-        {
-            Vector2 move = chargeDir * chargeSpeed;
-            if (Move(dodoPos + move * Engine.TimeDelta))
-            {
-                dodoPos += move * Engine.TimeDelta;
-            }
-            else
-            {
-                stunTimer = stunLength;
-                stunSpeed = chargeSpeed * 0.5f;
-                stunDir = -chargeDir;
-                return false;
-            }
-        }
-        // waits for fractions of a second, then generates locked direction for charge
-        // towards player with a random element of inacuraccy in player lock
-        else if(chargeTimer >= chargePauseLength - 0.05) chargeDir = 
-                new Vector2(playerPos.X + 12 - dodoPos.X - dimentions.X / 2 + 
-                random.Next(-50, 50), playerPos.Y + 12 - dodoPos.Y - dimentions.Y / 4 + 
-                random.Next(-50, 50)).Normalized();
-        chargeTimer += Engine.TimeDelta;
-        return true;
-    }
     
     public bool Move(Vector2 moveTo)
     {

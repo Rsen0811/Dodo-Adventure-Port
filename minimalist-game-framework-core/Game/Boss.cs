@@ -255,6 +255,7 @@ class Boss
        // boss does not experience knockback, only player does
        health--;
        player.BossRebound(pos);
+       Game.PlaySwordHit();
     }
 
     public static Vector2 Size()
