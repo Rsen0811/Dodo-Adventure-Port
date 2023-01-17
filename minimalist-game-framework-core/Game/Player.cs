@@ -159,7 +159,6 @@ class Player
             holding.Move(new Vector2(Math.Abs(pos.X % Game.Resolution.X), Game.Resolution.Y - Math.Abs(pos.Y)));
             tempRoom.Y--;
         }
-
         return Game.getRoom(tempRoom);
     }
 
