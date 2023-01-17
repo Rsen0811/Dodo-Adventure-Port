@@ -210,19 +210,19 @@ class Boss
                     switch(StartScreen.GetDifficulty())
                     {
                         case 0:
-                            bossRoom.AddDodo(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ? 
+                            bossRoom.AddEnemy(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ? 
                                 Game.Resolution.X + 100 : -100, random.Next(15, (int)Game.Resolution.Y)), 
                                 walkSpeed: 100, runSpeed: 200, chaseDist: 10000, maxHealth: 1, 
                                 chargePauseLength: 0.9f, stunLength: 1.3f));
                             break;
                         case 1:
-                            bossRoom.AddDodo(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ?
+                            bossRoom.AddEnemy(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ?
                                 Game.Resolution.X + 100 : -100, random.Next(15, (int)Game.Resolution.Y)),
                                 walkSpeed: 110, runSpeed: 280, chaseDist: 350,
                                 chargePauseLength: 0.8f, stunLength: 1.1f));
                             break;
                         case 2:
-                            bossRoom.AddDodo(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ?
+                            bossRoom.AddEnemy(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ?
                                 Game.Resolution.X + 100 : -100, random.Next(15, (int)Game.Resolution.Y))));
                             break;
                     }

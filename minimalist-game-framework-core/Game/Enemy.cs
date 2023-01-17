@@ -10,5 +10,6 @@ interface Enemy
     Rect GetBounds();
     void Damage();
     bool IsAlive();
+    void Idle();
 }
 

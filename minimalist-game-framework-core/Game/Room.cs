@@ -94,7 +94,7 @@ class Room
 
     public void Idle()
     {
-        foreach (Dodo d in enemies)
+        foreach (Enemy d in enemies)
         {
             d.Idle();
         }
