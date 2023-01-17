@@ -249,7 +249,7 @@ class Room
             }
         }
     }
-    public Gate getGate(String gateName)
+    public Gate GetGate(String gateName)
     {
         foreach(Gate g in Gates)
         {
