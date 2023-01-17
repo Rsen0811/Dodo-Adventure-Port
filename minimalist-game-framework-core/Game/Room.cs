@@ -40,7 +40,7 @@ class Room
     { 
         enemies.Add(e);
     }
-
+    
     public void Update(Player p)
     {
         if (Engine.GetKeyDown(Key.Escape) && glyphs.Count != 0)
