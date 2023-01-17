@@ -443,6 +443,7 @@ class Room
             if (Rect.CheckRectIntersect(s.CollisionZone(), enemy.GetBounds()))
             {
                  enemy.Damage();
+                Game.PlaySwordHit();
             }
         }
     }
