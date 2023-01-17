@@ -31,8 +31,9 @@ class Projectile
     }
     public void Draw() 
     {
-        Bounds2 firebounds = new Bounds2(((int)animationFrame % 4) * size.X, 0, size.X, size.Y);
-        Engine.DrawTexture(fire, position, source: firebounds, mirror: TextureMirror.None);
+        // 4 fps
+        Bounds2 firebounds = new Bounds2(((int)animationFrame/8 % 4) * size.X, 0, size.X, size.Y);
+        Engine.DrawTexture(fire, position, source: firebounds);
         animationFrame++;
     }
     public Rect GetBounds()
