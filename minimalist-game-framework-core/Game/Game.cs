@@ -25,6 +25,7 @@ class Game
     readonly Music music = Engine.LoadMusic("sounds/adventureSoundtrack.mp3");
     readonly static Sound swordHit = Engine.LoadSound("sounds/swordHit.mp3");
     float gameTime = 0;
+    PDodo pdodo;
     public Game()
     {
         Engine.PlayMusic(music, looping: true);
@@ -125,7 +126,12 @@ class Game
         // Graphics ------------------------------------
         rooms[(int)currRoom.X, (int)currRoom.Y].DrawRoom();
         player.DrawPlayer();
-        // Dodo ----------------------------------------        
+        // Dodo ----------------------------------------
+        if(Engine.GetKeyDown(Key.B))
+        {
+            pdodo = new PDodo(new Vector2(200, 200));
+        }
+        if(pdodo != null) pdodo.Update(player, Resolution.X);
     }
 
     public void Idle() 
