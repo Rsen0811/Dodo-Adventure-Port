@@ -110,7 +110,7 @@ class GateKey : Item
     {
         if (held)
         {
-            if (gate.getName().Equals(gateName) && Rect.CheckRectIntersect(gate, collisionBox))
+            if (gate.getName().Split(".")[0].Equals(gateName) && Rect.CheckRectIntersect(gate, collisionBox))
             {
                 gate.isOpen = true;
             }
