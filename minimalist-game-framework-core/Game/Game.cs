@@ -4,7 +4,7 @@ using System.IO;
 
 class Game
 {
-    public static readonly string Title = "Minimalist Game Framework";
+    public static readonly string Title = "Dodventure";
     public static readonly Vector2 Resolution = new Vector2(960, 640);
     public static readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
     public static readonly Vector2 SPAWN = new Vector2(1, 4);
@@ -25,7 +25,7 @@ class Game
     readonly Music music = Engine.LoadMusic("sounds/adventureSoundtrack.mp3");
     readonly static Sound swordHit = Engine.LoadSound("sounds/swordHit.mp3");
     float gameTime = 0;
-    PDodo pdodo;
+    Boss boss;
     public Game()
     {
         Engine.PlayMusic(music, looping: true);
@@ -129,9 +129,13 @@ class Game
         // Dodo ----------------------------------------
         if(Engine.GetKeyDown(Key.B))
         {
-            pdodo = new PDodo(new Vector2(200, 200));
+            boss = new Boss(new Vector2(200, 200));
         }
-        if(pdodo != null) pdodo.Update(player, Resolution.X);
+        if (boss != null)
+        {
+            boss.Update(player);
+            boss.Draw();
+        }
     }
 
     public void Idle() 
