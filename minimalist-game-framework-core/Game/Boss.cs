@@ -16,6 +16,7 @@ class Boss
     readonly int maxHealth;
     readonly float speed;
     int health;
+    BossRoom bossRoom;
 
     Vector2 move;
     Random random = new Random();
@@ -40,13 +41,14 @@ class Boss
     private readonly double projectileSpeed;
 
     List<Projectile> projectiles = new List<Projectile>();
-    List<Dodo> dodos = new List<Dodo>();
+    
 
-    public Boss(Vector2 pos, int health = 10, float speed = 25, float chargeLength = 6f, 
+    public Boss(Vector2 pos, BossRoom bossRoom, int health = 10, float speed = 25, float chargeLength = 6f, 
         float stunLength = 3f, float projectileDelay = 1f, int projectileAmount = 16, 
         double projectileSpeed = 100)
     {
         this.pos = pos;
+        this.bossRoom = bossRoom;
         this.health = health;
         maxHealth = health;
         this.speed = speed;
@@ -139,11 +141,6 @@ class Boss
                 }
             }
         }
-        // dodos -------------------------------
-        for(int i = 0; i < dodos.Count; i++)
-        {
-            dodos[i].Update(player, Game.Resolution.X);
-        }
     }
     public void Draw()
     {
@@ -213,19 +210,19 @@ class Boss
                     switch(StartScreen.GetDifficulty())
                     {
                         case 0:
-                            dodos.Add(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ? 
+                            bossRoom.AddEnemy(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ? 
                                 Game.Resolution.X + 100 : -100, random.Next(15, (int)Game.Resolution.Y)), 
                                 walkSpeed: 100, runSpeed: 200, chaseDist: 10000, maxHealth: 1, 
                                 chargePauseLength: 0.9f, stunLength: 1.3f));
                             break;
                         case 1:
-                            dodos.Add(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ?
+                            bossRoom.AddEnemy(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ?
                                 Game.Resolution.X + 100 : -100, random.Next(15, (int)Game.Resolution.Y)),
                                 walkSpeed: 110, runSpeed: 280, chaseDist: 350,
                                 chargePauseLength: 0.8f, stunLength: 1.1f));
                             break;
                         case 2:
-                            dodos.Add(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ?
+                            bossRoom.AddEnemy(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ?
                                 Game.Resolution.X + 100 : -100, random.Next(15, (int)Game.Resolution.Y))));
                             break;
                     }

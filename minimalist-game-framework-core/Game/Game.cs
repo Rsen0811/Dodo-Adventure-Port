@@ -25,7 +25,6 @@ class Game
     readonly Music music = Engine.LoadMusic("sounds/adventureSoundtrack.mp3");
     readonly static Sound swordHit = Engine.LoadSound("sounds/swordHit.mp3");
     float gameTime = 0;
-    Boss boss;
     public Game()
     {
         Engine.PlayMusic(music, looping: true);
@@ -105,8 +104,6 @@ class Game
         if (Engine.GetKeyHeld(Key.S)) moveVector.Y += 1;
         if (Engine.GetKeyHeld(Key.D)) moveVector.X += 1;
         if (Engine.GetKeyHeld(Key.A)) moveVector.X -= 1;
-
-        if (Engine.GetKeyHeld(Key.P)) rooms[(int)currRoom.X, (int)currRoom.Y].TestaddDodo();
         
         //normalize the movement
         moveVector = moveVector.Normalized();
@@ -127,15 +124,6 @@ class Game
         rooms[(int)currRoom.X, (int)currRoom.Y].DrawRoom();
         player.DrawPlayer();
         // Dodo ----------------------------------------
-        if(Engine.GetKeyDown(Key.B))
-        {
-            boss = new Boss(new Vector2(200, 200));
-        }
-        if (boss != null)
-        {
-            boss.Update(player);
-            boss.Draw();
-        }
     }
 
     public void Idle() 

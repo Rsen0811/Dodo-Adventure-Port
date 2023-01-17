@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using System.Text;
 
 class BossRoom : Room
@@ -22,6 +23,10 @@ class BossRoom : Room
         }
         base.Update(p);
         boss.Update(p);
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            enemies[i].Update(p, Game.Resolution.X);
+        }
         if (!boss.isAlive() == bossIsDead)
         {
             bossIsDead = !bossIsDead;
@@ -42,6 +47,7 @@ class BossRoom : Room
             String bossPos = sr.ReadLine();
             enterGate = sr.ReadLine().Trim();
             exitGate = sr.ReadLine().Trim();
+            boss = new Boss(new Vector2(int.Parse(bossPos.Split()[0]), int.Parse(bossPos.Split()[1])), this);
             //three lines
             //Line #1
             //boss pos
