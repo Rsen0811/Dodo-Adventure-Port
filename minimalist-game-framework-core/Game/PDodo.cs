@@ -64,7 +64,7 @@ class PDodo
         move = new Vector2(random.Next(), random.Next());
         dodoAlive = Engine.LoadTexture("textures/PDodoAlive.png");
         dodoDead = Engine.LoadTexture("textures/PDodoDead.png");
-        dodoDamaged = Engine.LoadTexture("textures/PDaodoDamaged.png");
+        dodoDamaged = Engine.LoadTexture("textures/PDodoDamaged.png");
         
     }
 
