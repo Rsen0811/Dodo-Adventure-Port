@@ -328,7 +328,7 @@ class Boss
     }
     public void SwordSweep(Sword s)
     {
-        if (Rect.CheckRectIntersect(s.CollisionZone(), GetBounds()))
+        if (Rect.CheckRectIntersect(s.CollisionZone(), GetDamageBounds()))
         {
             Damage();
         }
