@@ -5,7 +5,7 @@ using System.Text;
 
 class StartScreen
 {
-    static Texture startScreen = Engine.LoadTexture("startScreen/startScreen.png");
+    static Texture startScreen = Engine.LoadTexture("startScreen/startScreen2.png");
     static Font font = Engine.LoadFont("startScreen/font.ttf",18);
     static int difficulty = 0;
     static Rect topTriangle = new Rect(new Range(880, 905), new Range(45, 70));
