@@ -43,7 +43,7 @@ class Boss
     List<Projectile> projectiles = new List<Projectile>();
     
 
-    public Boss(Vector2 pos, BossRoom bossRoom, int health = 10, float speed = 25, float chargeLength = 6f, 
+    public Boss(Vector2 pos, BossRoom bossRoom, int health = 10, float speed = 15, float chargeLength = 6f, 
         float stunLength = 3f, float projectileDelay = 1f, int projectileAmount = 16, 
         double projectileSpeed = 100)
     {
@@ -212,18 +212,19 @@ class Boss
                         case 0:
                             bossRoom.AddEnemy(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ? 
                                 Game.Resolution.X + 100 : -100, random.Next(15, (int)Game.Resolution.Y)), 
-                                walkSpeed: 100, runSpeed: 200, chaseDist: 10000, maxHealth: 1, 
+                                walkSpeed: 100, runSpeed: 100, chaseDist: 10000, maxHealth: 1, 
                                 chargePauseLength: 0.9f, stunLength: 1.3f));
                             break;
                         case 1:
                             bossRoom.AddEnemy(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ?
                                 Game.Resolution.X + 100 : -100, random.Next(15, (int)Game.Resolution.Y)),
-                                walkSpeed: 110, runSpeed: 280, chaseDist: 350,
+                                walkSpeed: 110, runSpeed: 140, chaseDist: 10000,
                                 chargePauseLength: 0.8f, stunLength: 1.1f));
                             break;
                         case 2:
                             bossRoom.AddEnemy(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ?
-                                Game.Resolution.X + 100 : -100, random.Next(15, (int)Game.Resolution.Y))));
+                                Game.Resolution.X + 100 : -100, random.Next(15, (int)Game.Resolution.Y)), 
+                                chaseDist: 10000, runSpeed: 160));
                             break;
                     }
                 }
