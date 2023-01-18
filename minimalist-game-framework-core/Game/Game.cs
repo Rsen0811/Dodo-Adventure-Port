@@ -7,7 +7,7 @@ class Game
     public static readonly string Title = "Dodventure";
     public static readonly Vector2 Resolution = new Vector2(960, 640);
     public static readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
-    public static readonly Vector2 SPAWN = new Vector2(0, 2);
+    public static readonly Vector2 SPAWN = new Vector2(2, 4);
     public static readonly Vector2 SPAWNPOS = new Vector2(250, 300);
     //readonly int PLAYER_SPEED = 400;
 
@@ -44,7 +44,7 @@ class Game
                 Trophies.Save();
             }
             StartScreen.Update();
-            if (StartScreen.ShouldRun()) reset(); // if startsceen disable on this last click, reset everything
+            //if (StartScreen.ShouldRun()) reset(); // if startsceen disable on this last click, reset everything
             StartScreen.Draw();
             return;
         }
@@ -87,7 +87,7 @@ class Game
                 }
                 Trophies.Save();
                 gameTime = 0;
-                StartScreen.reset();
+                reset();
             }
             return;
         }
@@ -230,8 +230,8 @@ class Game
         startpos = SPAWNPOS;
         rooms = new Room[30, 20];
         rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
-        player = new Player(startpos, currRoom, 
-            maxDeathHits: StartScreen.GetDifficulty() == 3 ? 15 : 11);
+        player = null;
+        StartScreen.reset();
         endScreen = new GameOver();
 
     }
