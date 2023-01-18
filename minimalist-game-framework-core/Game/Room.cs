@@ -264,9 +264,9 @@ class Room
         }
         return null;
     }
-    public void addSwitch(List<String> pairs, Vector2 pos) 
+    public void addSwitch(List<String> pairs, Vector2 pos, String color) 
     {
-        switches.Add(new Switch(pairs, new Rect(new Range(pos.X, pos.X + 32), new Range(pos.Y, pos.Y + 32))));
+        switches.Add(new Switch(pairs, new Rect(new Range(pos.X, pos.X + 32), new Range(pos.Y, pos.Y + 32)),color));
     }
     public Switch checkSwitchIntersect(Rect player)
     {

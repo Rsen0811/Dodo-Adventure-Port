@@ -187,7 +187,7 @@ class Game
                 {
                     gates.Add(s[i]);
                 }
-                rooms[(int)roomPos.X, (int)roomPos.Y].addSwitch(gates, pos);
+                rooms[(int)roomPos.X, (int)roomPos.Y].addSwitch(gates, pos,color);
             } 
         }
         foreach(Vector2 pos in bossRooms)
