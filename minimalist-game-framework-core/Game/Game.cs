@@ -74,17 +74,20 @@ class Game
             if (Engine.GetMouseButtonUp(MouseButton.Left))
             {
                 Trophies.KillDodo(dodos: deadDodoCount);
-                switch (StartScreen.GetDifficulty())
+                if (Player.VICTORY)
                 {
-                    case 0:
-                        Trophies.BeatEasy(gameTime);
-                        break;
-                    case 1:
-                        Trophies.BeatMid(gameTime);
-                        break;
-                    case 2:
-                        Trophies.BeatHard(gameTime);
-                        break;
+                    switch (StartScreen.GetDifficulty())
+                    {
+                        case 0:
+                            Trophies.BeatEasy(gameTime);
+                            break;
+                        case 1:
+                            Trophies.BeatMid(gameTime);
+                            break;
+                        case 2:
+                            Trophies.BeatHard(gameTime);
+                            break;
+                    }
                 }
                 Trophies.Save();
                 gameTime = 0;
