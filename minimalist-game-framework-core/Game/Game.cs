@@ -7,7 +7,7 @@ class Game
     public static readonly string Title = "Dodo Adventure";
     public static readonly Vector2 Resolution = new Vector2(960, 640);
     public static readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
-    public static readonly Vector2 SPAWN = new Vector2(1, 3);
+    public static readonly Vector2 SPAWN = new Vector2(2, 4);
 
     public static readonly Vector2 SPAWNPOS = new Vector2(250, 300);
     //readonly int PLAYER_SPEED = 400;
@@ -175,14 +175,15 @@ class Game
         using (StreamReader sr = File.OpenText("Assets/" + "switches.txt"))
         {
 
-            //ROOM# xmin ymin GateName1 GateName2 GateName3
+            //ROOM# xmin ymin color GateName1 GateName2 GateName3
             while (sr.Peek() != -1)
             {
                 string[] s = sr.ReadLine().Split();
                 Vector2 roomPos = new Vector2(int.Parse(s[0].Substring(0,1)), int.Parse(s[0].Substring(1, 1)));
                 Vector2 pos = new Vector2(int.Parse(s[1]), int.Parse(s[2]));
+                String color = s[3];
                 List<String> gates = new List<String>();
-                for(int i= 3;i< s.Length; i++)
+                for(int i= 4;i< s.Length; i++)
                 {
                     gates.Add(s[i]);
                 }
