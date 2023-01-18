@@ -47,7 +47,25 @@ class BossRoom : Room
             String bossPos = sr.ReadLine();
             enterGate = sr.ReadLine().Trim();
             exitGate = sr.ReadLine().Trim();
-            boss = new Boss(new Vector2(int.Parse(bossPos.Split()[0]), int.Parse(bossPos.Split()[1])), this);
+            int health = 0;
+            int projectileAmount = 0;
+            switch(StartScreen.GetDifficulty())
+            {
+                case 0:
+                    health = 10;
+                    projectileAmount = 8;
+                    break;
+                case 1:
+                    health = 20;
+                    projectileAmount = 12;
+                    break;
+                case 2:
+                    health = 30;
+                    projectileAmount = 16;
+                    break;
+            }
+            boss = new Boss(new Vector2(int.Parse(bossPos.Split()[0]), int.Parse(bossPos.Split()[1])), 
+                this, health: health, projectileAmount: projectileAmount);
             //three lines
             //Line #1
             //boss pos

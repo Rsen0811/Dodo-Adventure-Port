@@ -26,6 +26,7 @@ class Boss
     int action;
     float actionTimer;
     float idleTimer;
+    float damageTimer;
 
     readonly float chargeLength;
     Vector2 chargeDir;
@@ -129,6 +130,14 @@ class Boss
             }
             actionTimer -= Engine.TimeDelta;
         }
+        else
+        {
+
+        }
+        if(damageTimer > 0)
+        {
+            damageTimer -= Engine.TimeDelta;
+        }
         // projectiles --------------------------
         for(int i = projectiles.Count - 1; i >= 0; i--)
         {
@@ -169,7 +178,7 @@ class Boss
             projectiles[i].Draw();
         }
     }
-    public bool isAlive()
+    public bool IsAlive()
     {
         return health > 0;
     }
@@ -289,10 +298,14 @@ class Boss
     }
     public void Damage()
     {
-       // boss does not experience knockback, only player does
-       health--;
-       player.BossRebound(pos);
-       Game.PlaySwordHit();
+        // boss does not experience knockback, only player does
+       if(damageTimer <= 0)
+        {
+            damageTimer = 0.5f;
+            health--;
+            player.BossRebound(pos);
+            Game.PlaySwordHit();
+        }
     }
 
     public static Vector2 Size()
@@ -303,6 +316,12 @@ class Boss
     {
         Vector2 bodyTLC = new Vector2((mirror ? 10 : 2) * 3.4f, 2 * 2.4f);
         Vector2 size = new Vector2(46 * 3.4f, 74 * 2.4f);
+        return Rect.GetSpriteBounds(bodyTLC + pos, size);
+    }
+    public Rect GetDamageBounds()
+    {
+        Vector2 bodyTLC = new Vector2((mirror ? 10 : 2) * 3f, 2 * 2f);
+        Vector2 size = new Vector2(46 * 3f, 74 * 2f);
         return Rect.GetSpriteBounds(bodyTLC + pos, size);
     }
     public void SwordSweep(Sword s)
