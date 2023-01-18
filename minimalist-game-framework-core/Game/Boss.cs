@@ -17,6 +17,7 @@ class Boss
     readonly float speed;
     int health;
     BossRoom bossRoom;
+    Player player;
 
     Vector2 move;
     Random random = new Random();
@@ -62,6 +63,7 @@ class Boss
 
     public void Update(Player player)
     {
+        this.player = player;
         // actions:
         // -1: die
         // 0: stun (after charge)
@@ -70,7 +72,12 @@ class Boss
         // 3: spray projectiles rapid fire in a circle around boss
         if (health > 0)
         {
-            if(action != -1 && Rect.CheckRectIntersect(player.getPlayerBounds(), GetBounds()))
+            if (player.GetItem() != null && player.GetItem().GetType() == typeof(Sword))
+            {
+                // sword collision 
+                SwordSweep((Sword)player.GetItem());
+            }
+            if (action != -1 && Rect.CheckRectIntersect(player.getPlayerBounds(), GetBounds()))
             {
                 // if intercecting with player, set action to -1: die for 5 seconds
                 action = -1;
@@ -280,7 +287,7 @@ class Boss
         Vector2 deathPos = new Vector2(pos.X + size.X / 4 + (mirror ? 5 : 0), pos.Y + size.Y / 2);
         player.GetBossEaten(beakPos, deathPos);
     }
-    public void Damage(Player player)
+    public void Damage()
     {
        // boss does not experience knockback, only player does
        health--;
@@ -298,7 +305,13 @@ class Boss
         Vector2 size = new Vector2(46 * 3.4f, 74 * 2.4f);
         return Rect.GetSpriteBounds(bodyTLC + pos, size);
     }
-
+    public void SwordSweep(Sword s)
+    {
+        if (Rect.CheckRectIntersect(s.CollisionZone(), GetBounds()))
+        {
+            Damage();
+        }
+    }
     private void DisplayAlive()
     {
         Engine.DrawTexture(bossAlive, pos, size: size, mirror: mirror ? TextureMirror.Horizontal :
