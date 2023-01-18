@@ -18,6 +18,7 @@ class Boss
     int health;
     bool alive;
     BossRoom bossRoom;
+    Player player;
 
     Vector2 move;
     Random random = new Random();
@@ -26,6 +27,7 @@ class Boss
     int action;
     float actionTimer;
     float idleTimer;
+    float damageTimer;
 
     readonly float chargeLength;
     Vector2 chargeDir;
@@ -44,7 +46,7 @@ class Boss
     List<Projectile> projectiles = new List<Projectile>();
     
 
-    public Boss(Vector2 pos, BossRoom bossRoom, int health = 10, float speed = 25, float chargeLength = 6f, 
+    public Boss(Vector2 pos, BossRoom bossRoom, int health = 10, float speed = 15, float chargeLength = 6f, 
         float stunLength = 3f, float projectileDelay = 1f, int projectileAmount = 16, 
         double projectileSpeed = 100)
     {
@@ -64,6 +66,7 @@ class Boss
 
     public void Update(Player player)
     {
+        this.player = player;
         // actions:
         // -1: die
         // 0: stun (after charge)
@@ -72,7 +75,12 @@ class Boss
         // 3: spray projectiles rapid fire in a circle around boss
         if (health > 0)
         {
-            if(action != -1 && Rect.CheckRectIntersect(player.getPlayerBounds(), GetBounds()))
+            if (player.GetItem() != null && player.GetItem().GetType() == typeof(Sword))
+            {
+                // sword collision 
+                SwordSweep((Sword)player.GetItem());
+            }
+            if (action != -1 && Rect.CheckRectIntersect(player.getPlayerBounds(), GetBounds()))
             {
                 // if intercecting with player, set action to -1: die for 5 seconds
                 action = -1;
@@ -126,7 +134,11 @@ class Boss
         }
         else
         {
-            player.Win();
+          player.Win();
+        }
+        if(damageTimer > 0)
+        {
+            damageTimer -= Engine.TimeDelta;
         }
         // projectiles --------------------------
         for(int i = projectiles.Count - 1; i >= 0; i--)
@@ -218,18 +230,19 @@ class Boss
                         case 0:
                             bossRoom.AddEnemy(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ? 
                                 Game.Resolution.X + 100 : -100, random.Next(15, (int)Game.Resolution.Y)), 
-                                walkSpeed: 100, runSpeed: 200, chaseDist: 10000, maxHealth: 1, 
+                                walkSpeed: 100, runSpeed: 100, chaseDist: 10000, maxHealth: 1, 
                                 chargePauseLength: 0.9f, stunLength: 1.3f));
                             break;
                         case 1:
                             bossRoom.AddEnemy(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ?
                                 Game.Resolution.X + 100 : -100, random.Next(15, (int)Game.Resolution.Y)),
-                                walkSpeed: 110, runSpeed: 280, chaseDist: 350,
+                                walkSpeed: 110, runSpeed: 140, chaseDist: 10000,
                                 chargePauseLength: 0.8f, stunLength: 1.1f));
                             break;
                         case 2:
                             bossRoom.AddEnemy(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ?
-                                Game.Resolution.X + 100 : -100, random.Next(15, (int)Game.Resolution.Y))));
+                                Game.Resolution.X + 100 : -100, random.Next(15, (int)Game.Resolution.Y)), 
+                                chaseDist: 10000, runSpeed: 160));
                             break;
                     }
                 }
@@ -285,12 +298,16 @@ class Boss
         Vector2 deathPos = new Vector2(pos.X + size.X / 4 + (mirror ? 5 : 0), pos.Y + size.Y / 2);
         player.GetBossEaten(beakPos, deathPos);
     }
-    public void Damage(Player player)
+    public void Damage()
     {
-       // boss does not experience knockback, only player does
-       health--;
-       player.BossRebound(pos);
-       Game.PlaySwordHit();
+        // boss does not experience knockback, only player does
+       if(damageTimer <= 0)
+        {
+            damageTimer = 0.5f;
+            health--;
+            player.BossRebound(pos);
+            Game.PlaySwordHit();
+        }
     }
 
     public static Vector2 Size()
@@ -303,7 +320,19 @@ class Boss
         Vector2 size = new Vector2(46 * 3.4f, 74 * 2.4f);
         return Rect.GetSpriteBounds(bodyTLC + pos, size);
     }
-
+    public Rect GetDamageBounds()
+    {
+        Vector2 bodyTLC = new Vector2((mirror ? 10 : 2) * 3f, 2 * 2f);
+        Vector2 size = new Vector2(46 * 3f, 74 * 2f);
+        return Rect.GetSpriteBounds(bodyTLC + pos, size);
+    }
+    public void SwordSweep(Sword s)
+    {
+        if (Rect.CheckRectIntersect(s.CollisionZone(), GetBounds()))
+        {
+            Damage();
+        }
+    }
     private void DisplayAlive()
     {
         Engine.DrawTexture(bossAlive, pos, size: size, mirror: mirror ? TextureMirror.Horizontal :

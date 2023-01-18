@@ -465,5 +465,16 @@ class Room
             }
         }
     }
+    public bool allDead()
+    {
+        foreach(Enemy e in enemies)
+        {
+            if (e.IsAlive())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 }
 

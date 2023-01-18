@@ -7,7 +7,7 @@ class Game
     public static readonly string Title = "Dodventure";
     public static readonly Vector2 Resolution = new Vector2(960, 640);
     public static readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
-    public static readonly Vector2 SPAWN = new Vector2(0, 2);
+    public static readonly Vector2 SPAWN = new Vector2(1, 0);
     public static readonly Vector2 SPAWNPOS = new Vector2(250, 300);
     //readonly int PLAYER_SPEED = 400;
 
@@ -16,6 +16,7 @@ class Game
         new Vector2(0,2), new Vector2(0, 0), new Vector2(0, 1), new Vector2(1,1),
         new Vector2(1, 2), new Vector2(1, 0), new Vector2(2, 2) ,
         new Vector2(0, 3), new Vector2(1, 3), new Vector2(0,4), new Vector2(1,4)};
+    static readonly Vector2[] bossRooms = {new Vector2(2,0)};
     Vector2 tileSize = new Vector2(32, 32);
     Vector2 startpos = SPAWNPOS;
     Vector2 currRoom = SPAWN;
@@ -116,13 +117,33 @@ class Game
         bool successfulMove = player.Move(moveVector, rooms[(int)currRoom.X, (int)currRoom.Y]);
         if (successfulMove) Wrap();
         player.ChangeRoom(rooms[(int)currRoom.X, (int)currRoom.Y]);
-        rooms[(int)currRoom.X, (int)currRoom.Y].Update(player);
+        Room tempRoom = (rooms[(int)currRoom.X, (int)currRoom.Y]);
+        if (rooms[(int)currRoom.X, (int)currRoom.Y].GetType() == typeof(BossRoom))
+        {
+            
+            BossRoom currRoom = (BossRoom)tempRoom;
+            currRoom.Update(player);
+        }
+        else
+        {
+            rooms[(int)currRoom.X, (int)currRoom.Y].Update(player);
+        }
         Idle();
         player.Update();
         // Game Timer ----------------------------------
         gameTime += Engine.TimeDelta;
         // Graphics ------------------------------------
-        rooms[(int)currRoom.X, (int)currRoom.Y].DrawRoom();
+        tempRoom = (rooms[(int)currRoom.X, (int)currRoom.Y]);
+        if (rooms[(int)currRoom.X, (int)currRoom.Y].GetType() == typeof(BossRoom))
+        {
+
+            BossRoom currRoom = (BossRoom)tempRoom;
+            currRoom.DrawRoom();
+        }
+        else
+        {
+            rooms[(int)currRoom.X, (int)currRoom.Y].DrawRoom();
+        }
         player.DrawPlayer();
         // Dodo ----------------------------------------
     }
@@ -163,6 +184,10 @@ class Game
                 }
                 rooms[(int)roomPos.X, (int)roomPos.Y].addSwitch(gates, pos);
             } 
+        }
+        foreach(Vector2 pos in bossRooms)
+        {
+            rooms[(int)pos.X, (int)pos.Y] = new BossRoom(pos);
         }
     }
     public void Wrap()

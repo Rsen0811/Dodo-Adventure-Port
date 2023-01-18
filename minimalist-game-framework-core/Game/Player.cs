@@ -289,7 +289,7 @@ class Player
         reboundDir = (new Vector2((pos.X + PLAYER_SIZE.X / 2) - (bossPos.X + Boss.Size().X / 2),
             (pos.Y + PLAYER_SIZE.Y / 2) - (bossPos.Y + Boss.Size().Y / 2))).Normalized();
         reboundTimer = 0.7f;
-        reboundSpeed = PLAYER_SPEED * 3f;
+        reboundSpeed = PLAYER_SPEED * 4f;
     }
     public void ProjectileRebound(Vector2 projectilePos)
     {
