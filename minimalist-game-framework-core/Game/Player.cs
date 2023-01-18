@@ -180,10 +180,10 @@ class Player
 
         if (holding != null && facing.Y != -1)
         {
-            Engine.DrawRectEmpty(holding.CollisionZone().ToBounds(), Color.Red);
+            //Engine.DrawRectEmpty(holding.CollisionZone().ToBounds(), Color.Red);
             holding.Draw();
         }
-        Engine.DrawRectEmpty(getPlayerBounds().ToBounds(), Color.Orange);
+        //Engine.DrawRectEmpty(getPlayerBounds().ToBounds(), Color.Orange);
     }
     public void ChangeRoom(Room room)
     {
