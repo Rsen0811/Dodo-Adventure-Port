@@ -51,6 +51,7 @@ class Boss
         double projectileSpeed = 100)
     {
         alive = true;
+        mirror = true;
         this.pos = pos;
         this.bossRoom = bossRoom;
         this.health = health;
@@ -301,7 +302,7 @@ class Boss
     public void Damage()
     {
         // boss does not experience knockback, only player does
-       if(damageTimer <= 0)
+       if(damageTimer <= 0 && action != -1)
         {
             damageTimer = 0.5f;
             health--;
