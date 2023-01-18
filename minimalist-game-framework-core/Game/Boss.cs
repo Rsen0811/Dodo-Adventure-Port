@@ -16,6 +16,7 @@ class Boss
     readonly int maxHealth;
     readonly float speed;
     int health;
+    bool alive;
     BossRoom bossRoom;
     Player player;
 
@@ -49,6 +50,7 @@ class Boss
         float stunLength = 3f, float projectileDelay = 1f, int projectileAmount = 16, 
         double projectileSpeed = 100)
     {
+        alive = true;
         this.pos = pos;
         this.bossRoom = bossRoom;
         this.health = health;
@@ -132,7 +134,7 @@ class Boss
         }
         else
         {
-
+          player.Win();
         }
         if(damageTimer > 0)
         {

@@ -9,6 +9,7 @@ class Player
     Vector2 pos;
     bool active;
     bool alive;
+    public static bool VICTORY;
     Item holding;
     private Vector2 facing;
     Vector2 checkpointRoom;
@@ -262,6 +263,13 @@ class Player
         respawnTimer -= Engine.TimeDelta;
     }
 
+    public void Win()
+    {
+        alive = false;
+        respawnTimer -= Engine.TimeDelta;
+        victory = true;
+    }
+
     public bool GameOver()
     {
         return gameOver;
@@ -289,11 +297,6 @@ class Player
             (pos.Y + PLAYER_SIZE.Y / 2) - (projectilePos.Y + Projectile.Size().Y / 2))).Normalized();
         reboundTimer = 0.7f;
         reboundSpeed = PLAYER_SPEED * 1.5f;
-    }
-
-    public void Shake()
-    {
-
     }
 
     public bool isActive()
