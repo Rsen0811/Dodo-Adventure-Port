@@ -4,7 +4,7 @@ using System.IO;
 
 class Game
 {
-    public static readonly string Title = "Dodventure";
+    public static readonly string Title = "Dodo Adventure";
     public static readonly Vector2 Resolution = new Vector2(960, 640);
     public static readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
     public static readonly Vector2 SPAWN = new Vector2(2, 4);
