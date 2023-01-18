@@ -17,7 +17,7 @@ class BossRoom : Room
     }
     public void Update(Player p)
     {
-        if (base.GetGate(enterGate).isOpen == true && boss.isAlive()&&Rect.CheckRectIntersect(p.getPlayerBounds(), base.GetGate(enterGate)))
+        if (base.GetGate(enterGate).isOpen == true && boss.isAlive()&&!Rect.CheckRectIntersect(p.getPlayerBounds(), base.GetGate(enterGate)))
         {
             base.toggleGate(enterGate);
         }
@@ -27,7 +27,7 @@ class BossRoom : Room
         {
             enemies[i].Update(p, Game.Resolution.X);
         }
-        if (!boss.isAlive() == bossIsDead && base.allDead())
+        if (!boss.isAlive() &&bossIsDead && base.allDead())
         {
             bossIsDead = !bossIsDead;
             base.toggleGate(enterGate);
