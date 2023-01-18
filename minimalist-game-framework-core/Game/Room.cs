@@ -18,10 +18,12 @@ class Room
     public List<Enemy> enemies; /// change back to private
     Boss boss;
     List<Glyph> glyphs;
-    List<Coin> coins; 
+    List<Coin> coins;
+    private readonly int DIFFICULTY;
 
     public Room(Vector2 pos) {
-        
+        DIFFICULTY = StartScreen.GetDifficulty();
+
         String name = "" + pos.X + pos.Y;
         (CollisionZones, Gates) = ReadOnlyCollisions("rooms/" + name + "/" + name + "c.txt");
         bg = Engine.LoadTexture("rooms/" + name + "/" + name + "i.png");
@@ -372,10 +374,11 @@ class Room
             while ((s = sr.ReadLine()) != null)
             {
                 String[] args = s.Split(' ');
+                if (args.Length == 4 && int.Parse(args[3]) > DIFFICULTY) continue;
                 if (args[0].Equals("D"))
                 {
                     Vector2 pos = new Vector2(int.Parse(args[1]), int.Parse(args[2]));
-                    switch (StartScreen.GetDifficulty())
+                    switch (DIFFICULTY)
                     {
                         case 0:
                             loader.Add(Dodo.EasyDodo(pos));
@@ -391,7 +394,7 @@ class Room
                 if (args[0].Equals("P"))
                 {
                     Vector2 pos = new Vector2(int.Parse(args[1]), int.Parse(args[2]));
-                    switch (StartScreen.GetDifficulty())
+                    switch (DIFFICULTY)
                     {
                         case 0:
                             loader.Add(PDodo.EasyDodo(pos));
