@@ -332,7 +332,6 @@ class Room
             String[] filesplit = s.Split("---");
 
             return (ReadItems(filesplit[0].Trim()), ReadDodos(filesplit[1].Trim()),
-            return (ReadItems(filesplit[0].Trim()), ReadDodos(filesplit[1].Trim()),
                 ReadGlyphs(filesplit[2].Trim()), (filesplit.GetLength(0) == 4) ? ReadCoins(filesplit[3].Trim()) : new List<Coin>());
         }
     }
