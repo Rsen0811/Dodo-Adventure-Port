@@ -44,6 +44,7 @@ class Game
                 Trophies.Save();
             }
             StartScreen.Update();
+            if (StartScreen.ShouldRun()) reset(); // if startsceen disable on this last click, reset everything
             StartScreen.Draw();
             return;
         }
@@ -86,7 +87,7 @@ class Game
                 }
                 Trophies.Save();
                 gameTime = 0;
-                reset();
+                StartScreen.reset();
             }
             return;
         }
@@ -231,7 +232,6 @@ class Game
         rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
         player = new Player(startpos, currRoom, 
             maxDeathHits: StartScreen.GetDifficulty() == 3 ? 15 : 11);
-        StartScreen.reset();
         endScreen = new GameOver();
 
     }
