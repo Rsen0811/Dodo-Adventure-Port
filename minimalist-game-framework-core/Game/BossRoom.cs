@@ -27,7 +27,7 @@ class BossRoom : Room
         {
             enemies[i].Update(p, Game.Resolution.X);
         }
-        if (!boss.isAlive() == bossIsDead)
+        if (!boss.isAlive() == bossIsDead && base.allDead())
         {
             bossIsDead = !bossIsDead;
             base.toggleGate(enterGate);
