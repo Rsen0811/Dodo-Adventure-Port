@@ -7,5 +7,9 @@ interface Enemy
 {
     void Update(Player player, float screenWidth);
     void DrawDodo();
+    Rect GetBounds();
+    void Damage();
+    bool IsAlive();
+    void Idle();
 }
 

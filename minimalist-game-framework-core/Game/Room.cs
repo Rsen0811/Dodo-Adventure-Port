@@ -1,4 +1,4 @@
-﻿using System    ;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -51,7 +51,7 @@ class Room
         {
             swordSweep((Sword) p.GetItem());
         }
-        foreach (Dodo d in enemies)
+        foreach (Enemy d in enemies)
         {
             d.Update(p, 960);
         }
@@ -94,7 +94,7 @@ class Room
 
     public void Idle()
     {
-        foreach (Dodo d in enemies)
+        foreach (Enemy d in enemies)
         {
             d.Idle();
         }
@@ -185,7 +185,7 @@ class Room
     public void DrawRoom()
     {
         Engine.DrawTexture(bg, new Vector2(0, 0));
-        foreach (Dodo d in enemies)
+        foreach (Enemy d in enemies)
         {
             d.DrawDodo();
         }
@@ -375,7 +375,7 @@ class Room
                 if (args[0].Equals("D"))
                 {
                     Vector2 pos = new Vector2(int.Parse(args[1]), int.Parse(args[2]));
-                    switch(StartScreen.GetDifficulty())
+                    switch (StartScreen.GetDifficulty())
                     {
                         case 0:
                             loader.Add(Dodo.EasyDodo(pos));
@@ -387,7 +387,22 @@ class Room
                             loader.Add(Dodo.HardDodo(pos));
                             break;
                     }
-                    
+                }
+                if (args[0].Equals("P"))
+                {
+                    Vector2 pos = new Vector2(int.Parse(args[1]), int.Parse(args[2]));
+                    switch (StartScreen.GetDifficulty())
+                    {
+                        case 0:
+                            loader.Add(PDodo.EasyDodo(pos));
+                            break;
+                        case 1:
+                            loader.Add(PDodo.MidDodo(pos));
+                            break;
+                        case 2:
+                            loader.Add(PDodo.HardDodo(pos));
+                            break;
+                    }
                 }
             }
         }
@@ -438,7 +453,7 @@ class Room
     }
 
     public void swordSweep(Sword s) { 
-        foreach(Dodo enemy in enemies)
+        foreach(Enemy enemy in enemies)
         {
             if (Rect.CheckRectIntersect(s.CollisionZone(), enemy.GetBounds()))
             {
