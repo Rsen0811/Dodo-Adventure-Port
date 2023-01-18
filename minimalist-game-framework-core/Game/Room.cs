@@ -187,11 +187,7 @@ class Room
     public void DrawRoom()
     {
         Engine.DrawTexture(bg, new Vector2(0, 0));
-        foreach (Enemy d in enemies)
-        {
-            d.DrawDodo();
-        }
-
+        
         foreach (Item i in items)
         {
             i.Draw();
@@ -211,9 +207,15 @@ class Room
         {
             glyphs[0].Draw();
         }
+
         foreach(Coin c in coins)
         {
             c.Draw();
+        }
+
+        foreach (Enemy d in enemies)
+        {
+            d.DrawDodo();
         }
     }
 
