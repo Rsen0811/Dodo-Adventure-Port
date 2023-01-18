@@ -230,6 +230,7 @@ class Game
         startpos = SPAWNPOS;
         rooms = new Room[30, 20];
         rooms[(int)currRoom.X, (int)currRoom.Y] = new Room(currRoom);
+        Player.VICTORY = false;
         player = null;
         StartScreen.reset();
         endScreen = new GameOver();

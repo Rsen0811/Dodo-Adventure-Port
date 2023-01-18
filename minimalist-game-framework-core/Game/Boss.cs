@@ -16,6 +16,7 @@ class Boss
     readonly int maxHealth;
     readonly float speed;
     int health;
+    bool alive;
     BossRoom bossRoom;
 
     Vector2 move;
@@ -47,6 +48,7 @@ class Boss
         float stunLength = 3f, float projectileDelay = 1f, int projectileAmount = 16, 
         double projectileSpeed = 100)
     {
+        alive = true;
         this.pos = pos;
         this.bossRoom = bossRoom;
         this.health = health;
@@ -122,6 +124,10 @@ class Boss
             }
             actionTimer -= Engine.TimeDelta;
         }
+        else
+        {
+            player.Win();
+        }
         // projectiles --------------------------
         for(int i = projectiles.Count - 1; i >= 0; i--)
         {
@@ -162,7 +168,7 @@ class Boss
             projectiles[i].Draw();
         }
     }
-    public bool isAlive()
+    public bool IsAlive()
     {
         return health > 0;
     }
