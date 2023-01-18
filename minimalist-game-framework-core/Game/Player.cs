@@ -267,7 +267,7 @@ class Player
     {
         alive = false;
         respawnTimer -= Engine.TimeDelta;
-        victory = true;
+        VICTORY = true;
     }
 
     public bool GameOver()

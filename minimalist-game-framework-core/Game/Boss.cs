@@ -80,7 +80,7 @@ class Boss
                 // sword collision 
                 SwordSweep((Sword)player.GetItem());
             }
-            if (action != -1 && Rect.CheckRectIntersect(player.getPlayerBounds(), GetBounds()))
+            if (action != -1 && Rect.CheckRectIntersect(player.getPlayerBounds(), GetDamageBounds()))
             {
                 // if intercecting with player, set action to -1: die for 5 seconds
                 action = -1;
@@ -230,19 +230,19 @@ class Boss
                         case 0:
                             bossRoom.AddEnemy(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ? 
                                 Game.Resolution.X + 100 : -100, random.Next(15, (int)Game.Resolution.Y)), 
-                                walkSpeed: 100, runSpeed: 100, chaseDist: 10000, maxHealth: 1, 
+                                walkSpeed: 100, runSpeed: 90, chaseDist: 10000, maxHealth: 1, 
                                 chargePauseLength: 0.9f, stunLength: 1.3f));
                             break;
                         case 1:
                             bossRoom.AddEnemy(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ?
                                 Game.Resolution.X + 100 : -100, random.Next(15, (int)Game.Resolution.Y)),
-                                walkSpeed: 110, runSpeed: 140, chaseDist: 10000,
+                                walkSpeed: 110, runSpeed: 110, chaseDist: 10000,
                                 chargePauseLength: 0.8f, stunLength: 1.1f));
                             break;
                         case 2:
                             bossRoom.AddEnemy(new Dodo(new Vector2((pos.X < Game.Resolution.X / 2) ?
                                 Game.Resolution.X + 100 : -100, random.Next(15, (int)Game.Resolution.Y)), 
-                                chaseDist: 10000, runSpeed: 160));
+                                chaseDist: 10000, runSpeed: 120));
                             break;
                     }
                 }

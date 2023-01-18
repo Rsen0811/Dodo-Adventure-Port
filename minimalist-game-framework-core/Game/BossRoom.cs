@@ -17,7 +17,7 @@ class BossRoom : Room
     }
     public void Update(Player p)
     {
-        if (base.GetGate(enterGate).isOpen == true && boss.isAlive()&&!Rect.CheckRectIntersect(p.getPlayerBounds(), base.GetGate(enterGate)))
+        if (base.GetGate(enterGate).isOpen == true && boss.IsAlive()&&!Rect.CheckRectIntersect(p.getPlayerBounds(), base.GetGate(enterGate)))
         {
             base.toggleGate(enterGate);
         }
@@ -27,7 +27,7 @@ class BossRoom : Room
         {
             enemies[i].Update(p, Game.Resolution.X);
         }
-        if (!boss.isAlive() &&bossIsDead && base.allDead())
+        if (!boss.IsAlive() &&bossIsDead && base.allDead())
         {
             bossIsDead = !bossIsDead;
             base.toggleGate(enterGate);
@@ -53,15 +53,15 @@ class BossRoom : Room
             {
                 case 0:
                     health = 10;
-                    projectileAmount = 8;
+                    projectileAmount = 6;
                     break;
                 case 1:
-                    health = 20;
-                    projectileAmount = 12;
+                    health = 18;
+                    projectileAmount = 8;
                     break;
                 case 2:
-                    health = 30;
-                    projectileAmount = 16;
+                    health = 25;
+                    projectileAmount = 12;
                     break;
             }
             boss = new Boss(new Vector2(int.Parse(bossPos.Split()[0]), int.Parse(bossPos.Split()[1])), 
