@@ -7,7 +7,7 @@ class Game
     public static readonly string Title = "Dodo Adventure";
     public static readonly Vector2 Resolution = new Vector2(960, 640);
     public static readonly Vector2 PLAYER_SIZE = new Vector2(24, 24);
-    public static readonly Vector2 SPAWN = new Vector2(3, 6);
+    public static readonly Vector2 SPAWN = new Vector2(0, 3);
 
     public static readonly Vector2 SPAWNPOS = new Vector2(250+400, 300);
     //readonly int PLAYER_SPEED = 400;
