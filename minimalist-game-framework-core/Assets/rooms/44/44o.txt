@@ -1,3 +1,5 @@
 ---
 ---
+T 50 -50 bossWarning
+T 50 -50 bossWarning2
 ---
