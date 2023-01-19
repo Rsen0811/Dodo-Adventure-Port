@@ -1,4 +1,3 @@
-S 250 300 false
 ---
 ---
 T 600 0 projectileDodo

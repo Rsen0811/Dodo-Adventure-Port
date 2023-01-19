@@ -13,7 +13,7 @@ class Switch : Rect
         this.gates = gates;
         this.pos = new Vector2(c.X.min,c.Y.min);
         this.leftPos= Engine.LoadTexture("textures/switches/"+color+"Left.png");
-        this.leftPos = Engine.LoadTexture("textures/switches/" + color + "Right.png");
+        this.rightPos = Engine.LoadTexture("textures/switches/" + color + "Right.png");
 
     }
     public void Draw()
