@@ -8,6 +8,14 @@ class Shop
     static Texture[] skins= {Engine.LoadTexture("textures/Player/playerBlue.png"),
                              Engine.LoadTexture("textures/Player/playerRed.png"),
                              Engine.LoadTexture("textures/Player/playerViolet.png"),
+
+                             Engine.LoadTexture("textures/Player/playerBlack.png"),
+                             Engine.LoadTexture("textures/Player/playerGray.png"),
+                             Engine.LoadTexture("textures/Player/playerCyan.png"),
+                             Engine.LoadTexture("textures/Player/playerGreen.png"),
+                             Engine.LoadTexture("textures/Player/playerPink.png"),
+                             Engine.LoadTexture("textures/Player/playerYellow.png"),
+                             Engine.LoadTexture("textures/Player/playerOrange.png")
         };
     static int currSkin = 0;
     static int currShowSkin = 0;
