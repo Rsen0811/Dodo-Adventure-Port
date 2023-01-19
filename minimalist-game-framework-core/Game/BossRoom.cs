@@ -17,55 +17,79 @@ class BossRoom : Room
     }
     public void Update(Player p)
     {
-        if (base.GetGate(enterGate).isOpen == true && boss.IsAlive()&&!Rect.CheckRectIntersect(p.getPlayerBounds(), base.GetGate(enterGate)))
+        if (boss != null)
         {
-            base.toggleGate(enterGate);
+            if (base.GetGate(enterGate).isOpen == true && boss.IsAlive() && !Rect.CheckRectIntersect(p.getPlayerBounds(), base.GetGate(enterGate)))
+            {
+                base.toggleGate(enterGate);
+            }
+            base.Update(p);
+            boss.Update(p);
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                enemies[i].Update(p, Game.Resolution.X);
+            }
+            if (!boss.IsAlive() && !bossIsDead && base.allDead())
+            {
+                bossIsDead = !bossIsDead;
+                base.toggleGate(enterGate);
+                base.toggleGate(exitGate);
+            }
         }
-        base.Update(p);
-        boss.Update(p);
-        for (int i = 0; i < enemies.Count; i++)
+        else
         {
-            enemies[i].Update(p, Game.Resolution.X);
-        }
-        if (!boss.IsAlive() &&bossIsDead && base.allDead())
-        {
-            bossIsDead = !bossIsDead;
-            base.toggleGate(enterGate);
-            base.toggleGate(exitGate);
+            if (base.GetGate(enterGate).isOpen == true && !base.allDead() && !Rect.CheckRectIntersect(p.getPlayerBounds(), base.GetGate(enterGate)))
+            {
+                base.toggleGate(enterGate);
+            }
+            base.Update(p);
+            if (!bossIsDead && base.allDead())
+            {
+                bossIsDead = !bossIsDead;
+                base.toggleGate(enterGate);
+                base.toggleGate(exitGate);
+            }
         }
     }
     public void DrawRoom()
     {
         base.DrawRoom();
-        boss.Draw();
+        if (boss != null)
+        {
+            boss.Draw();
+        }
     }
     private void ReadBoss(String file)
     {
         using (StreamReader sr = File.OpenText("Assets/" + file))
         {
 
-            String bossPos = sr.ReadLine();
+            
             enterGate = sr.ReadLine().Trim();
             exitGate = sr.ReadLine().Trim();
+            String bossPos = sr.ReadLine();
             int health = 0;
             int projectileAmount = 0;
-            switch(StartScreen.GetDifficulty())
+            if (bossPos != null)
             {
-                case 0:
-                    health = 10;
-                    projectileAmount = 6;
-                    break;
-                case 1:
-                    health = 18;
-                    projectileAmount = 8;
-                    break;
-                case 2:
-                    health = 25;
-                    projectileAmount = 12;
-                    break;
+                switch (StartScreen.GetDifficulty())
+                {
+                    case 0:
+                        health = 10;
+                        projectileAmount = 6;
+                        break;
+                    case 1:
+                        health = 18;
+                        projectileAmount = 8;
+                        break;
+                    case 2:
+                        health = 25;
+                        projectileAmount = 12;
+                        break;
+                }
+                boss = new Boss(new Vector2(int.Parse(bossPos.Split()[0]), int.Parse(bossPos.Split()[1])),
+                    this, health: health, projectileAmount: projectileAmount);
             }
-            boss = new Boss(new Vector2(int.Parse(bossPos.Split()[0]), int.Parse(bossPos.Split()[1])), 
-                this, health: health, projectileAmount: projectileAmount);
             //three lines
             //Line #1
             //boss pos
