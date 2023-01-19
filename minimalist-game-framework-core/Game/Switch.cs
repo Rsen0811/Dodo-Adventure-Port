@@ -19,16 +19,18 @@ class Switch : Rect
     public void Draw()
     {
         Texture map;
+        Vector2 tempPos = pos;
         if (state == true)
         {
             map = leftPos;
+            tempPos.X--;
         }
         else
         {
             map = rightPos;
         }
         int width = map.Width;
-        Engine.DrawTexture(map, pos, size: this.ToBounds().Size, source: new Bounds2(0, 0, width, map.Height));
+        Engine.DrawTexture(map, tempPos, size: this.ToBounds().Size, source: new Bounds2(0, 0, width, map.Height));
     }
     public void Toggle()
     {
