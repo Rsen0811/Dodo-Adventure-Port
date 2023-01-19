@@ -17,7 +17,7 @@ class Game
         new Vector2(0,2), new Vector2(0, 0), new Vector2(0, 1), new Vector2(1,1),
         new Vector2(1, 2), new Vector2(1, 0), new Vector2(2, 2) ,
         new Vector2(0, 3), new Vector2(1, 3), new Vector2(0,4), new Vector2(1,4)};
-    static readonly Vector2[] bossRooms = {new Vector2(2,0)};
+    static readonly Vector2[] bossRooms = {new Vector2(2,0),new Vector2(3,4)};
     Vector2 tileSize = new Vector2(32, 32);
     Vector2 startpos = SPAWNPOS;
     Vector2 currRoom = SPAWN;

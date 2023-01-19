@@ -1,0 +1,3 @@
+enterGate2
+exitGate2
+200 300
