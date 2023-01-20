@@ -3,6 +3,6 @@ S 400 100 false
 ---
 T 710 -20 wasdControl
 T 710 -20 arrowControl
-T 320 -50 dropPickup
+T 320 -100 dropPickup
 T 500 350 dodo
 ---

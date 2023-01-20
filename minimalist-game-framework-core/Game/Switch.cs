@@ -13,22 +13,24 @@ class Switch : Rect
         this.gates = gates;
         this.pos = new Vector2(c.X.min,c.Y.min);
         this.leftPos= Engine.LoadTexture("textures/switches/"+color+"Left.png");
-        this.leftPos = Engine.LoadTexture("textures/switches/" + color + "Right.png");
+        this.rightPos = Engine.LoadTexture("textures/switches/" + color + "Right.png");
 
     }
     public void Draw()
     {
         Texture map;
+        Vector2 tempPos = pos;
         if (state == true)
         {
             map = leftPos;
+            tempPos.X--;
         }
         else
         {
             map = rightPos;
         }
         int width = map.Width;
-        Engine.DrawTexture(map, pos, size: this.ToBounds().Size, source: new Bounds2(0, 0, width, map.Height));
+        Engine.DrawTexture(map, tempPos, size: this.ToBounds().Size, source: new Bounds2(0, 0, width, map.Height));
     }
     public void Toggle()
     {

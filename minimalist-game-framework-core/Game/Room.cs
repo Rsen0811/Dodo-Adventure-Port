@@ -375,7 +375,7 @@ class Room
             String s;
             while ((s = sr.ReadLine()) != null)
             {
-                String[] args = s.Split(' ');
+                String[] args = s.Trim().Split(' ');
                 if (args.Length == 4 && int.Parse(args[3]) > DIFFICULTY) continue;
                 if (args[0].Equals("D"))
                 {
