@@ -1,4 +1,6 @@
 ---
+D 100 100 1
+D 450 300
 ---
 T 600 0 projectileDodo
 T 600 0 projectiles
